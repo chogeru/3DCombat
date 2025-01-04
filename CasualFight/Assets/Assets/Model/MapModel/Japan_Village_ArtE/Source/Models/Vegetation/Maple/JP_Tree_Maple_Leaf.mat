@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: JP_Tree_Maple_Leaf
+  m_Shader: {fileID: 4800000, guid: fca946b0b05f46745baa1bc414f02ea1, type: 3}
+  m_ValidKeywords:
+  - _FACECAMERABILLBOARD_ON
+  - _GIBLYSTYLIZE_ON
+  - _GLOBALTINT_ENABLE_ON
+  m_InvalidKeywords: []
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GlobalMask:
+        m_Texture: {fileID: 2800000, guid: 75623c99564f975449ea10c0ca4368d1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 1aef069f5c522364199f33bfe4143572, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaCutoff: 0.5
+    - _AmbientOcclusion_Power: 0.561
+    - _BillBoardNoisePower: 5.79
+    - _BillBoardOffset: 0
+    - _BillboardScale: 0.95
+    - _BumpScale: 1
+    - _Cutoff: 0.3
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _EnvironmentReflections: 1
+    - _FaceCameraBillboard: 1
+    - _GhiblyIntensity: 0.208
+    - _Ghibly_Exponent: 0.58
+    - _Ghibly_Softness: 0.482
+    - _Ghibly_Steps: 5
+    - _GiblyStylize: 1
+    - _GlobalTintScale: 725
+    - _GlobalTint_Enable: 1
+    - _Global_Blend: 0.246
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _OverlayFactor: 0.691
+    - _Parallax: 0.02
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RandomizeColorFactor: 0
+    - _RandomizerDarkness: 1
+    - _ReceiveShadows: 1
+    - _SSSPower: 4.6
+    - _SSSScale: 4.9
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _SubSurfaceDistorion: 0.313
+    - _UVSec: 0
+    - _UV_as_WindMask: 0
+    - _UseUV2: 0
+    - _WindPower: 0.09
+    - _WindScale: 8.6
+    - _WindSpeed: 0.51
+    - _ZWrite: 1
+    - __dirty: 0
+    m_Colors:
+    - _BillBoardNoiseRemaper: {r: 0, g: 1, b: -0.92, a: 3.71}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LightTint: {r: 1, g: 0.5597484, b: 0.10849059, a: 0}
+    - _SSS_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _ShadowTint: {r: 0.12896048, g: 0.23171818, b: 0.3962264, a: 0}
+    - _SubSurfaceTint: {r: 6.498019, g: 4.109542, b: 3.586171, a: 0}
+    - _Tint: {r: 1, g: 0.9386792, b: 0.9386792, a: 0}
+  m_BuildTextureStacks: []

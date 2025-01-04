@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Jp_Vegetation_Leaves_Tile_02
+  m_Shader: {fileID: 4800000, guid: fca946b0b05f46745baa1bc414f02ea1, type: 3}
+  m_ValidKeywords:
+  - _FACECAMERABILLBOARD_ON
+  - _GIBLYSTYLIZE_ON
+  m_InvalidKeywords: []
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GlobalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GlobalMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 90855bf80050dc24ebc0eee1e19f02cc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tint_Gradient:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AO_Power: 0.845
+    - _AlphaCutoff: 0.5
+    - _AmbientOcclusion_Power: 0.557
+    - _BillBoardNoisePower: 0
+    - _BillBoardOffset: -0.185
+    - _BillboardScale: 1.47
+    - _BlendOp: 0
+    - _BumpScale: 1
+    - _CameraFadingEnabled: 0
+    - _CameraFarFadeDistance: 2
+    - _CameraNearFadeDistance: 1
+    - _Cull: 0
+    - _CurveMultyplier: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _Dist: 11.1
+    - _DistortionBlend: 0.5
+    - _DistortionEnabled: 0
+    - _DistortionStrength: 1
+    - _DistortionStrengthScaled: 0
+    - _Dither: 0
+    - _DoDither: 0
+    - _DstBlend: 0
+    - _EE: 3.03
+    - _EmissionEnabled: 0
+    - _EnvironmentReflections: 1
+    - _Exp: 8.93
+    - _FaceCameraBillboard: 1
+    - _FlipbookMode: 0
+    - _Float2: 0.1
+    - _Float3: 1
+    - _GhiblyIntensity: 0.523
+    - _Ghibly_Exponent: 0.15
+    - _Ghibly_Softness: 0.945
+    - _Ghibly_Steps: 6
+    - _GiblyStylize: 1
+    - _GlobalColorMap: 0
+    - _GlobalScale: 0
+    - _GlobalTintScale: 1024
+    - _GlobalTint_Enable: 0
+    - _Global_Blend: 0.524
+    - _GlossMapScale: 1
+    - _Glossiness: 0
+    - _GlossyReflections: 1
+    - _LightingEnabled: 1
+    - _MaxShadow: 0.113
+    - _Metallic: 0
+    - _Mode: 1
+    - _OcclusionStrength: 1
+    - _OverlayFactor: 0.514
+    - _Parallax: 0.02
+    - _ParallaxHeight: 0.82
+    - _ParallaxScale: -0.14
+    - _PushPower: -0.13
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RandomIndexScale: 0.67
+    - _RandomizeColorFactor: 0
+    - _RandomizerDarkness: 1
+    - _ReceiveShadows: 1
+    - _SSSPower: 4.7
+    - _SSSScale: 4.89
+    - _Smoothness: 0.13
+    - _SmoothnessTextureChannel: 0
+    - _SoftParticlesEnabled: 0
+    - _SoftParticlesFarFadeDistance: 1
+    - _SoftParticlesNearFadeDistance: 0
+    - _SpecularHighlights: 1
+    - _Speed: 1
+    - _SrcBlend: 1
+    - _SubSurfaceDistorion: 0.504
+    - _SunPower: 1
+    - _TextureArraySize: 4
+    - _TransAmbient: 0.106
+    - _TransDirect: 0.348
+    - _TransNormalDistortion: 0.328
+    - _TransScattering: 3.7
+    - _TransShadow: 0.845
+    - _Translucency: 1
+    - _TreeHeight: 1
+    - _UVSec: 0
+    - _UV_as_WindMask: 0
+    - _UseUV2: 0
+    - _VertexColorTint: 0
+    - _VertexShadeExponent: 3.27
+    - _WindPower: 0.09
+    - _WindScale: 99
+    - _WindSpeed: 0.1
+    - _Y_Factor: 1.79
+    - _ZWrite: 1
+    - __dirty: 0
+    m_Colors:
+    - _BillBoardNoiseRemaper: {r: 0, g: 1, b: 1, a: 1}
+    - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FreshnelColor: {r: 0.9245283, g: 0.65850836, b: 0.6855746, a: 1}
+    - _FresnelSettings: {r: 0, g: 1, b: 1, a: 0}
+    - _LightTint: {r: 1, g: 0.3349053, b: 0.5013019, a: 0}
+    - _SSS_Color: {r: 6.498019, g: 4.6283064, b: 5.0421414, a: 0}
+    - _ShadowTint: {r: 0.3018864, g: 0.10679921, b: 0.25939193, a: 0}
+    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SubSurfaceTint: {r: 1, g: 1, b: 1, a: 0}
+    - _Tint: {r: 1, g: 0.79716986, b: 0.9105161, a: 0}
+    - _TranlucencyColor: {r: 1, g: 0.4575472, b: 0.7361483, a: 1}
+    - _TransAddPass: {r: 0, g: 0, b: 0, a: 0}
+    - _Transmis: {r: 0, g: 0, b: 0, a: 0}
+    - _WindSphere: {r: 4, g: 4, b: 4, a: 0}
+  m_BuildTextureStacks: []

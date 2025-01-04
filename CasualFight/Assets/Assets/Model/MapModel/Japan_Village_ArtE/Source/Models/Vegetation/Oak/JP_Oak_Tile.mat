@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: JP_Oak_Tile
+  m_Shader: {fileID: 4800000, guid: fca946b0b05f46745baa1bc414f02ea1, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GlobalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 92778a40cc35abe439f57c694d34ba3b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Tint_Gradient:
+        m_Texture: {fileID: 2800000, guid: 7c66cb660b2cf3e45a9205e11b5ba8f1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AO_Power: 0
+    - _BumpScale: 1
+    - _ColorMaskSize: 0
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _Dist: 15.2
+    - _Dither: 0
+    - _DstBlend: 0
+    - _EE: 1.84
+    - _Exp: 0.77
+    - _GlobalColorMap: 0
+    - _GlobalScale: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.24015749
+    - _GlossyReflections: 1
+    - _MaxShadow: 0.11
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _PushPower: 0
+    - _SSSPower: 0
+    - _SSSScale: 0
+    - _Smoothness: 0
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _Speed: 1
+    - _SrcBlend: 1
+    - _SubSurfaceDistorion: 0
+    - _SunPower: 1
+    - _TransAmbient: 0.1
+    - _TransDirect: 0.261
+    - _TransNormalDistortion: 0.136
+    - _TransScattering: 5.2
+    - _TransShadow: 0.914
+    - _Translucency: 2.6
+    - _UVSec: 0
+    - _VertexColorTint: 0
+    - _VertexShadeExponent: 1.63
+    - _WindPower: 0.09
+    - _ZWrite: 1
+    - __dirty: 0
+    m_Colors:
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FreshnelColor: {r: 0.735849, g: 0.56836694, b: 0.21173012, a: 1}
+    - _FresnelSettings: {r: 0, g: 1, b: 6.81, a: 0}
+    - _SSS_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Tint: {r: 1, g: 1, b: 1, a: 0}
+    - _TranlucencyColor: {r: 0.93966365, g: 0.990566, b: 0.7242346, a: 1}
+  m_BuildTextureStacks: []

@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 0e89c7b6e50f0ab4b83e50a72ae178fe
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _GrungeMap: {fileID: 2800000, guid: 75623c99564f975449ea10c0ca4368d1, type: 3}
+  - _BumpMap: {fileID: 2800000, guid: 80f179a6aae19c74c9aea576bc8db25b, type: 3}
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

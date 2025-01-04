@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: JP_Bush_gbli_01
+  m_Shader: {fileID: 4800000, guid: fca946b0b05f46745baa1bc414f02ea1, type: 3}
+  m_ValidKeywords:
+  - _FACECAMERABILLBOARD_ON
+  - _GIBLYSTYLIZE_ON
+  m_InvalidKeywords: []
+  m_LightmapFlags: 0
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GlobalMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 32d3c98d633ad6e46b2114b7edc6e626, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaCutoff: 0.5
+    - _AmbientOcclusion_Power: 1
+    - _BillBoardNoisePower: 0
+    - _BillBoardOffset: -0.4
+    - _BillboardScale: 0.16
+    - _BumpScale: 1
+    - _CurveMultyplier: 0
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DoDither: 0
+    - _DstBlend: 0
+    - _EnvironmentReflections: 1
+    - _FaceCameraBillboard: 1
+    - _Float2: 0
+    - _Float3: 0
+    - _GhiblyIntensity: 0.673
+    - _Ghibly_Exponent: 0.54
+    - _Ghibly_Intensity: 0.78
+    - _Ghibly_Softness: 0.629
+    - _Ghibly_Steps: 5
+    - _GiblyStylize: 1
+    - _GlobalTintScale: 1024
+    - _GlobalTint_Enable: 0
+    - _Global_Blend: 0.524
+    - _GlossMapScale: 1
+    - _Glossiness: 0.59999996
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _OverlayFactor: 0.509
+    - _Parallax: 0.02
+    - _PosterizeFactor: 8
+    - _PushPower: -0.23
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RandomIndexScale: 1
+    - _RandomizeColorFactor: 0
+    - _RandomizerDarkness: 1
+    - _ReceiveShadows: 1
+    - _SSSPower: 0
+    - _SSSScale: 0
+    - _ScaleB: -0.86
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _SubSurfaceDistorion: 0
+    - _TextureArraySize: 1
+    - _TreeHeight: 0
+    - _UVSec: 0
+    - _UV_as_WindMask: 0
+    - _UseUV2: 0
+    - _WindPower: 0.06
+    - _WindScale: 5.7
+    - _WindSpeed: 1
+    - _ZWrite: 1
+    - __dirty: 0
+    m_Colors:
+    - _BillBoardNoiseRemaper: {r: 0, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LightTint: {r: 0.42299718, g: 0.7735849, b: 0.2517799, a: 0}
+    - _ShadowTint: {r: 0.16153431, g: 0.2769446, b: 0.28301883, a: 0}
+    - _StylizedTint_A: {r: 0.13750447, g: 0.2830189, b: 0.23607875, a: 0}
+    - _StylizedTint_B: {r: 0.43867922, g: 1, b: 0.47791126, a: 0}
+    - _SubSurfaceTint: {r: 0, g: 0, b: 0, a: 0}
+    - _Tint: {r: 0.42617476, g: 0.57547164, b: 0.46178138, a: 0}
+    - _WindSphere: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
