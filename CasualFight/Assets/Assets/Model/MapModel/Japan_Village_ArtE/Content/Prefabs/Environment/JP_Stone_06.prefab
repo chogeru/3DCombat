@@ -88,7 +88,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3326418134813237508}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 5865923579652733583}
   - component: {fileID: 5785721708730407682}
   - component: {fileID: 4055828401798862453}
-  - component: {fileID: 7358045420532371959}
+  - component: {fileID: 6343331598530773041}
   m_Layer: 0
   m_Name: JP_Stone_06_LOD0
   m_TagString: Untagged
@@ -229,8 +229,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7358045420532371959
-MeshCollider:
+--- !u!135 &6343331598530773041
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -239,10 +239,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8948912764173263014, guid: a41a90a59b68a6b4c80e57faca601526, type: 3}
+  serializedVersion: 2
+  m_Radius: 1.2287676
+  m_Center: {x: 0.043327868, y: 0.89744496, z: 0.0002478361}
 --- !u!1 &5804397310604368342
 GameObject:
   m_ObjectHideFlags: 0

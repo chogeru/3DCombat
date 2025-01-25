@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 7168490312799798047}
   - component: {fileID: 4325186526181841963}
   - component: {fileID: 2363099610654867368}
-  - component: {fileID: 2625229627275535612}
+  - component: {fileID: 3910588831959427431}
   m_Layer: 0
   m_Name: JP_Stone_01_LOD0
   m_TagString: Untagged
@@ -167,8 +167,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2625229627275535612
-MeshCollider:
+--- !u!135 &3910588831959427431
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -177,10 +177,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6374382457454556460, guid: ccb86deeb2d15284cad0494025803577, type: 3}
+  serializedVersion: 2
+  m_Radius: 1.3679656
+  m_Center: {x: 0.2729932, y: 1.2169248, z: 0.046207845}
 --- !u!1 &6277159882370327660
 GameObject:
   m_ObjectHideFlags: 0
