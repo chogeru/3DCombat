@@ -1,53 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] GameObject player;
+    [Header("プレイヤーとのオフセット設定")]
+    [SerializeField] private Transform player;
+    [SerializeField] private float distance = 3f;
+    [SerializeField] private float smoothSpeed = 0.125f;
 
-    Vector3 currentPos;//現在のカメラ位置
-    Vector3 pastPos;//過去のカメラ位置
+    [Header("マウス感度・角度制限")]
+    [SerializeField] private float mouseSensitivity = 5f;
+    [SerializeField] private float minVerticalAngle = -80f;
+    [SerializeField] private float maxVerticalAngle = 80f;
 
-    Vector3 diff;//移動距離
+    
 
-    private void Start()
+    private float horizontalAngle = 0f;
+    private float verticalAngle = 45f;
+
+    void LateUpdate()
     {
-        //最初のプレイヤーの位置の取得
-        pastPos = player.transform.position;
-    }
-    void Update()
-    {
-        //------カメラの移動------
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        //プレイヤーの現在地の取得
-        currentPos = player.transform.position;
+        horizontalAngle += mouseX;
+        verticalAngle -= mouseY;
+        verticalAngle = Mathf.Clamp(verticalAngle, minVerticalAngle, maxVerticalAngle);
 
-        diff = currentPos - pastPos;
-
-        transform.position = Vector3.Lerp(transform.position, transform.position + diff, 1.0f);//カメラをプレイヤーの移動差分だけうごかすよ
-
-        pastPos = currentPos;
-
-
-        //------カメラの回転------
-
-        // マウスの移動量を取得
-        float mx = Input.GetAxis("Mouse X");
-        float my = Input.GetAxis("Mouse Y");
-
-        // X方向に一定量移動していれば横回転
-        if (Mathf.Abs(mx) > 0.01f)
-        {
-            // 回転軸はワールド座標のY軸
-            transform.RotateAround(player.transform.position, Vector3.up, mx);
-        }
-
-        // Y方向に一定量移動していれば縦回転
-        if (Mathf.Abs(my) > 0.01f)
-        {
-            // 回転軸はカメラ自身のX軸
-            transform.RotateAround(player.transform.position, transform.right, -my);
-        }
+        float radVert = verticalAngle * Mathf.Deg2Rad;
+        float radHoriz = horizontalAngle * Mathf.Deg2Rad;
+        Vector3 offset = new Vector3(
+            distance * Mathf.Cos(radVert) * Mathf.Sin(radHoriz),
+            distance * Mathf.Sin(radVert),
+            distance * Mathf.Cos(radVert) * Mathf.Cos(radHoriz)
+        );
+        Vector3 desiredPosition = player.position + offset;
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        transform.LookAt(player.position);
     }
 }
