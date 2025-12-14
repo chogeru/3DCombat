@@ -7,7 +7,7 @@ Mesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 31f25616c8de4251ac64ec86287fdf88.baked
-  serializedVersion: 10
+  serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
     firstByte: 0
@@ -316,6 +316,7 @@ Mesh:
     m_Center: {x: 0.00055091083, y: 0.59390926, z: 0.00086317584}
     m_Extent: {x: 0.15401329, y: 0.5386088, z: 0.116634265}
   m_MeshUsageFlags: 0
+  m_CookingOptions: 30
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshMetrics[0]: 1
