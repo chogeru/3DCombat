@@ -3,6 +3,9 @@ using System.Globalization;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 
+/// <summary>
+/// Cinemachineを使用したズーム処理
+/// </summary>
 public class CinemachineUserInputZoom : CinemachineExtension
 {
     [Header("Input Managerに登録されている入力名"), SerializeField]
