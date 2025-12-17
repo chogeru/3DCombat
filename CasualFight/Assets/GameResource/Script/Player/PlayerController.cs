@@ -19,12 +19,14 @@ public class PlayerController : MonoBehaviour
     float m_Speed = 0f;
 
     //ダッシュ判定フラグ
-    bool m_IsDash = false;
+    [HideInInspector]
+    public bool m_IsDash = false;
 
     //その他プレイヤー情報
     Rigidbody m_Rb;
     Camera m_MainCamera;
-    Vector3 m_MoveInput;
+    [HideInInspector]
+    public Vector3 m_MoveInput;
 
     /// <summary>
     /// 初期化処理
