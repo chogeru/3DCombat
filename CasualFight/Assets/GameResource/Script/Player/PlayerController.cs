@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,11 +9,14 @@ public class PlayerController : MonoBehaviour
     [Header("ダッシュ移動設定"), SerializeField]
     float m_DashMoveSpeed = 13f;
 
-    [Header("1秒間の回転値"),SerializeField]
+    [Header("1秒間の回転値"), SerializeField]
     float m_RotationSpeed = 9999f;
 
+    [Header("アニメーター"), SerializeField]
+    Animator m_Animator;
+
     //移動値
-    float m_Speed=0f;
+    float m_Speed = 0f;
 
     //ダッシュ判定フラグ
     bool m_IsDash = false;
@@ -42,24 +46,31 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //左シフト押したとき
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        //ダッシュ判定
+        if (m_MoveInput.sqrMagnitude > 0.01f)
         {
-            m_IsDash = true;
-
-            //スピード変更
-            m_Speed = m_DashMoveSpeed;
+            //左シフトキー押したとき
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                m_IsDash = true;
+            }
+        }
+        else
+        {
+            m_IsDash = false;
         }
 
-        //移動されていなければスピード変更
-        if (m_MoveInput.sqrMagnitude < 0.01f)
-        {
-            m_Speed = m_MoveSpeed;
-        }
+        //スピードの変更
+        m_Speed = m_IsDash ? m_DashMoveSpeed : m_MoveSpeed;
 
+        //アニメーション変更
+        m_Animator.SetBool("Dash", m_IsDash);
+
+        //入力取得
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
+        //カメラの計算
         Vector3 camForward = m_MainCamera.transform.forward;
         camForward.y = 0;
         camForward.Normalize();
@@ -86,5 +97,9 @@ public class PlayerController : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(m_MoveInput);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
         }
+
+        //キャラアニメーションで動く
+        m_Animator.SetFloat("X", Input.GetAxis("Horizontal"));
+        m_Animator.SetFloat("Y", Input.GetAxis("Vertical"));
     }
 }
