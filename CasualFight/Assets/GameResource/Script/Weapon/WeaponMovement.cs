@@ -44,7 +44,7 @@ public class WeaponMovement : MonoBehaviour
     //最初のオブジェクトの位置を覚えておくため
     Vector3 m_WeaponDefaultPos;
     //ベースの回転
-    Quaternion m_BaseRot = Quaternion.Euler(180, 0, 90);
+    Quaternion m_BaseRot = Quaternion.Euler(7, 0, 163);
 
     [Header("プレイヤーオブジェクト"), SerializeField]
     GameObject m_PlayerObj;
@@ -107,7 +107,7 @@ public class WeaponMovement : MonoBehaviour
             m_WeaponTf.localPosition = Vector3.Lerp(transform.localPosition, m_WeaponDefaultPos, Time.deltaTime * 5f);
 
             //元の角度に戻す
-            Quaternion idleQ = Quaternion.Euler(180, 0, 90);
+            Quaternion idleQ = Quaternion.Euler(7, 0, 163);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, idleQ, Time.deltaTime * 5f);
         }
     }
