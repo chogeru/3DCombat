@@ -5,6 +5,7 @@ using UnityEngine;
 
 /// <summary>
 /// コンボ攻撃担当
+/// (OnComboWindowをコンボの途中アニメーションイベントで設定する・OnAttackEndに最後のアニメーションイベントに設定する)
 /// </summary>
 public class ComboSystem : MonoBehaviour
 {
@@ -17,24 +18,25 @@ public class ComboSystem : MonoBehaviour
     [Header("コンボが途切れるまでの猶予時間"), SerializeField]
     float m_ComboDelay = 0.7f;
 
-    [Header("プレイヤーのアニメーションコントローラー"), SerializeField]
-    Animator m_PlayerAnim;
+    [Header("プレイヤーオブジェクト"), SerializeField]
+    Animator m_Animator;
 
-    //クリックされたか判定フラグ
-    bool m_InputReserved = false;
+    [HideInInspector,Tooltip("クリックされたか判定フラグ")]
+    public bool m_InputReserved = false;
 
     //ゲーム側がOK出してるか判定フラグ
-    bool m_CanNextCombo=true;
+    bool m_CanNextCombo = true;
+
 
     /// <summary>
     /// クリックされたときの処理
     /// </summary>
     public void InputAttack()
     {
-        m_InputReserved=true;
+        m_InputReserved = true;
 
         //攻撃OKなら
-        if(m_CanNextCombo)
+        if (m_CanNextCombo)
         {
             ComboCount();
         }
@@ -72,10 +74,10 @@ public class ComboSystem : MonoBehaviour
         if (m_ComboNo > 5) m_ComboNo = 0;
 
         // 何打目であっても「今クリックされた」という合図を送る
-        m_PlayerAnim.SetTrigger("Attack_Combo");
+        m_Animator.SetTrigger("Attack_Combo");
 
         // 今のコンボ番号をセットする
-        m_PlayerAnim.SetInteger("AttackNo", m_ComboNo);
+        m_Animator.SetInteger("AttackNo", m_ComboNo);
 
         //クリック時の時間代入
         m_ClickLastTime = Time.time;

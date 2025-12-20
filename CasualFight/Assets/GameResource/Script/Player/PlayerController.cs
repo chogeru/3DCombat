@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     //その他プレイヤー情報
     Rigidbody m_Rb;
     Camera m_MainCamera;
-    [HideInInspector]
+    [HideInInspector,Tooltip("スティックやキーボードの入力値")]
     public Vector3 m_MoveInput;
 
     /// <summary>
