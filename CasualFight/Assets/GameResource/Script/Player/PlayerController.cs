@@ -3,10 +3,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("移動設定"), SerializeField]
-    float m_MoveSpeed = 5f;
+
+    [Header("歩く移動設定"), SerializeField]
+    float m_WalkSpeed = 2f;
 
     [Header("ダッシュ移動設定"), SerializeField]
+    float m_MoveSpeed = 5f;
+
+    [Header("戦闘中ダッシュ移動設定"), SerializeField]
     float m_DashMoveSpeed = 13f;
 
     [Header("1秒間の回転値"), SerializeField]
@@ -18,6 +22,10 @@ public class PlayerController : MonoBehaviour
     //移動値
     float m_Speed = 0f;
 
+    //攻撃中ダッシュ判定フラグ
+    [HideInInspector]
+    public bool m_IsFightDash = false;
+
     //ダッシュ判定フラグ
     [HideInInspector]
     public bool m_IsDash = false;
@@ -25,7 +33,7 @@ public class PlayerController : MonoBehaviour
     //その他プレイヤー情報
     Rigidbody m_Rb;
     Camera m_MainCamera;
-    [HideInInspector,Tooltip("スティックやキーボードの入力値")]
+    [HideInInspector, Tooltip("スティックやキーボードの入力値")]
     public Vector3 m_MoveInput;
 
     /// <summary>
@@ -39,7 +47,7 @@ public class PlayerController : MonoBehaviour
         m_MainCamera = Camera.main;
 
         //ダッシュ値代入
-        m_Speed = m_MoveSpeed;
+        m_Speed = m_WalkSpeed;
 
     }
 
@@ -63,10 +71,22 @@ public class PlayerController : MonoBehaviour
         }
 
         //スピードの変更
-        m_Speed = m_IsDash ? m_DashMoveSpeed : m_MoveSpeed;
+        if (m_IsDash)
+        {
+            m_Speed = m_MoveSpeed;
+        }
+        else if (m_IsFightDash)
+        {
+            m_Speed = m_DashMoveSpeed;
+        }
+        else
+        {
+            m_Speed = m_WalkSpeed;
+        }
 
         //アニメーション変更
         m_Animator.SetBool("Dash", m_IsDash);
+        m_Animator.SetBool("FightDash", m_IsFightDash);
 
         //入力取得
         float h = Input.GetAxisRaw("Horizontal");

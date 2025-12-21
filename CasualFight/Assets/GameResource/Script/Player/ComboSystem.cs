@@ -10,7 +10,7 @@ using UnityEngine;
 public class ComboSystem : MonoBehaviour
 {
     [Header("攻撃コンボ番号"), SerializeField]
-    int m_ComboNo = 1;
+    int m_ComboNo = 0;
 
     [Header("最後にクリックした時間"), SerializeField]
     float m_ClickLastTime = 0f;
@@ -71,13 +71,14 @@ public class ComboSystem : MonoBehaviour
         //加算
         m_ComboNo++;
 
-        if (m_ComboNo > 5) m_ComboNo = 0;
-
-        // 何打目であっても「今クリックされた」という合図を送る
-        m_Animator.SetTrigger("Attack_Combo");
+        if (m_ComboNo > 4) 
+            m_ComboNo = 1;
 
         // 今のコンボ番号をセットする
         m_Animator.SetInteger("AttackNo", m_ComboNo);
+
+        // 何打目であっても「今クリックされた」という合図を送る
+        m_Animator.SetTrigger("Attack_Combo");
 
         //クリック時の時間代入
         m_ClickLastTime = Time.time;
