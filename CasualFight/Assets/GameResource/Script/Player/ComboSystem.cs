@@ -33,12 +33,21 @@ public class ComboSystem : MonoBehaviour
     /// </summary>
     public void InputAttack()
     {
-        m_InputReserved = true;
+        // 最後にクリックした時間を更新（タイムアウト判定用）
+        m_ClickLastTime = Time.time;
 
-        //攻撃OKなら
-        if (m_CanNextCombo)
+        if (m_ComboNo == 0)
         {
+            // まだ何もしていない（待機状態）なら、即座に1打目を出す
+            m_InputReserved = false;
             ComboCount();
+        }
+        else
+        {
+            // 既に攻撃中なら「予約」だけ入れる
+            // ここではまだ m_ComboNo は増やさない！
+            m_InputReserved = true;
+            Debug.Log("入力を予約しました");
         }
     }
 
@@ -79,9 +88,6 @@ public class ComboSystem : MonoBehaviour
 
         // 何打目であっても「今クリックされた」という合図を送る
         m_Animator.SetTrigger("Attack_Combo");
-
-        //クリック時の時間代入
-        m_ClickLastTime = Time.time;
     }
 
     /// <summary>
@@ -112,6 +118,20 @@ public class ComboSystem : MonoBehaviour
     {
         m_InputReserved = false;
         m_CanNextCombo = true;
+        m_ClickLastTime = 0f;
+    }
+
+    /// <summary>
+    /// 最後のアニメーションがおわったので、コンボ状態初期化
+    /// </summary>
+    public void OnFinishAttackEnd()
+    {
+        m_InputReserved = false;
+        m_CanNextCombo = true;
         m_ComboNo = 0;
+        m_ClickLastTime = 0f;
+        m_Animator.SetInteger("AttackNo", 0);
+        m_Animator.ResetTrigger("Attack_Combo");
+        Debug.Log("コンボを完全にリセットしました。次は1段目から出せます。");
     }
 }
