@@ -21,6 +21,9 @@ public class ComboSystem : MonoBehaviour
     [Header("プレイヤーオブジェクト"), SerializeField]
     Animator m_Animator;
 
+    [Header("プレイヤーオブジェクト"),SerializeField] 
+    WeaponSwitch m_WeaponSwitch;
+
     [HideInInspector,Tooltip("クリックされたか判定フラグ")]
     public bool m_InputReserved = false;
 
@@ -35,6 +38,9 @@ public class ComboSystem : MonoBehaviour
     {
         // 最後にクリックした時間を更新（タイムアウト判定用）
         m_ClickLastTime = Time.time;
+
+        //カウントダウン武器の開始
+        m_WeaponSwitch.ShowWeapon();
 
         if (m_ComboNo == 0)
         {

@@ -8,14 +8,17 @@ using UnityEngine;
 
 public class WeaponSwitch : MonoBehaviour
 {
-    [Header("手の刀のオブジェクト")]
+    [Header("手の刀のオブジェクト"), SerializeField]
     GameObject m_HandWeapon;
 
-    [Header("背中の刀のオブジェクト")]
+    [Header("背中の刀のオブジェクト"),SerializeField]
     GameObject m_BackWeapon;
 
-    [Header("武器が消えるまでの時間")]
+    [Header("武器が消えるまでの時間"),SerializeField]
     float m_WeaponTimer = 10f;
+
+    [Header("プレイヤーオブジェクト"),SerializeField]
+    PlayerController m_PC;
 
     CancellationTokenSource m_Cts;
 
@@ -24,8 +27,12 @@ public class WeaponSwitch : MonoBehaviour
     /// </summary>
     public void ShowWeapon()
     {
+        //攻撃時攻撃フラグON
+        m_PC.m_IsAttack = true;
+
         //すでに動いているタイマーがあれば停止
         m_Cts?.Cancel();
+        m_Cts?.Dispose();
         m_Cts = new CancellationTokenSource();
 
         //手のオブジェクトON
@@ -62,5 +69,23 @@ public class WeaponSwitch : MonoBehaviour
         //オブジェクトが壊れた時にタイマーを確実に止める
         m_Cts?.Cancel();
         m_Cts?.Dispose();
+    }
+
+    private void Update()
+    {
+        //少しでも移動したら
+        if(m_PC.m_MoveInput.sqrMagnitude > 0.01f)
+        {
+            //すでに動いているタイマーがあれば停止
+            m_Cts?.Cancel();
+            m_Cts?.Dispose();
+            m_Cts = null; 
+
+            //手のオブジェクトOFF
+            m_HandWeapon?.SetActive(false);
+
+            //背中のオブジェクトON
+            m_BackWeapon?.SetActive(true);
+        }
     }
 }

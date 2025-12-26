@@ -43,6 +43,7 @@ public class StandbyCount : MonoBehaviour
         {
             //‰Šú‰»
             m_IdleTimer = 0f;
+            m_Animator.SetTrigger("Moving");
         }
     }
 

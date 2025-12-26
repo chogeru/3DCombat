@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Linq;
 using UnityEngine;
 
@@ -19,6 +20,19 @@ public class PlayerController : MonoBehaviour
     [Header("アニメーター"), SerializeField]
     Animator m_Animator;
 
+    [Header("キャラクターコントローラー"), SerializeField]
+    CharacterController m_Controller;
+
+    [Space]
+
+    [Header("ブリンク")]
+    [Header("ブリンク時の速度"), SerializeField]
+    float m_BlinkDashSpeed = 20f;
+
+    [Header("ブリンクしている時間"), SerializeField]
+    float m_BlinkTime = 0.2f;
+
+
     //移動値
     float m_Speed = 0f;
 
@@ -29,6 +43,13 @@ public class PlayerController : MonoBehaviour
     //ダッシュ判定フラグ
     [HideInInspector]
     public bool m_IsDash = false;
+
+    //攻撃判定フラグ
+    [HideInInspector]
+    public bool m_IsAttack { get; set; }
+
+    //ブリンク中判定フラグ
+    bool m_isBlink = false;
 
     //その他プレイヤー情報
     Rigidbody m_Rb;
@@ -56,19 +77,34 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //ダッシュ判定
-        if (m_MoveInput.sqrMagnitude > 0.01f)
+        //入力取得
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        //カメラの計算
+        Vector3 camForward = m_MainCamera.transform.forward;
+        camForward.y = 0;
+        camForward.Normalize();
+        Vector3 camRight = m_MainCamera.transform.right;
+        camRight.y = 0;
+        camRight.Normalize();
+
+        m_MoveInput = (v * camForward + h * camRight).normalized;
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
         {
-            //左シフトキー押したとき
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                m_IsDash = true;
-            }
+            //攻撃中でもダッシュキャンセルしてブリンク
+            DashProcess().Forget();
         }
-        else
+
+        //攻撃中は移動禁止
+        if (m_IsAttack&&!m_isBlink)
         {
-            m_IsDash = false;
+            m_MoveInput = Vector3.zero;
         }
+
+        //移動入力がある間は継続ダッシュ
+        m_IsDash = m_MoveInput.sqrMagnitude>0.01f&&Input.GetKey(KeyCode.LeftShift);
 
         //スピードの変更
         if (m_IsDash)
@@ -87,20 +123,6 @@ public class PlayerController : MonoBehaviour
         //アニメーション変更
         m_Animator.SetBool("Dash", m_IsDash);
         m_Animator.SetBool("FightDash", m_IsFightDash);
-
-        //入力取得
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
-
-        //カメラの計算
-        Vector3 camForward = m_MainCamera.transform.forward;
-        camForward.y = 0;
-        camForward.Normalize();
-        Vector3 camRight = m_MainCamera.transform.right;
-        camRight.y = 0;
-        camRight.Normalize();
-
-        m_MoveInput = (v * camForward + h * camRight).normalized;
     }
 
     /// <summary>
@@ -108,10 +130,21 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        //移動処理
-        Vector3 newVelocity = m_MoveInput * m_Speed;
-        newVelocity.y = m_Rb.velocity.y;
-        m_Rb.velocity = newVelocity;
+        //ブリンク中はRigidbodyによる移動を停止
+        if (m_isBlink)
+            return;
+
+        Vector3 gravityMove = Vector3.zero;
+        if (!m_Controller.isGrounded)
+        {
+            gravityMove.y = -9.81f * Time.deltaTime; // 重力
+        }
+
+        //移動の計算
+        Vector3 moveStep = m_MoveInput * m_Speed * Time.deltaTime;
+
+        //CharacterControllerで動かす
+        m_Controller.Move(moveStep + gravityMove);
 
         //回転処理
         if (m_MoveInput.sqrMagnitude > 0.001f)
@@ -123,5 +156,48 @@ public class PlayerController : MonoBehaviour
         //キャラアニメーションで動く
         m_Animator.SetFloat("X", Input.GetAxis("Horizontal"));
         m_Animator.SetFloat("Y", Input.GetAxis("Vertical"));
+    }
+
+
+    async UniTaskVoid DashProcess()
+    {
+        if (m_isBlink)
+            return;
+
+        m_isBlink = true;
+
+        //攻撃中ならキャンセル
+        m_IsAttack = false;
+
+        //ブリンク中だけ速度をリセットして干渉を防ぐ
+        m_Rb.velocity = Vector3.zero;
+
+        m_Animator.SetTrigger("BlinkDash");
+
+        float timer = 0f;
+
+        //一定期間中高速移動
+        while (timer < m_BlinkTime)
+        {
+            //入力値取得
+            Vector3 inputDir = new Vector3(m_MoveInput.x, 0f, m_MoveInput.z);
+            
+            //少しでも入力されていたら
+            if(inputDir.magnitude>0.1)
+            {
+                //キャラクターのキャラの正面を上書き
+                transform.forward = inputDir.normalized;
+            }
+
+            //向いている方向に物理的にFixedUpdateのタイミングで移動
+            m_Controller.Move(transform.forward * m_BlinkDashSpeed * Time.fixedDeltaTime);
+
+            //加算
+            timer += Time.fixedDeltaTime;
+
+            //1フレーム待機
+            await UniTask.WaitForFixedUpdate();
+        }
+        m_isBlink=false;
     }
 }
