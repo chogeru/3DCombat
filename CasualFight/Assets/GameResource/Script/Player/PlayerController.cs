@@ -154,8 +154,8 @@ public class PlayerController : MonoBehaviour
         }
 
         //キャラアニメーションで動く
-        m_Animator.SetFloat("X", Input.GetAxis("Horizontal"));
-        m_Animator.SetFloat("Y", Input.GetAxis("Vertical"));
+        m_Animator.SetFloat("X", m_MoveInput.x);
+        m_Animator.SetFloat("Y", m_MoveInput.z);
     }
 
 
@@ -199,5 +199,14 @@ public class PlayerController : MonoBehaviour
             await UniTask.WaitForFixedUpdate();
         }
         m_isBlink=false;
+    }
+
+    /// <summary>
+    /// 攻撃終了時に呼ぶ
+    /// </summary>
+    public void OnAttackEnd()
+    {
+        Debug.Log("OnAttackEnd 呼ばれた");
+        m_IsAttack = false;
     }
 }
