@@ -11,13 +11,13 @@ public class WeaponSwitch : MonoBehaviour
     [Header("手の刀のオブジェクト"), SerializeField]
     GameObject m_HandWeapon;
 
-    [Header("背中の刀のオブジェクト"),SerializeField]
+    [Header("背中の刀のオブジェクト"), SerializeField]
     GameObject m_BackWeapon;
 
-    [Header("武器が消えるまでの時間"),SerializeField]
+    [Header("武器が消えるまでの時間"), SerializeField]
     float m_WeaponTimer = 10f;
 
-    [Header("プレイヤーオブジェクト"),SerializeField]
+    [Header("プレイヤーオブジェクト"), SerializeField]
     PlayerController m_PC;
 
     CancellationTokenSource m_Cts;
@@ -49,6 +49,12 @@ public class WeaponSwitch : MonoBehaviour
     {
         try
         {
+            //戦闘中なら刀をしまう処理をスキップする
+            if (BattleManager.m_BattleInstance.m_IsCombat)
+            {
+                return;
+            }
+
             //指定した時間待機
             await UniTask.Delay(TimeSpan.FromSeconds(m_WeaponTimer), cancellationToken: token);
 
@@ -58,7 +64,7 @@ public class WeaponSwitch : MonoBehaviour
             //背中のオブジェクトON
             m_BackWeapon?.SetActive(true);
         }
-       catch(OperationCanceledException)
+        catch (OperationCanceledException)
         {
             Debug.Log("攻撃されたのでタイマー中断");
         }
@@ -73,13 +79,19 @@ public class WeaponSwitch : MonoBehaviour
 
     private void Update()
     {
-        //少しでも移動したら
-        if(m_PC.m_MoveInput.sqrMagnitude > 0.01f)
+        //移動入力があるかチェック
+        if (m_PC.m_MoveInput.sqrMagnitude > 0.01f)
         {
+            //戦闘中なら刀をしまう処理をスキップする
+            if (BattleManager.m_BattleInstance.m_IsCombat)
+            {
+                return;
+            }
+
             //すでに動いているタイマーがあれば停止
             m_Cts?.Cancel();
             m_Cts?.Dispose();
-            m_Cts = null; 
+            m_Cts = null;
 
             //手のオブジェクトOFF
             m_HandWeapon?.SetActive(false);

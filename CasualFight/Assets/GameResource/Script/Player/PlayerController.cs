@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System.Linq;
+using System.Resources;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -32,6 +33,13 @@ public class PlayerController : MonoBehaviour
     [Header("ブリンクしている時間"), SerializeField]
     float m_BlinkTime = 0.2f;
 
+    [Space]
+
+    [Header("PlayerMoveSound"), SerializeField]
+    PlayerMoveSound m_PMS;
+
+    [Header("ComboSystem"), SerializeField]
+    ComboSystem m_CS;
 
     //移動値
     float m_Speed = 0f;
@@ -91,20 +99,20 @@ public class PlayerController : MonoBehaviour
 
         m_MoveInput = (v * camForward + h * camRight).normalized;
 
-        if(Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             //攻撃中でもダッシュキャンセルしてブリンク
             DashProcess().Forget();
         }
 
         //攻撃中は移動禁止
-        if (m_IsAttack&&!m_isBlink)
+        if (m_IsAttack && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;
         }
 
         //移動入力がある間は継続ダッシュ
-        m_IsDash = m_MoveInput.sqrMagnitude>0.01f&&Input.GetKey(KeyCode.LeftShift);
+        m_IsDash = m_MoveInput.sqrMagnitude > 0.01f && Input.GetKey(KeyCode.Mouse1);
 
         //スピードの変更
         if (m_IsDash)
@@ -120,9 +128,50 @@ public class PlayerController : MonoBehaviour
             m_Speed = m_WalkSpeed;
         }
 
+        //シフトキーが押されているかの判定
+        bool isDashMotion = m_MoveInput.sqrMagnitude > 0.01f && Input.GetKey(KeyCode.Mouse1);
+        if (isDashMotion)
+        {
+            //戦闘中なら
+            if (BattleManager.m_BattleInstance.m_IsCombat)
+            {
+                m_IsFightDash = true;
+                m_IsDash = false;
+            }
+            //戦闘中じゃなければ
+            else
+            {
+                m_IsFightDash=false;
+                m_IsDash=true;
+            }
+        }
+        else
+        // キーを離していたら両方オフ
+        {
+            m_IsDash = false;
+            m_IsFightDash = false;
+        }
+
         //アニメーション変更
         m_Animator.SetBool("Dash", m_IsDash);
         m_Animator.SetBool("FightDash", m_IsFightDash);
+
+        //動きのサウンド
+        if (m_MoveInput.sqrMagnitude < 0.01)
+        //停止
+        {
+            m_PMS.PlayerSoundMove(0);
+        }
+        //走り
+        else if (m_IsDash || m_IsFightDash)
+        {
+            m_PMS.PlayerSoundMove(2);
+        }
+        //歩き
+        else
+        {
+            m_PMS.PlayerSoundMove(1);
+        }
     }
 
     /// <summary>
@@ -169,6 +218,9 @@ public class PlayerController : MonoBehaviour
         //攻撃中ならキャンセル
         m_IsAttack = false;
 
+        //強制リセット
+        m_CS.ForceResetCombo();
+
         //ブリンク中だけ速度をリセットして干渉を防ぐ
         m_Rb.velocity = Vector3.zero;
 
@@ -181,9 +233,9 @@ public class PlayerController : MonoBehaviour
         {
             //入力値取得
             Vector3 inputDir = new Vector3(m_MoveInput.x, 0f, m_MoveInput.z);
-            
+
             //少しでも入力されていたら
-            if(inputDir.magnitude>0.1)
+            if (inputDir.magnitude > 0.1)
             {
                 //キャラクターのキャラの正面を上書き
                 transform.forward = inputDir.normalized;
@@ -198,7 +250,7 @@ public class PlayerController : MonoBehaviour
             //1フレーム待機
             await UniTask.WaitForFixedUpdate();
         }
-        m_isBlink=false;
+        m_isBlink = false;
     }
 
     /// <summary>

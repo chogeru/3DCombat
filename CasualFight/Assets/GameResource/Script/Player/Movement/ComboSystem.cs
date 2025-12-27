@@ -140,4 +140,19 @@ public class ComboSystem : MonoBehaviour
         m_Animator.ResetTrigger("Attack_Combo");
         Debug.Log("コンボを完全にリセットしました。次は1段目から出せます。");
     }
+
+    /// <summary>
+    /// 強制的にコンボを中断
+    /// </summary>
+    public void ForceResetCombo()
+    {
+        m_ComboNo = 0;
+        m_InputReserved = false;
+        m_CanNextCombo = true;
+        m_ClickLastTime = 0f;
+
+        m_Animator.SetInteger("AttackNo", 0);
+        m_Animator.ResetTrigger("Attack_Combo");
+        m_Animator.ResetTrigger("Attack_Break");
+    }
 }
