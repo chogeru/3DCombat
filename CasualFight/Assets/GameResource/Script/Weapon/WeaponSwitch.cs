@@ -20,6 +20,9 @@ public class WeaponSwitch : MonoBehaviour
     [Header("プレイヤーオブジェクト"), SerializeField]
     PlayerController m_PC;
 
+    [Header("プレイヤーオブジェクト"), SerializeField]
+    Animator m_Animator;
+
     CancellationTokenSource m_Cts;
 
     /// <summary>
@@ -58,16 +61,24 @@ public class WeaponSwitch : MonoBehaviour
             //指定した時間待機
             await UniTask.Delay(TimeSpan.FromSeconds(m_WeaponTimer), cancellationToken: token);
 
-            //手のオブジェクトOFF
-            m_HandWeapon?.SetActive(false);
-
-            //背中のオブジェクトON
-            m_BackWeapon?.SetActive(true);
+            m_Animator.SetTrigger("Sheathe");
         }
         catch (OperationCanceledException)
         {
             Debug.Log("攻撃されたのでタイマー中断");
         }
+    }
+
+    /// <summary>
+    /// アニメーター側で呼ぶ
+    /// </summary>
+    public void PositionChangeWeapon()
+    {
+        //手のオブジェクトOFF
+        m_HandWeapon?.SetActive(false);
+
+        //背中のオブジェクトON
+        m_BackWeapon?.SetActive(true);
     }
 
     private void OnDestroy()

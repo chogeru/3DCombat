@@ -23,27 +23,32 @@ public class StandbyCount : MonoBehaviour
 
     private void Update()
     {
-        //攻撃も移動もしていないなら
-        if (m_PC.m_MoveInput.sqrMagnitude < 0.01f && !m_CS.m_InputReserved)
+        bool isMoving = m_PC.m_MoveInput.sqrMagnitude > 0.01f;
+
+        //攻撃中かチェック
+        bool isAttacking = m_CS.m_InputReserved || m_Animator.GetInteger("AttackNo") > 0;
+
+        //移動も攻撃もしていない完全な待機状態の時だけ
+        if (!isMoving && !isAttacking)
         {
-            //時間加算
             m_IdleTimer += Time.deltaTime;
 
-            //指定時間を超えたら
             if (m_IdleTimer > m_Timer)
             {
-                //アニメーション再生
                 PlayStandbyMotion();
-
-                //初期化
                 m_IdleTimer = 0f;
             }
         }
-        else//動いたら
+        else
         {
-            //初期化
+            //移動したあるいは攻撃した瞬間にタイマーを0にリセットする
             m_IdleTimer = 0f;
-            m_Animator.SetTrigger("Moving");
+
+            // 移動中であればトリガーを送る
+            if (isMoving)
+            {
+                m_Animator.SetTrigger("Moving");
+            }
         }
     }
 
