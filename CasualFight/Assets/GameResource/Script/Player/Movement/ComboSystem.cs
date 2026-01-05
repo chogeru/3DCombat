@@ -24,6 +24,9 @@ public class ComboSystem : MonoBehaviour
     [Header("プレイヤーオブジェクト"),SerializeField] 
     WeaponSwitch m_WeaponSwitch;
 
+    [Header("プレイヤーオブジェクト"), SerializeField]
+    AttackModifier m_AM;
+
     [HideInInspector,Tooltip("クリックされたか判定フラグ")]
     public bool m_InputReserved = false;
 
@@ -79,6 +82,12 @@ public class ComboSystem : MonoBehaviour
         //アニメ前半での誤発動防止
         if (!m_CanNextCombo)
             return;
+
+        //敵の方向に向かせる
+        if (m_AM!=null) 
+        {
+            m_AM.LookAtenemy();
+        }
 
         m_InputReserved = false;
         m_CanNextCombo = false;
