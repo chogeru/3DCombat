@@ -44,6 +44,16 @@ public class PlayerController : MonoBehaviour
     [Header("WeaponSwitch"), SerializeField]
     WeaponSwitch m_WeaponSwitch;
 
+    [Header("HP設定")]
+    [SerializeField] int m_MaxHP = 100;
+    int m_CurrentHP;
+
+    [Header("ダメージ設定")]
+    [SerializeField] float m_InvincibleTime = 1.0f; // ダメージ後の無敵時間
+    bool m_IsInvincible = false;
+
+    [SerializeField] HPBarController m_HPBar; // UI参照
+
     //移動値
     float m_Speed = 0f;
 
@@ -81,6 +91,12 @@ public class PlayerController : MonoBehaviour
         //ダッシュ値代入
         m_Speed = m_WalkSpeed;
 
+    }
+
+    private void Start()
+    {
+        // HP初期化
+        m_CurrentHP = m_MaxHP;
     }
 
     /// <summary>
@@ -270,7 +286,52 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void TakeDamage(int damage)
     {
+        if (m_IsInvincible || m_CurrentHP <= 0) return;
+
         // 武器を構える
         m_WeaponSwitch?.DrawWeapon();
+
+        // HP減少
+        m_CurrentHP = Mathf.Max(m_CurrentHP - damage, 0);
+
+        // UI更新 (0.0 ～ 1.0 の割合で渡す)
+        if (m_HPBar != null)
+        {
+            m_HPBar.OnTakeDamage((float)m_CurrentHP / m_MaxHP);
+        }
+
+        // 死亡判定
+        if (m_CurrentHP <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            // 無敵時間開始
+            StartInvincibility().Forget();
+        }
+    }
+
+    /// <summary>
+    /// 死亡処理
+    /// </summary>
+    private void Die()
+    {
+        Debug.Log("Player Died");
+        // アニメーションがある場合はここで発動
+        if (m_Animator != null)
+        {
+            m_Animator.SetTrigger("Die");
+        }
+    }
+
+    /// <summary>
+    /// 無敵時間の制御
+    /// </summary>
+    private async UniTaskVoid StartInvincibility()
+    {
+        m_IsInvincible = true;
+        await UniTask.Delay(System.TimeSpan.FromSeconds(m_InvincibleTime));
+        m_IsInvincible = false;
     }
 }
