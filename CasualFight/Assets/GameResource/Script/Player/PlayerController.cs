@@ -130,26 +130,9 @@ public class PlayerController : MonoBehaviour
             m_MoveInput = Vector3.zero;
         }
 
-        //移動入力がある間は継続ダッシュ
-        m_IsDash = m_MoveInput.sqrMagnitude > 0.01f && Input.GetKey(KeyCode.Mouse1);
-
-        //スピードの変更
-        if (m_IsDash)
-        {
-            m_Speed = m_MoveSpeed;
-        }
-        else if (m_IsFightDash)
-        {
-            m_Speed = m_DashMoveSpeed;
-        }
-        else
-        {
-            m_Speed = m_WalkSpeed;
-        }
-
-        //シフトキーが押されているかの判定
-        bool isDashMotion = m_MoveInput.sqrMagnitude > 0.01f && Input.GetKey(KeyCode.Mouse1);
-        if (isDashMotion)
+        //移動入力とダッシュキーの判定
+        bool isDashPressed = m_MoveInput.sqrMagnitude > 0.01f && Input.GetKey(KeyCode.Mouse1);
+        if (isDashPressed)
         {
             //戦闘中か武器を抜いているなら
             if (BattleManager.m_BattleInstance.m_IsCombat || m_WeaponSwitch.IsWeaponDrawn)
@@ -160,15 +143,28 @@ public class PlayerController : MonoBehaviour
             //戦闘中じゃなければ
             else
             {
-                m_IsFightDash=false;
-                m_IsDash=true;
+                m_IsFightDash = false;
+                m_IsDash = true;
             }
         }
         else
-        // キーを離していたら両方オフ
         {
             m_IsDash = false;
             m_IsFightDash = false;
+        }
+
+        //スピードの変更（判定の後に計算する）
+        if (m_IsFightDash)
+        {
+            m_Speed = m_DashMoveSpeed;
+        }
+        else if (m_IsDash)
+        {
+            m_Speed = m_MoveSpeed;
+        }
+        else
+        {
+            m_Speed = m_WalkSpeed;
         }
 
         //アニメーション変更
@@ -205,11 +201,11 @@ public class PlayerController : MonoBehaviour
         Vector3 gravityMove = Vector3.zero;
         if (!m_Controller.isGrounded)
         {
-            gravityMove.y = -9.81f * Time.deltaTime; // 重力
+            gravityMove.y = -9.81f * Time.fixedDeltaTime; // 重力
         }
 
         //移動の計算
-        Vector3 moveStep = m_MoveInput * m_Speed * Time.deltaTime;
+        Vector3 moveStep = m_MoveInput * m_Speed * Time.fixedDeltaTime;
 
         //CharacterControllerで動かす
         m_Controller.Move(moveStep + gravityMove);
@@ -218,7 +214,7 @@ public class PlayerController : MonoBehaviour
         if (m_MoveInput.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(m_MoveInput);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, m_RotationSpeed * Time.fixedDeltaTime);
         }
 
         //キャラアニメーションで動く
