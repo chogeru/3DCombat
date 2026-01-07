@@ -35,6 +35,12 @@ public class SpecialMoveManager : MonoBehaviour
     [Header("プレイヤーのアニメーター"), SerializeField]
     Animator m_Animator;
 
+    [Header("武器切り替えシステム"), SerializeField]
+    WeaponSwitch m_WeaponSwitch;
+
+    [Header("プレイヤーコントローラー"), SerializeField]
+    PlayerController m_PC;
+
     [Header("チャージ設定")]
     [Header("マックスチャージ"), SerializeField]
     float m_MaxChargeTime = 10f;
@@ -52,8 +58,8 @@ public class SpecialMoveManager : MonoBehaviour
 
     private void Update()
     {
-        //スペースキーが押されている間
-        if (Input.GetKey(KeyCode.Space))
+        //スペースキーが押されている間かつ、刀を抜いている時かつ、攻撃中（コンボ中）でない時のみ反応
+        if (Input.GetKey(KeyCode.Space) && (m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn) && (m_PC != null && !m_PC.m_IsAttack))
         {
             StartChange();
             m_CurrentCharge += Time.deltaTime;
@@ -106,6 +112,8 @@ public class SpecialMoveManager : MonoBehaviour
         if (m_Animator != null)
         {
             m_Animator.SetBool("AbilityCharge", false);
+            //速度を元に戻す
+            m_Animator.speed = 1f;
         }
     }
 
