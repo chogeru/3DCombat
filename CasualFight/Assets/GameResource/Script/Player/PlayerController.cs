@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
     [Header("WeaponSwitch"), SerializeField]
     WeaponSwitch m_WeaponSwitch;
 
+    [Header("SpecialMoveManager"), SerializeField]
+    SpecialMoveManager m_SMM;
+
     [Header("HP設定")]
     [SerializeField] int m_MaxHP = 100;
     int m_CurrentHP;
@@ -124,8 +127,9 @@ public class PlayerController : MonoBehaviour
             DashProcess().Forget();
         }
 
-        //攻撃中は移動禁止
-        if (m_IsAttack && !m_isBlink)
+        //攻撃またはチャージ中は移動禁止
+        bool isCharging = m_SMM != null && m_SMM.IsCharging;
+        if ((m_IsAttack || isCharging) && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;
         }
@@ -170,6 +174,17 @@ public class PlayerController : MonoBehaviour
         //アニメーション変更
         m_Animator.SetBool("Dash", m_IsDash);
         m_Animator.SetBool("FightDash", m_IsFightDash);
+
+        // FIGHT DASH中はルートモーションをOFFにする
+        if (m_IsFightDash)
+        {
+            m_Animator.applyRootMotion = false;
+        }
+        else if (!m_IsAttack)
+        {
+            // ダッシュ中ではなく、かつ攻撃中でなければONに戻す
+            m_Animator.applyRootMotion = true;
+        }
 
         //動きのサウンド
         if (m_MoveInput.sqrMagnitude < 0.01)
@@ -229,6 +244,12 @@ public class PlayerController : MonoBehaviour
             return;
 
         m_isBlink = true;
+
+        //チャージ中ならキャンセル
+        if (m_SMM != null)
+        {
+            m_SMM.StopChargeAbility();
+        }
 
         //攻撃中ならキャンセル
         m_IsAttack = false;

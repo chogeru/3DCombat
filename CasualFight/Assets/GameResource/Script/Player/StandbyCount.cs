@@ -31,8 +31,11 @@ public class StandbyCount : MonoBehaviour
         //攻撃中かチェック
         bool isAttacking = m_CS.m_InputReserved || m_Animator.GetInteger("AttackNo") > 0;
 
-        //移動も攻撃もしていない完全な待機状態の時だけ
-        if (!isMoving && !isAttacking)
+        //チャージ中かチェック
+        bool isCharging = m_Animator.GetBool("AbilityCharge");
+
+        //移動も攻撃もチャージもしていない完全な待機状態の時だけ
+        if (!isMoving && !isAttacking && !isCharging)
         {
             m_IdleTimer += Time.deltaTime;
 
@@ -47,7 +50,7 @@ public class StandbyCount : MonoBehaviour
         }
         else
         {
-            //移動したあるいは攻撃した瞬間にタイマーを0にリセットする
+            //移動した・攻撃した・あるいはチャージを開始した瞬間にタイマーを0にリセットする
             m_IdleTimer = 0f;
 
             // 移動中であれば一度だけトリガーを送る

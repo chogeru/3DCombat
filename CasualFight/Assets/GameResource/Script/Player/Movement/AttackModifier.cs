@@ -54,43 +54,66 @@ public class AttackModifier : MonoBehaviour
 
         // キャラクターコントローラー取得
         CharacterController cc = GetComponent<CharacterController>();
+        Animator anim = GetComponent<Animator>();
 
         // ホーミング移動（振り向きより優先または同時に行う）
         if (closestEnemyHoming != null)
         {
             Vector3 targetPos = closestEnemyHoming.transform.position;
-            Vector3 diff = targetPos - transform.position;
-            diff.y = 0;
+            Vector3 playerPos = transform.position;
             
+            // Y軸を揃える
+            targetPos.y = playerPos.y;
+            
+            Vector3 diff = targetPos - playerPos;
             float distanceToTarget = diff.magnitude;
 
             if (distanceToTarget > m_StopDistance)
             {
-                // 停止距離を引いた移動距離
-                float moveDistance = distanceToTarget - m_StopDistance;
+                // 目標地点：敵の座標から停止距離分だけ手前の位置
                 Vector3 moveDir = diff.normalized;
+                Vector3 destination = targetPos - (moveDir * m_StopDistance);
 
-                // 瞬時に移動させる（CharacterController.Moveを使用することで衝突判定を維持）
-                // 1フレームで複数回Moveを呼ぶことで「一瞬で移動」をシミュレート
+                // ルートモーションを一時的にOFF（スクリプトによる移動を優先）
+                if (anim != null)
+                {
+                    anim.applyRootMotion = false;
+                }
+
+                // ルートモーションや物理演算による上書きを防ぐため、
+                // 一時的にCharacterControllerを無効化して直接座標を書き換える
                 if (cc != null)
                 {
-                    // ループ回数を調整することで精度と速度を制御可能
-                    // ここでは一気に移動
-                    cc.Move(moveDir * moveDistance);
+                    cc.enabled = false;
+                    transform.position = destination;
+                    cc.enabled = true;
                 }
+                else
+                {
+                    transform.position = destination;
+                }
+                
+                // 物理演算とトランスフォームの同期を強制（埋まり防止と即時反映のため）
+                Physics.SyncTransforms();
             }
 
             // 移動後に敵の方向を向く
-            Vector3 lookTarget = targetPos;
-            lookTarget.y = transform.position.y;
-            transform.LookAt(lookTarget);
+            if (diff != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(diff);
+            }
         }
         else if (closestEnemyRotation != null)
         {
             // 移動はしないが振り向きだけ行う場合
             Vector3 targetPos = closestEnemyRotation.transform.position;
-            targetPos.y = transform.position.y;
-            transform.LookAt(targetPos);
+            Vector3 diff = targetPos - transform.position;
+            diff.y = 0;
+
+            if (diff != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(diff);
+            }
         }
     }
 }
