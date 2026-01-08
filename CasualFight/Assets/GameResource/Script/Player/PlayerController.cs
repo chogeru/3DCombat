@@ -1,6 +1,4 @@
 using Cysharp.Threading.Tasks;
-using System.Linq;
-using System.Resources;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -72,10 +70,6 @@ public class PlayerController : MonoBehaviour
     //移動値
     float m_Speed = 0f;
 
-    //攻撃中ダッシュ判定フラグ
-    [HideInInspector]
-    public bool m_IsFightDash = false;
-
     //ダッシュ判定フラグ
     [HideInInspector]
     public bool m_IsDash = false;
@@ -136,13 +130,69 @@ public class PlayerController : MonoBehaviour
 
         m_MoveInput = (v * camForward + h * camRight).normalized;
 
+        // 右クリック入力処理 (BlinkDash と Dash)
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            //攻撃中でもダッシュキャンセルしてブリンク
+            // 攻撃中でもダッシュキャンセルしてブリンク
+            m_Animator.SetTrigger("BlinkDash");
             DashProcess().Forget();
+            m_IsDash = true;
+        }
+        else if (Input.GetKey(KeyCode.Mouse1))
+        {
+            if (m_MoveInput.sqrMagnitude > 0.01f)
+            {
+                m_IsDash = true;
+            }
+            else
+            {
+                m_IsDash = false;
+            }
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            m_IsDash = false;
         }
 
-        //攻撃中またはガード中は歩行不可
+        // 移動入力がなくなったらダッシュ解除
+        if (m_MoveInput.sqrMagnitude < 0.01f)
+        {
+            m_IsDash = false;
+        }
+
+        // 武器装備状態の同期 (InEquipped: 0=未装備, 1=装備)
+        float inEquippedValue = (m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn) ? 1.0f : 0.0f;
+        m_Animator.SetFloat("InEquipped", inEquippedValue);
+
+        //スピードの変更
+        if (m_IsDash)
+        {
+            // 装備中なら戦闘ダッシュ速度、未装備なら通常走り速度
+            bool isDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
+            m_Speed = isDrawn ? m_DashMoveSpeed : m_MoveSpeed;
+        }
+        else
+        {
+            // ダッシュ中でなければ歩行速度
+            m_Speed = m_WalkSpeed;
+        }
+
+        //アニメーションパラメータ更新
+        m_Animator.SetBool("Dash", m_IsDash);
+
+        // RootMotionの制御 (戦闘ダッシュ時のみOFFにして手動移動の精度を優先)
+        bool isCombatDash = m_IsDash && (m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn);
+        if (isCombatDash)
+        {
+            m_Animator.applyRootMotion = false;
+        }
+        else if (!m_IsAttack)
+        {
+            // 攻撃中でなければONに戻す
+            m_Animator.applyRootMotion = true;
+        }
+
+        // 攻撃中またはガード中は歩行不可
         bool isGuardBreaking = m_SMM != null && m_SMM.IsGuardBreaking;
         bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
         m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn;
@@ -153,70 +203,15 @@ public class PlayerController : MonoBehaviour
 
         m_Animator.SetBool("Guard", m_IsGuard);
 
-        //移動入力とダッシュキーの判定
-        bool isDashPressed = m_MoveInput.sqrMagnitude > 0.01f && Input.GetKey(KeyCode.Mouse1);
-        if (isDashPressed)
-        {
-            //戦闘中か武器を抜いているなら
-            if (BattleManager.m_BattleInstance.m_IsCombat || m_WeaponSwitch.IsWeaponDrawn)
-            {
-                m_IsFightDash = true;
-                m_IsDash = false;
-            }
-            //戦闘中じゃなければ
-            else
-            {
-                m_IsFightDash = false;
-                m_IsDash = true;
-            }
-        }
-        else
-        {
-            m_IsDash = false;
-            m_IsFightDash = false;
-        }
-
-        //スピードの変更（判定の後に計算する）
-        if (m_IsFightDash)
-        {
-            m_Speed = m_DashMoveSpeed;
-        }
-        else if (m_IsDash)
-        {
-            m_Speed = m_MoveSpeed;
-        }
-        else
-        {
-            m_Speed = m_WalkSpeed;
-        }
-
-        //アニメーション変更
-        m_Animator.SetBool("Dash", m_IsDash);
-        m_Animator.SetBool("FightDash", m_IsFightDash);
-
-        // FIGHT DASH中はルートモーションをOFFにする
-        if (m_IsFightDash)
-        {
-            m_Animator.applyRootMotion = false;
-        }
-        else if (!m_IsAttack)
-        {
-            // ダッシュ中ではなく、かつ攻撃中でなければONに戻す
-            m_Animator.applyRootMotion = true;
-        }
-
         //動きのサウンド
         if (m_MoveInput.sqrMagnitude < 0.01)
-        //停止
         {
             m_PMS.PlayerSoundMove(0);
         }
-        //走り
-        else if (m_IsDash || m_IsFightDash)
+        else if (m_IsDash)
         {
             m_PMS.PlayerSoundMove(2);
         }
-        //歩き
         else
         {
             m_PMS.PlayerSoundMove(1);
@@ -225,7 +220,7 @@ public class PlayerController : MonoBehaviour
         //待機タイマー処理
         bool isMoving = m_MoveInput.sqrMagnitude > 0.01f;
         // 何らかの活動を行っているか判定
-        if (isMoving || m_IsAttack || m_isBlink || m_IsGuard)
+        if (isMoving || m_IsAttack || m_isBlink || m_IsGuard || m_IsDash)
         {
             m_IdleTimer = 0f;
             m_IsStandbyTriggered = false;
@@ -271,8 +266,10 @@ public class PlayerController : MonoBehaviour
         }
 
         //キャラアニメーションで動く
-        m_Animator.SetFloat("X", m_MoveInput.x);
-        m_Animator.SetFloat("Y", m_MoveInput.z);
+        //ダッシュ時はX,Yを2倍にする
+        float animationSpeedMultiplier = m_IsDash ? 2.0f : 1.0f;
+        m_Animator.SetFloat("X", m_MoveInput.x * animationSpeedMultiplier);
+        m_Animator.SetFloat("Y", m_MoveInput.z * animationSpeedMultiplier);
     }
 
 
@@ -291,8 +288,6 @@ public class PlayerController : MonoBehaviour
 
         //ブリンク中だけ速度をリセットして干渉を防ぐ
         m_Rb.velocity = Vector3.zero;
-
-        m_Animator.SetTrigger("BlinkDash");
 
         float timer = 0f;
 
