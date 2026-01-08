@@ -143,7 +143,9 @@ public class PlayerController : MonoBehaviour
         }
 
         //攻撃中またはガード中は歩行不可
-        m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack;
+        bool isGuardBreaking = m_SMM != null && m_SMM.IsGuardBreaking;
+        bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
+        m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn;
         if ((m_IsAttack || m_IsGuard) && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;

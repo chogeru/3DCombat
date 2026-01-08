@@ -22,8 +22,10 @@ public class SpecialMoveManager : MonoBehaviour
         [HideInInspector] public bool isCoolingDown;
     }
     [Header("各レベルのスキル設定")]
-    [SerializeField] SkillLevelData m_MiddleSkill; // 中
-    [SerializeField] SkillLevelData m_StrongSkill; // 強
+    //中
+    [SerializeField] SkillLevelData m_MiddleSkill;
+    //強
+    [SerializeField] SkillLevelData m_StrongSkill;
 
     [Header("UIのバー"), SerializeField]
     Slider m_SpecialGaugeSlider;
@@ -44,6 +46,10 @@ public class SpecialMoveManager : MonoBehaviour
     [Header("マックスチャージ"), SerializeField]
     float m_MaxChargeTime = 10f;
 
+    [Header("ガードブレイク設定")]
+    [Header("ガードブレイク時のゲージ減少速度(毎秒)"), SerializeField]
+    float m_GuardBreakRecoverySpeed = 5.0f;
+
     //現在の数値
     private float m_CurrentCharge = 0f;
 
@@ -53,7 +59,11 @@ public class SpecialMoveManager : MonoBehaviour
     //クールタイム中かどうかのフラグ
     private bool m_IsCoolingDown = false;
 
+    //ガードブレイク中かどうかのフラグ
+    private bool m_IsGuardBreaking = false;
+
     public bool IsCharging => m_IsCharging;
+    public bool IsGuardBreaking => m_IsGuardBreaking;
 
     private void Update()
     {
@@ -65,9 +75,58 @@ public class SpecialMoveManager : MonoBehaviour
     /// <param name="amount"></param>
     public void AddGauge(float amount)
     {
+        // ガードブレイク中は加算しない
+        if (m_IsGuardBreaking) return;
+
         m_CurrentCharge += amount;
-        m_CurrentCharge = Mathf.Clamp(m_CurrentCharge, 0, m_MaxChargeTime);
+
+        if (m_CurrentCharge >= m_MaxChargeTime)
+        {
+            m_CurrentCharge = m_MaxChargeTime;
+            OnGuardBreak();
+        }
+        else
+        {
+            m_CurrentCharge = Mathf.Clamp(m_CurrentCharge, 0, m_MaxChargeTime);
+        }
         UpdateUI();
+    }
+
+    /// <summary>
+    /// ガードブレイク発生時の処理
+    /// </summary>
+    void OnGuardBreak()
+    {
+        if (m_IsGuardBreaking) return;
+
+        m_IsGuardBreaking = true;
+        Debug.Log("ガードブレイク発生！");
+
+        if (m_Animator != null)
+        {
+            m_Animator.SetTrigger("GuardBreak");
+        }
+
+        StartGuardBreakRecoveryAsync().Forget();
+    }
+
+    /// <summary>
+    /// ガードブレイクからの回復処理
+    /// </summary>
+    async UniTaskVoid StartGuardBreakRecoveryAsync()
+    {
+        while (m_CurrentCharge > 0f)
+        {
+            // インスペクターで設定した速度で減算
+            m_CurrentCharge -= m_GuardBreakRecoverySpeed * Time.deltaTime;
+            m_CurrentCharge = Mathf.Max(m_CurrentCharge, 0f); // 0以下にはしない
+
+            UpdateUI();
+            await UniTask.Yield();
+        }
+
+        m_IsGuardBreaking = false;
+        Debug.Log("ガードブレイク回復完了");
     }
 
     /// <summary>
@@ -76,6 +135,7 @@ public class SpecialMoveManager : MonoBehaviour
     public void ResetGauge()
     {
         m_CurrentCharge = 0f;
+        m_IsGuardBreaking = false;
         UpdateUI();
     }
 
@@ -84,6 +144,9 @@ public class SpecialMoveManager : MonoBehaviour
     /// </summary>
     void CheckChargeRelease()
     {
+        // ガードブレイク中は技を出せないならここで弾く
+        if (m_IsGuardBreaking) return;
+
         if (m_CurrentCharge >= m_StrongSkill.chargeTime)
         {
             if (!m_StrongSkill.isCoolingDown)
@@ -119,7 +182,20 @@ public class SpecialMoveManager : MonoBehaviour
     /// </summary>
     public void UpdateUI()
     {
-        m_SpecialGaugeSlider.value = m_CurrentCharge / m_MaxChargeTime;
+        if (m_SpecialGaugeSlider != null)
+        {
+            m_SpecialGaugeSlider.value = m_CurrentCharge / m_MaxChargeTime;
+        }
+
+        if (m_FillImage == null) return;
+
+        // ガードブレイク中は色を変えるなどの処理を追加しても良いかもしれません
+        if (m_IsGuardBreaking)
+        {
+             // 例: ブレイク中は点滅させるとか、特定の色にするとか
+             // ここでは一旦既存ロジックの上書きは最小限に留めますが、
+             // MAX状態なので放置すると赤(StrongSkill)などの色になります。
+        }
 
         if (m_CurrentCharge >= m_StrongSkill.chargeTime)
         {
