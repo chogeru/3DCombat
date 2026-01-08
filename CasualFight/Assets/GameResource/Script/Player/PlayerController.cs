@@ -47,6 +47,12 @@ public class PlayerController : MonoBehaviour
     [Header("SpecialMoveManager"), SerializeField]
     SpecialMoveManager m_SMM;
 
+    [Header("GuardSystem"), SerializeField]
+    GuardSystem m_GS;
+
+    [Header("ActionController"), SerializeField]
+    ActionController m_AC;
+
     [Header("HP設定")]
     [SerializeField] int m_MaxHP = 100;
     int m_CurrentHP;
@@ -56,6 +62,12 @@ public class PlayerController : MonoBehaviour
     bool m_IsInvincible = false;
 
     [SerializeField] HPBarController m_HPBar; // UI参照
+
+    [Header("待機設定")]
+    [SerializeField, Tooltip("待機アニメーションを開始するまでの時間(秒)")]
+    float m_StandbyThreshold = 5.0f;
+    float m_IdleTimer = 0f;
+    bool m_IsStandbyTriggered = false;
 
     //移動値
     float m_Speed = 0f;
@@ -74,6 +86,9 @@ public class PlayerController : MonoBehaviour
 
     //ブリンク中判定フラグ
     bool m_isBlink = false;
+
+    //ガード中判定フラグ
+    bool m_IsGuard = false;
 
     //その他プレイヤー情報
     Rigidbody m_Rb;
@@ -127,12 +142,14 @@ public class PlayerController : MonoBehaviour
             DashProcess().Forget();
         }
 
-        //攻撃またはチャージ中は移動禁止
-        bool isCharging = m_SMM != null && m_SMM.IsCharging;
-        if ((m_IsAttack || isCharging) && !m_isBlink)
+        //攻撃中またはガード中は歩行不可
+        m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack;
+        if ((m_IsAttack || m_IsGuard) && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;
         }
+
+        m_Animator.SetBool("Guard", m_IsGuard);
 
         //移動入力とダッシュキーの判定
         bool isDashPressed = m_MoveInput.sqrMagnitude > 0.01f && Input.GetKey(KeyCode.Mouse1);
@@ -202,6 +219,25 @@ public class PlayerController : MonoBehaviour
         {
             m_PMS.PlayerSoundMove(1);
         }
+
+        //待機タイマー処理
+        bool isMoving = m_MoveInput.sqrMagnitude > 0.01f;
+        // 何らかの活動を行っているか判定
+        if (isMoving || m_IsAttack || m_isBlink || m_IsGuard)
+        {
+            m_IdleTimer = 0f;
+            m_IsStandbyTriggered = false;
+        }
+        else
+        {
+            m_IdleTimer += Time.deltaTime;
+            // 一定時間を超えたらStandbyトリガーを発動
+            if (m_IdleTimer >= m_StandbyThreshold && !m_IsStandbyTriggered)
+            {
+                m_Animator.SetTrigger("Standby");
+                m_IsStandbyTriggered = true;
+            }
+        }
     }
 
     /// <summary>
@@ -244,12 +280,6 @@ public class PlayerController : MonoBehaviour
             return;
 
         m_isBlink = true;
-
-        //チャージ中ならキャンセル
-        if (m_SMM != null)
-        {
-            m_SMM.StopChargeAbility();
-        }
 
         //攻撃中ならキャンセル
         m_IsAttack = false;
@@ -305,6 +335,21 @@ public class PlayerController : MonoBehaviour
     {
         if (m_IsInvincible || m_CurrentHP <= 0) return;
 
+        // 待機リセット
+        m_IdleTimer = 0f;
+        m_IsStandbyTriggered = false;
+
+        // ガード判定
+        if (m_IsGuard)
+        {
+            Debug.Log("ガード成功！ダメージを無効化しました。");
+            if (m_GS != null)
+            {
+                m_GS.OnGuardSuccess();
+            }
+            return; // ダメージを受けずに終了
+        }
+
         // 武器を構える
         m_WeaponSwitch?.DrawWeapon();
 
@@ -334,7 +379,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Die()
     {
-        Debug.Log("Player Died");
+        Debug.Log("プレイヤーが死亡しました。");
         // アニメーションがある場合はここで発動
         if (m_Animator != null)
         {

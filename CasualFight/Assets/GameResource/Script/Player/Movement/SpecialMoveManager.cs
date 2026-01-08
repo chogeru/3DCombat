@@ -13,16 +13,15 @@ public class SpecialMoveManager : MonoBehaviour
     {
         [Header("技名")]
         public string name;
-        [Header("何秒溜めたらこの技か")]
+        [Header("どこまで溜めたらこの技発動できるか")]
         public float chargeTime;
-        [Header("クールタイムの秒数")] 
+        [Header("クールタイムの秒数")]
         public float coolTime;
-        [Header("表示用Text")] 
-        public Text coolTimeText;    
+        [Header("表示用Text")]
+        public Text coolTimeText;
         [HideInInspector] public bool isCoolingDown;
     }
     [Header("各レベルのスキル設定")]
-    [SerializeField] SkillLevelData m_WeakSkill;   // 弱
     [SerializeField] SkillLevelData m_MiddleSkill; // 中
     [SerializeField] SkillLevelData m_StrongSkill; // 強
 
@@ -52,78 +51,31 @@ public class SpecialMoveManager : MonoBehaviour
     private bool m_IsCharging = false;
 
     //クールタイム中かどうかのフラグ
-    private bool m_IsCoolingDown = false; 
-    
+    private bool m_IsCoolingDown = false;
+
     public bool IsCharging => m_IsCharging;
 
     private void Update()
     {
-        //スペースキーが押されている間かつ、刀を抜いている時かつ、攻撃中（コンボ中）でない時のみ反応
-        if (Input.GetKey(KeyCode.Space) && (m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn) && (m_PC != null && !m_PC.m_IsAttack))
-        {
-            StartChange();
-            m_CurrentCharge += Time.deltaTime;
-        }
-        //スペースキー離したら
-        else
-        {
-            StopCharge();
-        }
-
-        //上限や下限を超えないように
-        m_CurrentCharge = Mathf.Clamp(m_CurrentCharge, 0, m_MaxChargeTime);
-
-        // AbilityChargeパラメータの更新 (0.2秒以上でtrue)
-        if (m_Animator != null)
-        {
-            m_Animator.SetBool("AbilityCharge", m_IsCharging && m_CurrentCharge >= 0.2f);
-        }
-
-        //スペースキーが離されたとき
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            CheckChargeRelease();
-        }
     }
 
     /// <summary>
-    /// ゲージの増加処理
+    /// ガード成功時などに外部からゲージを加算する
     /// </summary>
-    void StartChange()
+    /// <param name="amount"></param>
+    public void AddGauge(float amount)
     {
-        m_IsCharging = true;
-
-        //ゲージの増加
-        m_CurrentCharge += Time.deltaTime;
-
-        //上限や下限を超えないように
+        m_CurrentCharge += amount;
         m_CurrentCharge = Mathf.Clamp(m_CurrentCharge, 0, m_MaxChargeTime);
-
         UpdateUI();
     }
 
     /// <summary>
-    /// 離した判定処理
+    /// アクションなどによる強制リセット
     /// </summary>
-    public void StopCharge()
-    {
-        m_IsCharging = false;
-        
-        if (m_Animator != null)
-        {
-            m_Animator.SetBool("AbilityCharge", false);
-            //速度を元に戻す
-            m_Animator.speed = 1f;
-        }
-    }
-
-    /// <summary>
-    /// アクションなどによる強制停止
-    /// </summary>
-    public void StopChargeAbility()
+    public void ResetGauge()
     {
         m_CurrentCharge = 0f;
-        StopCharge();
         UpdateUI();
     }
 
@@ -136,36 +88,24 @@ public class SpecialMoveManager : MonoBehaviour
         {
             if (!m_StrongSkill.isCoolingDown)
             {
-                Debug.Log($"{m_StrongSkill.name}発動！");
+                Debug.Log($"【{m_StrongSkill.name}】発動！");
                 StartCoolTimeAsync(m_StrongSkill).Forget();
             }
             else
             {
-                Debug.Log($"{m_StrongSkill.name}はクールタイム中です");
+                Debug.Log($"{m_StrongSkill.name}はクールタイム中です。");
             }
         }
         else if (m_CurrentCharge >= m_MiddleSkill.chargeTime)
         {
             if (!m_MiddleSkill.isCoolingDown)
             {
-                Debug.Log($"{m_MiddleSkill.name}発動");
+                Debug.Log($"【{m_MiddleSkill.name}】発動！");
                 StartCoolTimeAsync(m_MiddleSkill).Forget();
             }
             else
             {
-                Debug.Log($"{m_MiddleSkill.name}はクールタイム中です");
-            }
-        }
-        else if (m_CurrentCharge >= m_WeakSkill.chargeTime)
-        {
-            if (!m_WeakSkill.isCoolingDown)
-            {
-                Debug.Log($"{m_WeakSkill.name}発動");
-                StartCoolTimeAsync(m_WeakSkill).Forget();
-            }
-            else
-            {
-                Debug.Log($"{m_WeakSkill.name}はクールタイム中です");
+                Debug.Log($"{m_MiddleSkill.name}はクールタイム中です。");
             }
         }
 
@@ -177,7 +117,7 @@ public class SpecialMoveManager : MonoBehaviour
     /// <summary>
     /// UIの更新処理
     /// </summary>
-    void UpdateUI()
+    public void UpdateUI()
     {
         m_SpecialGaugeSlider.value = m_CurrentCharge / m_MaxChargeTime;
 
@@ -190,11 +130,6 @@ public class SpecialMoveManager : MonoBehaviour
         {
             //Lv2
             m_FillImage.color = Color.yellow;
-        }
-        else if (m_CurrentCharge >= m_WeakSkill.chargeTime)
-        {
-            //Lv1
-            m_FillImage.color = Color.white;
         }
         else
         {
@@ -211,18 +146,17 @@ public class SpecialMoveManager : MonoBehaviour
         // 構造体は値渡しなので、フラグ管理のために参照が必要な場合は注意が必要ですが、
         // ここでは個別にフラグを立てるために ref は使わず、呼び出し元のインスタンス自体を操作する形にします。
         // ※SkillLevelDataをstructにしているため、フィールドとして保持しているものを直接書き換える必要があります。
-        
-        if (data.name == m_WeakSkill.name) m_WeakSkill.isCoolingDown = true;
-        else if (data.name == m_MiddleSkill.name) m_MiddleSkill.isCoolingDown = true;
+
+        if (data.name == m_MiddleSkill.name) m_MiddleSkill.isCoolingDown = true;
         else if (data.name == m_StrongSkill.name) m_StrongSkill.isCoolingDown = true;
 
         float remainingTime = data.coolTime;
-       
+
         while (remainingTime > 0f)
         {
             remainingTime -= Time.deltaTime;
             remainingTime = Mathf.Max(remainingTime, 0);
-            
+
             if (data.coolTimeText != null)
             {
                 data.coolTimeText.text = remainingTime.ToString("F1");
@@ -236,8 +170,7 @@ public class SpecialMoveManager : MonoBehaviour
             data.coolTimeText.text = "";
         }
 
-        if (data.name == m_WeakSkill.name) m_WeakSkill.isCoolingDown = false;
-        else if (data.name == m_MiddleSkill.name) m_MiddleSkill.isCoolingDown = false;
+        if (data.name == m_MiddleSkill.name) m_MiddleSkill.isCoolingDown = false;
         else if (data.name == m_StrongSkill.name) m_StrongSkill.isCoolingDown = false;
     }
 }

@@ -30,9 +30,6 @@ public class ComboSystem : MonoBehaviour
     [Header("プレイヤーオブジェクト"), SerializeField]
     PlayerController m_PC;
 
-    [Header("プレイヤーオブジェクト"), SerializeField]
-    SpecialMoveManager m_SMM;
-
     [HideInInspector,Tooltip("クリックされたか判定フラグ")]
     public bool m_InputReserved = false;
 
@@ -88,12 +85,6 @@ public class ComboSystem : MonoBehaviour
         //アニメ前半での誤発動防止
         if (!m_CanNextCombo)
             return;
-
-        //チャージ中ならキャンセル
-        if (m_SMM != null)
-        {
-            m_SMM.StopChargeAbility();
-        }
 
         //攻撃フラグを立てて、PlayerController側での回転干渉を防ぐ
         if (m_PC != null)
@@ -180,6 +171,12 @@ public class ComboSystem : MonoBehaviour
 
         // ルートモーションをONに戻す
         m_Animator.applyRootMotion = true;
+
+        // 攻撃終了を通知
+        if (m_PC != null)
+        {
+            m_PC.OnAttackEnd();
+        }
         
         Debug.Log("コンボを完全にリセットしました。次は1段目から出せます。");
     }

@@ -19,6 +19,10 @@ public class PlayerMoveSound : MonoBehaviour
     //再生中の種類
     int m_CurrentState = -1;
 
+    /// <summary>
+    /// プレイヤーの移動サウンド処理
+    /// </summary>
+    /// <param name="no">[0.停止 1.歩き 2.走り]</param>
     public void PlayerSoundMove(int no)
     {
         //再生中の番号と同じならスキップ
