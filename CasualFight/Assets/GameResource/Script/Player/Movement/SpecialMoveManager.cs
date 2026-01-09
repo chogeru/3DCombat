@@ -104,7 +104,7 @@ public class SpecialMoveManager : MonoBehaviour
 
         if (m_Animator != null)
         {
-            m_Animator.SetTrigger("GuardBreak");
+            m_Animator.CrossFade("GuardBreak", 0.1f);
         }
 
         StartGuardBreakRecoveryAsync().Forget();
@@ -152,6 +152,7 @@ public class SpecialMoveManager : MonoBehaviour
             if (!m_StrongSkill.isCoolingDown)
             {
                 Debug.Log($"【{m_StrongSkill.name}】発動！");
+                m_Animator.CrossFade("UltraSlash", 0.1f);
                 StartCoolTimeAsync(m_StrongSkill).Forget();
             }
             else
@@ -164,6 +165,7 @@ public class SpecialMoveManager : MonoBehaviour
             if (!m_MiddleSkill.isCoolingDown)
             {
                 Debug.Log($"【{m_MiddleSkill.name}】発動！");
+                m_Animator.CrossFade("SpeedSlash", 0.1f);
                 StartCoolTimeAsync(m_MiddleSkill).Forget();
             }
             else

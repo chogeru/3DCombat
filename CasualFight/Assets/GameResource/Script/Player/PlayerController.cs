@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             // 攻撃中でもダッシュキャンセルしてブリンク
-            m_Animator.SetTrigger("BlinkDash");
+            m_Animator.CrossFade("BlinkDash", 0.1f);
             DashProcess().Forget();
             m_IsDash = true;
         }
@@ -195,7 +195,15 @@ public class PlayerController : MonoBehaviour
         // 攻撃中またはガード中は歩行不可
         bool isGuardBreaking = m_SMM != null && m_SMM.IsGuardBreaking;
         bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
+        bool isGuardPrev = m_IsGuard;
         m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn;
+        
+        // ガード開始時に CrossFade
+        if (m_IsGuard && !isGuardPrev)
+        {
+            m_Animator.CrossFade("Guard", 0.1f);
+        }
+
         if ((m_IsAttack || m_IsGuard) && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;
@@ -219,8 +227,8 @@ public class PlayerController : MonoBehaviour
 
         //待機タイマー処理
         bool isMoving = m_MoveInput.sqrMagnitude > 0.01f;
-        // 何らかの活動を行っているか判定
-        if (isMoving || m_IsAttack || m_isBlink || m_IsGuard || m_IsDash)
+        // 何らかの活動を行っている、または刀を抜いているか判定
+        if (isMoving || m_IsAttack || m_isBlink || m_IsGuard || m_IsDash || isWeaponDrawn)
         {
             m_IdleTimer = 0f;
             m_IsStandbyTriggered = false;
@@ -231,7 +239,7 @@ public class PlayerController : MonoBehaviour
             // 一定時間を超えたらStandbyトリガーを発動
             if (m_IdleTimer >= m_StandbyThreshold && !m_IsStandbyTriggered)
             {
-                m_Animator.SetTrigger("Standby");
+                m_Animator.CrossFade("Angry", 0.1f);
                 m_IsStandbyTriggered = true;
             }
         }
@@ -380,7 +388,7 @@ public class PlayerController : MonoBehaviour
         // アニメーションがある場合はここで発動
         if (m_Animator != null)
         {
-            m_Animator.SetTrigger("Die");
+            m_Animator.CrossFade("Die", 0.1f);
         }
     }
 

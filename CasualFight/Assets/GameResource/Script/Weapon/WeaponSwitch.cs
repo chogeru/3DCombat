@@ -95,8 +95,8 @@ public class WeaponSwitch : MonoBehaviour
                 await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
             }
 
-            // 納刀アニメーショントリガー
-            m_Animator.SetTrigger("Sheathe");
+            // 納刀アニメーション CrossFade
+            m_Animator.CrossFade("Sheathe", 0.1f);
         }
         catch (OperationCanceledException)
         {

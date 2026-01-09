@@ -28,14 +28,14 @@ public class StandbyCount : MonoBehaviour
     {
         bool isMoving = m_PC.m_MoveInput.sqrMagnitude > 0.01f;
 
-        //攻撃中かチェック
-        bool isAttacking = m_CS.m_InputReserved || m_Animator.GetInteger("AttackNo") > 0;
+        //攻撃中かチェック (!m_PC.m_IsAttack も考慮して二重チェック)
+        bool isAttacking = m_PC.m_IsAttack || m_CS.m_InputReserved || m_Animator.GetInteger("AttackNo") > 0;
+        
+        // 武器を抜いているかチェック
+        bool isWeaponDrawn = m_PC.GetComponent<WeaponSwitch>() != null && m_PC.GetComponent<WeaponSwitch>().IsWeaponDrawn;
 
-        //チャージ中かチェック
-        bool isCharging = m_Animator.GetBool("AbilityCharge");
-
-        //移動も攻撃もチャージもしていない完全な待機状態の時だけ
-        if (!isMoving && !isAttacking && !isCharging)
+        //移動も攻撃もしておらず、かつ刀をしまっている完全な待機状態の時だけ
+        if (!isMoving && !isAttacking && !isWeaponDrawn)
         {
             m_IdleTimer += Time.deltaTime;
 
@@ -53,10 +53,10 @@ public class StandbyCount : MonoBehaviour
             //移動した・攻撃した・あるいはチャージを開始した瞬間にタイマーを0にリセットする
             m_IdleTimer = 0f;
 
-            // 移動中であれば一度だけトリガーを送る
-            if (isMoving && !m_IsMovingAnimator)
+            // 移動中かつ攻撃中でなければ一度だけ CrossFade を送る
+            if (isMoving && !isAttacking && !m_IsMovingAnimator)
             {
-                m_Animator.SetTrigger("Moving");
+                m_Animator.CrossFade("Movement", 0.1f, 0, 0f);
                 m_IsMovingAnimator = true;
             }
         }
@@ -73,6 +73,6 @@ public class StandbyCount : MonoBehaviour
 
         //アニメーション再生
         m_Animator.SetFloat("StandbyIndex", no);
-        m_Animator.SetTrigger("Standby");
+        m_Animator.CrossFade("Angry", 0.1f);
     }
 }
