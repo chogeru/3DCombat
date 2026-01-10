@@ -93,6 +93,9 @@ public class PlayerController : MonoBehaviour
     // 移動アニメーション再生中フラグ
     bool m_IsMovingAnimator = false;
 
+    // ガードアニメーション発火済みフラグ
+    bool m_IsGuardAnimatorTriggered = false;
+
     /// <summary>
     /// 初期化処理
     /// </summary>
@@ -137,7 +140,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             // 攻撃中でもダッシュキャンセルしてブリンク
-            m_Animator.Play("BlinkDash", 0, 0f);
+            m_Animator.CrossFade("Dash_Start", 0.1f);
             DashProcess().Forget();
             m_IsDash = true;
         }
@@ -201,10 +204,28 @@ public class PlayerController : MonoBehaviour
         bool isGuardPrev = m_IsGuard;
         m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn;
         
-        // ガード開始時に Play
-        if (m_IsGuard && !isGuardPrev)
+        if (m_IsGuard)
         {
-            m_Animator.Play("Guard", 0, 0f);
+            // ガードアニメーションを一度だけ発火
+            if (!m_IsGuardAnimatorTriggered)
+            {
+                m_Animator.CrossFade("ARPG_Samurai_Guard_B", 0.1f);
+                m_IsGuardAnimatorTriggered = true;
+            }
+        }
+        else
+        {
+            // ガード解除時：フラグリセットと移動遷移
+            if (m_IsGuardAnimatorTriggered)
+            {
+                m_IsGuardAnimatorTriggered = false;
+                // 移動入力があればMoveへ遷移
+                if (h != 0 || v != 0)
+                {
+                    m_Animator.CrossFade("Move", 0.1f);
+                    m_IsMovingAnimator = true;
+                }
+            }
         }
 
         if ((m_IsAttack || m_IsGuard) && !m_isBlink)
@@ -212,11 +233,11 @@ public class PlayerController : MonoBehaviour
             m_MoveInput = Vector3.zero;
         }
 
-        // 移動入力がある場合、一度だけ Movement に CrossFade する
+        // 移動入力がある場合、一度だけ Move に CrossFade する
         bool isMoving = (h != 0 || v != 0); // zeroにされる前の入力値で判定
         if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !m_IsMovingAnimator)
         {
-            m_Animator.CrossFade("Movement", 0.1f);
+            m_Animator.CrossFade("Move", 0.1f);
             m_IsMovingAnimator = true;
         }
         else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink)

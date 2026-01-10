@@ -136,6 +136,13 @@ public class ComboSystem : MonoBehaviour
             //リセット処理
             m_ComboNo = 0;
             anim.SetInteger("AttackNo", 0);
+            
+            // 攻撃フラグをリセット
+            if (m_PC != null)
+            {
+                m_PC.m_IsAttack = false;
+            }
+            
             // 待機に戻るための処理が必要な場合はここで CrossFade("Angry") 等を呼ぶ
             // 今回は animator 側の自然な遷移に任せる
         }
@@ -219,5 +226,11 @@ public class ComboSystem : MonoBehaviour
 
         // ルートモーションをONに戻す
         m_Animator.applyRootMotion = true;
+        
+        // 攻撃フラグをリセット
+        if (m_PC != null)
+        {
+            m_PC.m_IsAttack = false;
+        }
     }
 }
