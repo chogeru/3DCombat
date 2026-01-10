@@ -90,6 +90,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector, Tooltip("スティックやキーボードの入力値")]
     public Vector3 m_MoveInput;
 
+    // 移動アニメーション再生中フラグ
+    bool m_IsMovingAnimator = false;
+
     /// <summary>
     /// 初期化処理
     /// </summary>
@@ -134,7 +137,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             // 攻撃中でもダッシュキャンセルしてブリンク
-            m_Animator.CrossFade("BlinkDash", 0.1f);
+            m_Animator.Play("BlinkDash", 0, 0f);
             DashProcess().Forget();
             m_IsDash = true;
         }
@@ -198,15 +201,27 @@ public class PlayerController : MonoBehaviour
         bool isGuardPrev = m_IsGuard;
         m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn;
         
-        // ガード開始時に CrossFade
+        // ガード開始時に Play
         if (m_IsGuard && !isGuardPrev)
         {
-            m_Animator.CrossFade("Guard", 0.1f);
+            m_Animator.Play("Guard", 0, 0f);
         }
 
         if ((m_IsAttack || m_IsGuard) && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;
+        }
+
+        // 移動入力がある場合、一度だけ Movement に CrossFade する
+        bool isMoving = (h != 0 || v != 0); // zeroにされる前の入力値で判定
+        if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !m_IsMovingAnimator)
+        {
+            m_Animator.CrossFade("Movement", 0.1f);
+            m_IsMovingAnimator = true;
+        }
+        else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink)
+        {
+            m_IsMovingAnimator = false;
         }
 
         m_Animator.SetBool("Guard", m_IsGuard);
@@ -226,7 +241,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //待機タイマー処理
-        bool isMoving = m_MoveInput.sqrMagnitude > 0.01f;
+        isMoving = m_MoveInput.sqrMagnitude > 0.01f;
         // 何らかの活動を行っている、または刀を抜いているか判定
         if (isMoving || m_IsAttack || m_isBlink || m_IsGuard || m_IsDash || isWeaponDrawn)
         {

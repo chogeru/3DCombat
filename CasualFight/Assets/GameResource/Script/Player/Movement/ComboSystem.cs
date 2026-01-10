@@ -118,7 +118,7 @@ public class ComboSystem : MonoBehaviour
         string stateName = $"Combo_Attack_02_0{m_ComboNo}";
         Debug.Log($"ComboCount: {stateName} を CrossFade 再生します。");
         
-        m_Animator.CrossFade(stateName, 0.1f, 0, 0f);
+        m_Animator.Play(stateName, 0, 0f);
     }
 
     /// <summary>
