@@ -51,6 +51,9 @@ public class PlayerController : MonoBehaviour
     [Header("ActionController"), SerializeField]
     ActionController m_AC;
 
+    [Header("PlayerHitController"), SerializeField]
+    PlayerHitController m_PHC;
+
     [Header("HP設定")]
     [SerializeField] int m_MaxHP = 100;
     int m_CurrentHP;
@@ -122,6 +125,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // 硬直中は入力を無視
+        if (m_PHC != null && m_PHC.IsStunned) return;
+
         //入力取得
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -294,6 +300,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        // 硬直中は物理移動も停止（念のため）
+        if (m_PHC != null && m_PHC.IsStunned) return;
+
         //ブリンク中はRigidbodyによる移動を停止
         if (m_isBlink)
             return;
