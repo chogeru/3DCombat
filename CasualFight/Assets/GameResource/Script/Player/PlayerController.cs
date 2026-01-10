@@ -146,24 +146,20 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Mouse1))
         {
-            if (m_MoveInput.sqrMagnitude > 0.01f)
+            if (m_MoveInput.sqrMagnitude <= 0.01f)
             {
-                m_IsDash = true;
-            }
-            else
-            {
-                m_IsDash = false;
+                StopDash();
             }
         }
         else if (Input.GetKeyUp(KeyCode.Mouse1))
         {
-            m_IsDash = false;
+            StopDash();
         }
 
         // 移動入力がなくなったらダッシュ解除
         if (m_MoveInput.sqrMagnitude < 0.01f)
         {
-            m_IsDash = false;
+            StopDash();
         }
 
         // 武器装備状態の同期 (InEquipped: 0=未装備, 1=装備)
@@ -278,6 +274,18 @@ public class PlayerController : MonoBehaviour
                 m_Animator.CrossFade("Angry", 0.1f);
                 m_IsStandbyTriggered = true;
             }
+        }
+    }
+
+    void StopDash()
+    {
+        if (m_IsDash)
+        {
+            if (!m_IsAttack && m_MoveInput.sqrMagnitude < 0.01f)
+            {
+                m_Animator.CrossFade("Run_Fast_Stop", 0.1f);
+            }
+            m_IsDash = false;
         }
     }
 

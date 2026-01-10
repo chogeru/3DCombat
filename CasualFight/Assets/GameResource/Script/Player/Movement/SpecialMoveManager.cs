@@ -104,7 +104,7 @@ public class SpecialMoveManager : MonoBehaviour
 
         if (m_Animator != null)
         {
-            m_Animator.CrossFade("GuardBreak", 0.1f);
+            m_Animator.CrossFade("ARPG_Samurai_Guard_B_Break", 0.1f);
         }
 
         StartGuardBreakRecoveryAsync().Forget();
