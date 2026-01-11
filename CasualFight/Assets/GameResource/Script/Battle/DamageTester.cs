@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// デバッグ用
+/// </summary>
 public class DamageTester : MonoBehaviour
 {
     [SerializeField] HPBarController m_HealthBarController;

@@ -1,6 +1,9 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
+/// <summary>
+/// Playerのヒット処理
+/// </summary>
 public class PlayerHitController : MonoBehaviour
 {
     [Header("参照")]

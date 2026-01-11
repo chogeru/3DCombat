@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+/// <summary>
+/// 武器の背中と手の入れ替え処理
+/// </summary>
 public class WeaponSwitch : MonoBehaviour
 {
     [Header("手元の武器オブジェクト"), SerializeField]
