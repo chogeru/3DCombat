@@ -13,8 +13,6 @@ public class ActionController : MonoBehaviour
     [Header("コンボシステム"), SerializeField]
     ComboSystem m_ComboSystem;
 
-    [Header("ガードシステム"), SerializeField]
-    GuardSystem m_GuardSystem;
     // クリックの経過時間
     float m_ClickTimer = 0f;
 
@@ -66,6 +64,13 @@ public class ActionController : MonoBehaviour
                 m_InGuardMode = false;
                 m_ClickTimer = 0f;
             }
+        }
+        else
+        {
+            // ボタンが押されていない間は確実にリセット
+            m_IsPressing = false;
+            m_InGuardMode = false;
+            m_ClickTimer = 0f;
         }
 
         // 一定時間操作がなければコンボをリセット

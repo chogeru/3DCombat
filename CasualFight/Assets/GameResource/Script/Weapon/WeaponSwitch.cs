@@ -95,8 +95,11 @@ public class WeaponSwitch : MonoBehaviour
                 await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
             }
 
-            // 納刀アニメーション CrossFade
-            m_Animator.CrossFade("Sheathe", 0.1f);
+            // 納刀状態へ移行（InEquippedを0にし、アニメーション同士の重複を防ぐ）
+            m_IsWeaponActive = false;
+
+            // 納刀アニメーション Play
+            m_Animator.Play("Idle_to_Idle_Combat", 0, 0f);
         }
         catch (OperationCanceledException)
         {

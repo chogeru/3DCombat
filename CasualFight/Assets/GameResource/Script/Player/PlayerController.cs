@@ -203,7 +203,6 @@ public class PlayerController : MonoBehaviour
         // 攻撃中またはガード中は歩行不可
         bool isGuardBreaking = m_SMM != null && m_SMM.IsGuardBreaking;
         bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
-        bool isGuardPrev = m_IsGuard;
         m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn;
         
         if (m_IsGuard)
@@ -211,7 +210,7 @@ public class PlayerController : MonoBehaviour
             // ガードアニメーションを一度だけ発火
             if (!m_IsGuardAnimatorTriggered)
             {
-                m_Animator.CrossFade("ARPG_Samurai_Guard_B", 0.1f);
+                m_Animator.Play("ARPG_Samurai_Guard_B", 0, 0f);
                 m_IsGuardAnimatorTriggered = true;
             }
         }
@@ -221,10 +220,10 @@ public class PlayerController : MonoBehaviour
             if (m_IsGuardAnimatorTriggered)
             {
                 m_IsGuardAnimatorTriggered = false;
-                // 移動入力があればMoveへ遷移
+                // 移動入力があれば移動アニメーション、なければ待機状態を含んだMoveへ遷移
+                m_Animator.Play("Move", 0, 0f);
                 if (h != 0 || v != 0)
                 {
-                    m_Animator.CrossFade("Move", 0.1f);
                     m_IsMovingAnimator = true;
                 }
             }
@@ -239,7 +238,7 @@ public class PlayerController : MonoBehaviour
         bool isMoving = (h != 0 || v != 0); // zeroにされる前の入力値で判定
         if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !m_IsMovingAnimator)
         {
-            m_Animator.CrossFade("Move", 0.1f);
+            m_Animator.Play("Move", 0, 0f);
             m_IsMovingAnimator = true;
         }
         else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink)
@@ -247,7 +246,6 @@ public class PlayerController : MonoBehaviour
             m_IsMovingAnimator = false;
         }
 
-        m_Animator.SetBool("Guard", m_IsGuard);
 
         //動きのサウンド
         if (m_MoveInput.sqrMagnitude < 0.01)
