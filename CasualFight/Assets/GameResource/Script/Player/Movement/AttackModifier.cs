@@ -1,24 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 /// <summary>
 /// 最も近い敵を探してその方向に向かせる処理
 /// </summary>
 public class AttackModifier : MonoBehaviour
 {
-    [Header("索敵範囲(振り向き用)"), SerializeField]
+    [Header("索敵範囲(敵に近づきはしないが、その場で振り向くだけの対象を探す範囲)"), SerializeField]
     float m_SearchRadius = 3f;
 
-    [Header("ホーミング範囲(移動用)"), SerializeField]
+    [Header("ホーミング範囲(攻撃ボタンを押したとき、どれくらい離れた敵まで自動で移動するかの距離)"), SerializeField]
     float m_HomingRange = 8f;
 
-    [Header("停止距離"), SerializeField]
+    [Header("停止距離(敵からどれくらい離れた位置で止まるかの距離)"), SerializeField]
     float m_StopDistance = 1.5f;
 
     [Header("索敵するタグ")]
     [SerializeField]
     string m_EnemyTag = "Enemy";
+
+    [Header("吸い付き移動にかける時間"), SerializeField]
+    float m_HomingDuration = 0.1f;
+
+    private CancellationTokenSource m_HomingCts;
+
+    private void OnDestroy()
+    {
+        CancelHomingTask();
+    }
+
+    private void CancelHomingTask()
+    {
+        if (m_HomingCts != null)
+        {
+            m_HomingCts.Cancel();
+            m_HomingCts.Dispose();
+            m_HomingCts = null;
+        }
+    }
 
     /// <summary>
     /// 敵の方を向く
@@ -74,27 +96,8 @@ public class AttackModifier : MonoBehaviour
                 Vector3 moveDir = diff.normalized;
                 Vector3 destination = targetPos - (moveDir * m_StopDistance);
 
-                // ルートモーションを一時的にOFF（スクリプトによる移動を優先）
-                if (anim != null)
-                {
-                    anim.applyRootMotion = false;
-                }
-
-                // ルートモーションや物理演算による上書きを防ぐため、
-                // 一時的にCharacterControllerを無効化して直接座標を書き換える
-                if (cc != null)
-                {
-                    cc.enabled = false;
-                    transform.position = destination;
-                    cc.enabled = true;
-                }
-                else
-                {
-                    transform.position = destination;
-                }
-                
-                // 物理演算とトランスフォームの同期を強制（埋まり防止と即時反映のため）
-                Physics.SyncTransforms();
+                // 滑らかな移動を開始
+                StartSmoothHoming(destination, cc, anim).Forget();
             }
 
             // 移動後に敵の方向を向く
@@ -114,6 +117,65 @@ public class AttackModifier : MonoBehaviour
             {
                 transform.rotation = Quaternion.LookRotation(diff);
             }
+        }
+    }
+
+    /// <summary>
+    /// 目標地点まで滑らかに移動する
+    /// </summary>
+    private async UniTaskVoid StartSmoothHoming(Vector3 destination, CharacterController cc, Animator anim)
+    {
+        CancelHomingTask();
+        m_HomingCts = new CancellationTokenSource();
+        CancellationToken token = m_HomingCts.Token;
+
+        Vector3 startPos = transform.position;
+        float elapsed = 0f;
+
+        try
+        {
+            // 移動開始時にRootMotionを一時停止
+            if (anim != null) anim.applyRootMotion = false;
+
+            while (elapsed < m_HomingDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / m_HomingDuration);
+
+                // 線形補間
+                Vector3 targetPos = Vector3.Lerp(startPos, destination, t);
+                Vector3 moveAmount = targetPos - transform.position;
+
+                if (cc != null)
+                {
+                    cc.Move(moveAmount);
+                }
+                else
+                {
+                    transform.position = targetPos;
+                }
+
+                await UniTask.Yield(token);
+            }
+
+            // 最後に位置を微調整
+            if (cc != null)
+            {
+                cc.Move(destination - transform.position);
+            }
+            else
+            {
+                transform.position = destination;
+            }
+        }
+        catch (System.OperationCanceledException)
+        {
+            // キャンセル時は中断
+        }
+        finally
+        {
+            // RootMotionを戻す判断はPlayerController側のアニメーション終了などで行われるが、
+            // ここでも念のため一旦終了処理としての扱いに留める
         }
     }
 }

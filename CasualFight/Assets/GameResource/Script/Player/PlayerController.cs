@@ -1,4 +1,6 @@
 using Cysharp.Threading.Tasks;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -42,8 +44,8 @@ public class PlayerController : MonoBehaviour
     [Header("WeaponSwitch"), SerializeField]
     WeaponSwitch m_WeaponSwitch;
 
-    [Header("SpecialMoveManager"), SerializeField]
-    SpecialMoveManager m_SMM;
+    [Header("AbilityAttackSystem"), SerializeField]
+    AbilityAttackSystem m_AAS;
 
     [Header("GuardSystem"), SerializeField]
     GuardSystem m_GS;
@@ -88,7 +90,6 @@ public class PlayerController : MonoBehaviour
     bool m_IsGuard = false;
 
     //その他プレイヤー情報
-    Rigidbody m_Rb;
     Camera m_MainCamera;
     [HideInInspector, Tooltip("スティックやキーボードの入力値")]
     public Vector3 m_MoveInput;
@@ -105,8 +106,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         //プレイヤー情報のコンポーネント
-        m_Rb = GetComponent<Rigidbody>();
-        m_Rb.interpolation = RigidbodyInterpolation.Interpolate;
         m_MainCamera = Camera.main;
 
         //ダッシュ値代入
@@ -201,9 +200,10 @@ public class PlayerController : MonoBehaviour
         }
 
         // 攻撃中またはガード中は歩行不可
-        bool isGuardBreaking = m_SMM != null && m_SMM.IsGuardBreaking;
+        bool isGuardBreaking = m_GS != null && m_GS.IsGuardBreaking;
         bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
-        m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn;
+        bool canGuard = m_GS != null && m_GS.CanGuard;
+        m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn && canGuard;
         
         if (m_IsGuard)
         {
@@ -220,28 +220,32 @@ public class PlayerController : MonoBehaviour
             if (m_IsGuardAnimatorTriggered)
             {
                 m_IsGuardAnimatorTriggered = false;
-                // 移動入力があれば移動アニメーション、なければ待機状態を含んだMoveへ遷移
-                m_Animator.Play("Move", 0, 0f);
-                if (h != 0 || v != 0)
+
+                // ガードブレイク中でなければ移動遷移（ブレイク中はブレイクアニメを優先させる）
+                if (!isGuardBreaking)
                 {
-                    m_IsMovingAnimator = true;
+                    m_Animator.Play("Move", 0, 0f);
+                    if (m_MoveInput.sqrMagnitude > 0.01f)
+                    {
+                        m_IsMovingAnimator = true;
+                    }
                 }
             }
         }
 
-        if ((m_IsAttack || m_IsGuard) && !m_isBlink)
+        if ((m_IsAttack || m_IsGuard || isGuardBreaking) && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;
         }
 
-        // 移動入力がある場合、一度だけ Move に CrossFade する
+        // 移動入力がある場合、一度だけ Move に Play する
         bool isMoving = (h != 0 || v != 0); // zeroにされる前の入力値で判定
-        if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !m_IsMovingAnimator)
+        if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !isGuardBreaking && !m_IsMovingAnimator)
         {
             m_Animator.Play("Move", 0, 0f);
             m_IsMovingAnimator = true;
         }
-        else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink)
+        else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink || isGuardBreaking)
         {
             m_IsMovingAnimator = false;
         }
@@ -345,8 +349,6 @@ public class PlayerController : MonoBehaviour
         //強制リセット
         m_CS.ForceResetCombo();
 
-        //ブリンク中だけ速度をリセットして干渉を防ぐ
-        m_Rb.velocity = Vector3.zero;
 
         float timer = 0f;
 

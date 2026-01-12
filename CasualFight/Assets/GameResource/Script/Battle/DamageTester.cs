@@ -7,7 +7,7 @@ using UnityEngine;
 public class DamageTester : MonoBehaviour
 {
     [SerializeField] HPBarController m_HealthBarController;
-    [SerializeField] SpecialMoveManager m_SMM;
+    [SerializeField] GuardSystem m_GS;
 
     private float m_CurrentHPPercent = 1.0f; // 100%
 
@@ -40,9 +40,9 @@ public class DamageTester : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            if (m_SMM != null)
+            if (m_GS != null)
             {
-                m_SMM.AddGauge(100f);
+                m_GS.AddGauge(100f);
                 Debug.Log("Debug: Special Gauge Maxed Out via L key.");
             }
         }

@@ -9,7 +9,6 @@ public class PlayerHitController : MonoBehaviour
     [Header("参照")]
     [SerializeField] PlayerController m_PC;
     [SerializeField] Animator m_Animator;
-    [SerializeField] Rigidbody m_Rb;
 
     [Header("設定")]
     [SerializeField] float m_StunDuration = 0.5f;
@@ -63,10 +62,6 @@ public class PlayerHitController : MonoBehaviour
     private async UniTaskVoid StartHitStop()
     {
         // 動作停止開始
-        if (m_Rb != null)
-        {
-            m_Rb.velocity = Vector3.zero;
-        }
         
         IsStunned = true;
 
