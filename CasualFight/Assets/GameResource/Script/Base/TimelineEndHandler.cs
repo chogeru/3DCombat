@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -8,11 +9,14 @@ using UnityEngine.Playables;
 /// </summary>
 public class TimelineEndHandler : MonoBehaviour
 {
-    [Header("プレイヤーオブジェクト"),SerializeField]
+    [Header("プレイヤーオブジェクト"), SerializeField]
     PlayableDirector m_PlayableDirector;
 
     [Header("シネマシーン"), SerializeField]
     GameObject m_Cinema;
+
+    [Header("プレイヤーのUI"), SerializeField]
+    GameObject m_Canvas;
 
     [Header("プレイヤーの機能（コンポーネント）")]
     [SerializeField] PlayerController m_PC;
@@ -29,20 +33,23 @@ public class TimelineEndHandler : MonoBehaviour
     [SerializeField]
     CharacterController m_CC;
 
+    [SerializeField]
+    AbilityAttackSystem m_AA;
 
     private void Start()
     {
         //初期時OFF
+        m_Canvas.SetActive(false);
         m_PC.enabled = false;
         m_AC.enabled = false;
         m_PG.enabled = false;
         m_SC.enabled = false;
         m_CC.enabled = false;
+        m_AA.enabled = false;
     }
 
     private void OnEnable()
     {
-        Debug.Log("2. イベント登録（+=）を行いました。");
         //イベント終了時登録
         m_PlayableDirector.stopped += OnTimelineStopped;
     }
@@ -50,7 +57,7 @@ public class TimelineEndHandler : MonoBehaviour
     private void OnDisable()
     {
         //オブジェクトが破棄される時にイベント登録を解除(メモリリークの防止)
-        m_PlayableDirector.stopped-=OnTimelineStopped;
+        m_PlayableDirector.stopped -= OnTimelineStopped;
     }
 
     /// <summary>
@@ -59,18 +66,18 @@ public class TimelineEndHandler : MonoBehaviour
     /// <param name="playabledirector"></param>
     void OnTimelineStopped(PlayableDirector playabledirector)
     {
-        Debug.Log("Timelineの停止を検知しました！");
         //再生が終わったDirectorが指定のものであるか確認
-        if (m_PlayableDirector==playabledirector)
+        if (m_PlayableDirector == playabledirector)
         {
-            Debug.Log("指定されたDirectorと一致したので、オブジェクトを切り替えます");
             //ゲームスタートできるようにON
             m_Cinema.SetActive(false);
+            m_Canvas.SetActive(true);
             m_PC.enabled = true;
             m_AC.enabled = true;
             m_PG.enabled = true;
             m_SC.enabled = true;
             m_CC.enabled = true;
+            m_AA.enabled = true;
         }
     }
 }

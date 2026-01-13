@@ -30,6 +30,8 @@ public class DamageTester : MonoBehaviour
         }
     }
 
+    [SerializeField] AbilityAttackSystem m_AbilityAttackSystem;
+
     // スペースキー以外の「D」キーなどでもテストできるようにする場合
     void Update()
     {
@@ -44,6 +46,14 @@ public class DamageTester : MonoBehaviour
             {
                 m_GS.AddGauge(100f);
                 Debug.Log("Debug: Special Gauge Maxed Out via L key.");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            if (m_AbilityAttackSystem != null)
+            {
+                m_AbilityAttackSystem.MaximizeEnergy();
             }
         }
     }

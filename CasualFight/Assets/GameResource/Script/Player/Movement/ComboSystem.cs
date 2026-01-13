@@ -30,6 +30,9 @@ public class ComboSystem : MonoBehaviour
     [Header("プレイヤーオブジェクト"), SerializeField]
     PlayerController m_PC;
 
+    [Header("アビリティシステム"), SerializeField]
+    AbilityAttackSystem m_AbilityAttackSystem;
+
     [HideInInspector,Tooltip("クリックされたか判定フラグ")]
     public bool m_InputReserved = false;
 
@@ -42,6 +45,12 @@ public class ComboSystem : MonoBehaviour
     /// </summary>
     public void InputAttack()
     {
+        // アビリティ使用中（クールダウン中）は通常攻撃不可
+        if (m_AbilityAttackSystem != null && m_AbilityAttackSystem.IsAnyAbilityActive())
+        {
+            return;
+        }
+
         // 最後にクリックした時間を更新（タイムアウト判定用）
         m_ClickLastTime = Time.time;
 

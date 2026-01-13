@@ -821,19 +821,19 @@ AnimatorStateMachine:
     m_Position: {x: 612, y: 36, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102113711233472208}
-    m_Position: {x: 612, y: -48, z: 0}
+    m_Position: {x: 610, y: -50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102797476126612028}
     m_Position: {x: 864, y: -48, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102004040797145186}
-    m_Position: {x: 912, y: 48, z: 0}
+    m_Position: {x: 910, y: 50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102506080104051386}
     m_Position: {x: 912, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102380626254403724}
-    m_Position: {x: 928.1627, y: 219.72694, z: 0}
+    m_Position: {x: 940, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102941530246767678}
     m_Position: {x: 876, y: 312, z: 0}
