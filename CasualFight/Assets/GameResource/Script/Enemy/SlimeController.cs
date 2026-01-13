@@ -40,7 +40,7 @@ namespace Enemy
                 m_Animator = GetComponent<Animator>();
             }
 
-            // プレイヤーを自動検索（タグまたは型で検索）
+            // プレイヤーを検索（タグまたは型で検索）
             if (m_Target == null)
             {
                 var player = GameObject.FindGameObjectWithTag("Player");
@@ -86,10 +86,10 @@ namespace Enemy
             if (distance <= m_DetectRange)
             {
                 ChangeState(SlimeState.Chase);
-                // BattleManagerに戦闘開始を通知
+                // BattleManagerに戦闘開始通知
                 if (BattleManager.m_BattleInstance != null)
                 {
-                    BattleManager.m_BattleInstance.EnemyFoundPlayer();
+                    BattleManager.m_BattleInstance.EnemyFoundPlayer(transform);
                 }
             }
         }
@@ -111,18 +111,18 @@ namespace Enemy
                 return;
             }
 
-            // 追跡範囲外なら諦める
-            if (distance > m_DetectRange * 1.5f) // 追跡解除は少し広めに
+            // 追跡範囲外なら戻る
+            if (distance > m_DetectRange * 1.5f) // 追跡解除は少し広め
             {
                 ChangeState(SlimeState.Idle);
                 if (BattleManager.m_BattleInstance != null)
                 {
-                    BattleManager.m_BattleInstance.EnemyLostPlayer();
+                    BattleManager.m_BattleInstance.EnemyLostPlayer(transform);
                 }
                 return;
             }
 
-            // 移動処理 (NavMeshAgentを使う場合はAgent.SetDestination)
+            // 移動処理（NavMeshAgent使う場合はAgent.SetDestination）
             // ここでは簡易的にTransform移動
             Vector3 direction = (m_Target.position - transform.position).normalized;
             direction.y = 0; // 高さは変えない
@@ -192,10 +192,10 @@ namespace Enemy
 
             // HP処理など...
             
-            // 死亡判定（仮）
+            // 死亡処理（例）
             // m_IsDead = true;
             // if (m_Animator != null) m_Animator.SetTrigger("Die");
-            // if (BattleManager.m_BattleInstance != null) BattleManager.m_BattleInstance.EnemyLostPlayer();
+            // if (BattleManager.m_BattleInstance != null) BattleManager.m_BattleInstance.EnemyLostPlayer(transform);
         }
 
         private void OnDrawGizmosSelected()

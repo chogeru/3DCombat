@@ -59,14 +59,17 @@ public class AbilityAttackSystem : MonoBehaviour
             m_IsUlt = true;
         }
 
+        // ダッシュ中は発動不可
+        bool isDashing = m_PC != null && m_PC.m_IsDash;
+
         //Eキーを押したらアビリティ発動
-        if (Input.GetKeyDown(KeyCode.E) && !m_Ability.m_IsCoolingDown && m_WeaponSwitch.IsWeaponDrawn)
+        if (Input.GetKeyDown(KeyCode.E) && !m_Ability.m_IsCoolingDown && m_WeaponSwitch.IsWeaponDrawn && !isDashing)
         {
             AbilityAttack();
         }
 
         //Qキーを押したら必殺技発動
-        if (Input.GetKeyDown(KeyCode.Q) && !m_Ult.m_IsCoolingDown&&m_IsUlt && m_WeaponSwitch.IsWeaponDrawn)
+        if (Input.GetKeyDown(KeyCode.Q) && !m_Ult.m_IsCoolingDown && m_IsUlt && m_WeaponSwitch.IsWeaponDrawn && !isDashing)
         {
             UltimateAttack();
         }
@@ -89,6 +92,9 @@ public class AbilityAttackSystem : MonoBehaviour
             m_Animator.Play(m_SpeedSlash);
             // 移動制限（攻撃フラグON）
             if (m_PC != null) m_PC.m_IsAttack = true;
+            
+            // アニメーション終了後にフラグ解除
+            WaitForAnimationEnd(m_SpeedSlash).Forget();
         }
 
         AbilityCoolTimer(m_Ability).Forget();
@@ -109,9 +115,35 @@ public class AbilityAttackSystem : MonoBehaviour
             m_Animator.Play(m_UltraSlash);
             // 移動制限（攻撃フラグON）
             if (m_PC != null) m_PC.m_IsAttack = true;
+            
+            // アニメーション終了後にフラグ解除
+            WaitForAnimationEnd(m_UltraSlash).Forget();
         }
 
         AbilityCoolTimer(m_Ult).Forget();
+    }
+
+    /// <summary>
+    /// アニメーション終了を待ってフラグを解除する
+    /// </summary>
+    async UniTaskVoid WaitForAnimationEnd(string stateName)
+    {
+        // 1フレーム待ってアニメーション状態を取得
+        await UniTask.Yield();
+        
+        // 現在のアニメーション状態を取得
+        AnimatorStateInfo stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+        
+        // アニメーション長を取得して待機
+        float animLength = stateInfo.length;
+        await UniTask.Delay(TimeSpan.FromSeconds(animLength));
+        
+        // 攻撃フラグ解除
+        if (m_PC != null)
+        {
+            m_PC.m_IsAttack = false;
+            Debug.Log($"{stateName} アニメーション終了：攻撃フラグを解除しました。");
+        }
     }
 
     /// <summary>
@@ -158,7 +190,7 @@ public class AbilityAttackSystem : MonoBehaviour
     void AddEnergy(float amount)
     {
         //溢れないように
-        m_CurrentEnergy += Mathf.Clamp(m_CurrentEnergy + amount, 0, m_MaximumEnergy);
+        m_CurrentEnergy = Mathf.Clamp(m_CurrentEnergy + amount, 0, m_MaximumEnergy);
         UpdateEnergyUI();
     }
 

@@ -70,5 +70,14 @@ public class PlayerHitController : MonoBehaviour
 
         // 動作再開
         IsStunned = false;
+        
+        // 硬直解除後、移動入力があれば移動アニメーションへ遷移
+        if (m_Animator != null && m_PC != null)
+        {
+            if (m_PC.m_MoveInput.sqrMagnitude > 0.01f)
+            {
+                m_Animator.CrossFade("Move", 0.1f);
+            }
+        }
     }
 }

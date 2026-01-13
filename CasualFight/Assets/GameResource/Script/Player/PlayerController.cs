@@ -142,9 +142,20 @@ public class PlayerController : MonoBehaviour
         m_MoveInput = (v * camForward + h * camRight).normalized;
 
         // 右クリック入力処理 (BlinkDash と Dash)
+        // 攻撃中でもダッシュでキャンセル可能
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            // 攻撃中でもダッシュキャンセルしてブリンク
+            // ブリンク開始前にフラグを立てて移動アニメーションの上書きを防ぐ
+            m_isBlink = true;
+            
+            // 攻撃中ならキャンセル
+            if (m_IsAttack)
+            {
+                m_IsAttack = false;
+                m_CS?.ForceResetCombo();
+            }
+            
+            // ダッシュ開始
             m_Animator.CrossFade("Dash_Start", 0.1f);
             DashProcess().Forget();
             m_IsDash = true;
@@ -225,10 +236,8 @@ public class PlayerController : MonoBehaviour
                 if (!isGuardBreaking)
                 {
                     m_Animator.Play("Move", 0, 0f);
-                    if (m_MoveInput.sqrMagnitude > 0.01f)
-                    {
-                        m_IsMovingAnimator = true;
-                    }
+                    // 移動入力があればフラグを立てて重複Playを防ぐ
+                    m_IsMovingAnimator = true;
                 }
             }
         }
@@ -240,12 +249,13 @@ public class PlayerController : MonoBehaviour
 
         // 移動入力がある場合、一度だけ Move に Play する
         bool isMoving = (h != 0 || v != 0); // zeroにされる前の入力値で判定
-        if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !isGuardBreaking && !m_IsMovingAnimator)
+        // ダッシュ中やブリンク中は移動アニメーションを再生しない（ダッシュアニメーションを優先）
+        if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !m_IsDash && !isGuardBreaking && !m_IsMovingAnimator)
         {
             m_Animator.Play("Move", 0, 0f);
             m_IsMovingAnimator = true;
         }
-        else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink || isGuardBreaking)
+        else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink || m_IsDash || isGuardBreaking)
         {
             m_IsMovingAnimator = false;
         }
@@ -338,10 +348,7 @@ public class PlayerController : MonoBehaviour
 
     async UniTaskVoid DashProcess()
     {
-        if (m_isBlink)
-            return;
-
-        m_isBlink = true;
+        // 注意: m_isBlink は呼び出し側 (Update) で既に true に設定されている
 
         //攻撃中ならキャンセル
         m_IsAttack = false;
@@ -375,6 +382,13 @@ public class PlayerController : MonoBehaviour
             await UniTask.WaitForFixedUpdate();
         }
         m_isBlink = false;
+        
+        // ブリンク終了後、ダッシュ継続中であればダッシュアニメーションへ遷移
+        if (m_IsDash && m_Animator != null)
+        {
+            // Dashパラメータがtrueの場合、Animatorが自動遷移するが、確実に遷移させるためCrossFade
+            m_Animator.CrossFade("Move", 0.1f);
+        }
     }
 
     /// <summary>

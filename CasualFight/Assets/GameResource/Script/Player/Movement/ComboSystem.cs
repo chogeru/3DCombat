@@ -187,6 +187,12 @@ public class ComboSystem : MonoBehaviour
         if (m_Animator != null)
         {
             m_Animator.applyRootMotion = true;
+            
+            // 移動入力があれば移動アニメーション、なければ待機への遷移をAnimatorに任せる
+            if (m_PC != null && m_PC.m_MoveInput.sqrMagnitude > 0.01f)
+            {
+                m_Animator.CrossFade("Move", 0.1f);
+            }
         }
 
         // 攻撃終了を通知
