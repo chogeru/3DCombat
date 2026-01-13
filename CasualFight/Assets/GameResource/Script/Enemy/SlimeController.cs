@@ -18,20 +18,27 @@ namespace Enemy
         }
 
         [Header("State")]
-        [SerializeField] private SlimeState m_CurrentState = SlimeState.Idle;
+        [SerializeField]
+        SlimeState m_CurrentState = SlimeState.Idle;
 
         [Header("References")]
-        [SerializeField] private Animator m_Animator;
-        [SerializeField] private Transform m_Target; // プレイヤーのTransform
+        [SerializeField]
+        Animator m_Animator;
+        [Header("プレイヤーのTransform"),SerializeField]
+        Transform m_Target; 
 
         [Header("Settings")]
-        [SerializeField] private float m_DetectRange = 10f;
-        [SerializeField] private float m_AttackRange = 2f;
-        [SerializeField] private float m_MoveSpeed = 3f;
-        [SerializeField] private float m_AttackCooldown = 2f;
+        [SerializeField]
+        float m_DetectRange = 10f;
+        [SerializeField]
+        float m_AttackRange = 2f;
+        [SerializeField]
+        float m_MoveSpeed = 3f;
+        [SerializeField]
+        float m_AttackCooldown = 2f;
 
-        private float m_LastAttackTime;
-        private bool m_IsDead = false;
+        float m_LastAttackTime;
+        bool m_IsDead = false;
 
         private void Start()
         {
@@ -43,7 +50,7 @@ namespace Enemy
             // プレイヤーを検索（タグまたは型で検索）
             if (m_Target == null)
             {
-                var player = GameObject.FindGameObjectWithTag("Player");
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
                 if (player != null)
                 {
                     m_Target = player.transform;
@@ -51,7 +58,7 @@ namespace Enemy
                 else
                 {
                     // PlayerController型で検索
-                    var playerController = FindObjectOfType<PlayerController>();
+                    PlayerController playerController = FindObjectOfType<PlayerController>();
                     if (playerController != null)
                     {
                         m_Target = playerController.transform;
