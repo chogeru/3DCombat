@@ -147,14 +147,14 @@ public class PlayerController : MonoBehaviour
         {
             // ブリンク開始前にフラグを立てて移動アニメーションの上書きを防ぐ
             m_isBlink = true;
-            
+
             // 攻撃中ならキャンセル
             if (m_IsAttack)
             {
                 m_IsAttack = false;
                 m_CS?.ForceResetCombo();
             }
-            
+
             // ダッシュ開始
             m_Animator.CrossFade("Dash_Start", 0.1f);
             DashProcess().Forget();
@@ -215,7 +215,7 @@ public class PlayerController : MonoBehaviour
         bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
         bool canGuard = m_GS != null && m_GS.CanGuard;
         m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn && canGuard;
-        
+
         if (m_IsGuard)
         {
             // ガードアニメーションを一度だけ発火
@@ -249,6 +249,17 @@ public class PlayerController : MonoBehaviour
 
         // 移動入力がある場合、一度だけ Move に Play する
         bool isMoving = (h != 0 || v != 0); // zeroにされる前の入力値で判定
+
+        // 【修正】実際のステートが "Move" でない場合、フラグをリセットして再生を促す（自己修復）
+        if (m_IsMovingAnimator)
+        {
+            var currentState = m_Animator.GetCurrentAnimatorStateInfo(0);
+            if (!currentState.IsName("Move") && !m_Animator.IsInTransition(0))
+            {
+                m_IsMovingAnimator = false;
+            }
+        }
+
         // ダッシュ中やブリンク中は移動アニメーションを再生しない（ダッシュアニメーションを優先）
         if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !m_IsDash && !isGuardBreaking && !m_IsMovingAnimator)
         {
@@ -381,13 +392,16 @@ public class PlayerController : MonoBehaviour
             //1フレーム待機
             await UniTask.WaitForFixedUpdate();
         }
+
         m_isBlink = false;
-        
-        // ブリンク終了後、ダッシュ継続中であればダッシュアニメーションへ遷移
-        if (m_IsDash && m_Animator != null)
+
+        // ブリンク終了後、ダッシュ継続中かどうかにかかわらず、攻撃中でなければ Move に戻してブレンドツリーを有効化する
+        // これにより「最後のポーズで固まる」現象を防ぐ
+        if (m_Animator != null && !m_IsAttack)
         {
-            // Dashパラメータがtrueの場合、Animatorが自動遷移するが、確実に遷移させるためCrossFade
             m_Animator.CrossFade("Move", 0.1f);
+            // Move再生中フラグを立てておくことで Update での重複 Play を防ぐ
+            m_IsMovingAnimator = true;
         }
     }
 
