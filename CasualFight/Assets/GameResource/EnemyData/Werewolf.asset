@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87a128f7df74dbf45a8db2a8eed698ec, type: 3}
-  m_Name: Specter
+  m_Name: Werewolf
   m_EditorClassIdentifier: 
-  m_EnemyName: Specter
+  m_EnemyName: Werewolf
   m_MaxHp: 15
   m_MoveSpeed: 5
   m_AttackRange: 5
   m_SearchRange: 5
-  m_IdleAnimName: IdleNormal
-  m_MoveAnimName: WalkFWD
-  m_AttackAnimName: Attack02
-  m_HitAnimName: GetHit
-  m_SearchAnimName: SenseSomethingRPT
-  m_DieAnimName: Die
+  m_IdleAnimName: Werewolf_IdleNormal
+  m_MoveAnimName: Werewolf_WalkFWD
+  m_AttackAnimName: Werewolf_Attack02
+  m_HitAnimName: Werewolf_GetHit
+  m_SearchAnimName: Werewolf_SenseSomethingRPT
+  m_DieAnimName: Werewolf_Die

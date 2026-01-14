@@ -41,6 +41,12 @@ namespace StateMachineAI
         //PlayerのTransform
         public Transform m_Player { get; set; }
 
+        //自分のHP
+        public int m_EnemyHP;
+
+        //死亡判定フラグ
+        public bool m_IsDead = false;
+
         /// <summary>
         /// クラス名を元にステートを生成して追加する
         /// </summary>
@@ -102,15 +108,26 @@ namespace StateMachineAI
         }
 
         /// <summary>
-        /// アニメーションイベントから呼び出される攻撃判定用関数
+        /// ダメージ処理
         /// </summary>
-        public void AnimEvent_AttackHit()
+        /// <param name="damage"></param>
+        public void TakeDamage(int damage)
         {
-            // 現在のステートが State_Attack なら判定処理を実行
-            // State_Attack クラスにキャストしてメソッドを呼ぶ
-            if (stateMachine != null && stateMachine.CurrentState is State_Attack attackState)
+            if(m_IsDead)
+                return;
+
+            //減算処理
+            m_EnemyHP = Mathf.Clamp(m_EnemyHP - damage, 0, m_EnemyData.m_MaxHp);
+
+            //HPが0になると
+            if(m_EnemyHP==0)
             {
-                attackState.OnCheckHit();
+                ChangeState(AIState_Type.Die);
+            }
+            else
+            {
+                //0じゃなければ
+                ChangeState(AIState_Type.Hit);
             }
         }
 
@@ -119,12 +136,26 @@ namespace StateMachineAI
         /// </summary>
         public void AISetUp()
         {
-
             Debug.Log($"{nameof(AISetUp)}起動", this);
-            //ステートマシACーンを自身として設定
+            
+            // コンポーネントの取得
+            m_Animator = GetComponent<Animator>();
+            m_Rigidbody = GetComponent<Rigidbody>();
+            
+            // EnemyDataのnullチェック
+            if (m_EnemyData == null)
+            {
+                Debug.LogError("m_EnemyData が設定されていません！", this);
+                return;
+            }
+            
+            //ステートマシーンを自身として設定
             stateMachine = new StateMachine<AITester>();
-
-            //初期起動時は、「???」に移行させる
+            
+            //HP代入
+            m_EnemyHP = m_EnemyData.m_MaxHp;
+            
+            //初期起動時は、Idleに移行させる
             ChangeState(AIState_Type.Idle);
         }
     }

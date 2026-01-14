@@ -15,8 +15,8 @@ TagManager:
   - Environment
   - WorldSpace
   - Weapon
-  - 
-  - 
+  - Enemy
+  - Player
   - 
   - 
   - 

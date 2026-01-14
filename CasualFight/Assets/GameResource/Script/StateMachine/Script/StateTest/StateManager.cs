@@ -42,7 +42,6 @@ public class StateManager : MonoBehaviour
         //キャラクターオブジェクトからステートマシン取得
         AITester m_StateM = m_Chara.GetComponent<AITester>();
         m_StateM.m_Player = m_Player;
-
         //指定したタイプのリストがない場合通知する
         if (m_Ainame[m_TypeNo].m_AIName.Count == 0)
         {
