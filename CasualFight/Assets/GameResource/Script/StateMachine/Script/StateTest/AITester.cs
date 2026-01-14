@@ -29,10 +29,18 @@ namespace StateMachineAI
     public class AITester 
         : StatefulObjectBase<AITester, AIState_Type>
     {
+        //自分のアニメーター
         public Animator m_Animator { get; private set; }
+
+        //自分のRigidbody 
         public Rigidbody m_Rigidbody { get; private set; }
 
+        [Header("敵の固有設定データ")]
+        public EnemyData m_EnemyData;
+
+        //PlayerのTransform
         public Transform m_Player { get; set; }
+
         /// <summary>
         /// クラス名を元にステートを生成して追加する
         /// </summary>
@@ -90,6 +98,19 @@ namespace StateMachineAI
             {
                 Debug.LogError($"エラーが発生しました。: {ex.Message}");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// アニメーションイベントから呼び出される攻撃判定用関数
+        /// </summary>
+        public void AnimEvent_AttackHit()
+        {
+            // 現在のステートが State_Attack なら判定処理を実行
+            // State_Attack クラスにキャストしてメソッドを呼ぶ
+            if (stateMachine != null && stateMachine.CurrentState is State_Attack attackState)
+            {
+                attackState.OnCheckHit();
             }
         }
 

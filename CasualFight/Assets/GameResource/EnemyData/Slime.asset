@@ -17,6 +17,9 @@ MonoBehaviour:
   m_MoveSpeed: 1
   m_AttackRange: 5
   m_SearchRange: 5
-  m_IdleAnimName: 
-  m_AttackAnimName: 
-  m_DieAnimName: 
+  m_IdleAnimName: IdleNormal
+  m_MoveAnimName: WalkFWD
+  m_AttackAnimName: Attack02
+  m_HitAnimName: GetHit
+  m_SearchAnimName: SenseSomethingRPT
+  m_DieAnimName: Die

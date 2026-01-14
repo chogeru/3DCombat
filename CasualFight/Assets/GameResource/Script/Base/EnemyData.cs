@@ -25,8 +25,14 @@ public class EnemyData : ScriptableObject
 
     [Header("待機アニメ名")]
     public string m_IdleAnimName;
+    [Header("移動アニメ名")]
+    public string m_MoveAnimName;
     [Header("攻撃アニメ名")]
     public string m_AttackAnimName;
+    [Header("ヒットアニメ名")]
+    public string m_HitAnimName;
+    [Header("索敵アニメ名")]
+    public string m_SearchAnimName;
     [Header("死亡アニメ名")]
     public string m_DieAnimName;
 }
