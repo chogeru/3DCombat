@@ -14,7 +14,7 @@ namespace StateMachineAI
     /// ここでステートを登録していない場合、
     /// 該当する行動が全くでなきい。
     /// </summary>
-    /// 
+    ///
     public enum AIState_Type
     {
         Idle,//待機
@@ -26,13 +26,13 @@ namespace StateMachineAI
     }
 
 
-    public class AITester 
+    public class AITester
         : StatefulObjectBase<AITester, AIState_Type>
     {
         //自分のアニメーター
         public Animator m_Animator { get; private set; }
 
-        //自分のRigidbody 
+        //自分のRigidbody
         public Rigidbody m_Rigidbody { get; private set; }
 
         [Header("敵の固有設定データ")]
@@ -43,6 +43,9 @@ namespace StateMachineAI
 
         //自分のHP
         public int m_EnemyHP;
+
+        //ヒット時にエフェクトを出す場所
+        public Transform m_HitPosition;
 
         //死亡判定フラグ
         public bool m_IsDead = false;
@@ -76,7 +79,7 @@ namespace StateMachineAI
                 // インスタンスを生成
                 System.Reflection.ConstructorInfo Constructor =
                     StateType.GetConstructor(new[] { typeof(AITester) });
-                
+
 
                 if (Constructor == null)
                 {
@@ -84,7 +87,7 @@ namespace StateMachineAI
                     return true;
                 }
 
-                State<AITester> StateInstance = 
+                State<AITester> StateInstance =
                     Constructor.Invoke(new object[] { this }) as State<AITester>;
 
                 if (StateInstance != null)
@@ -137,24 +140,24 @@ namespace StateMachineAI
         public void AISetUp()
         {
             Debug.Log($"{nameof(AISetUp)}起動", this);
-            
+
             // コンポーネントの取得
             m_Animator = GetComponent<Animator>();
             m_Rigidbody = GetComponent<Rigidbody>();
-            
+
             // EnemyDataのnullチェック
             if (m_EnemyData == null)
             {
                 Debug.LogError("m_EnemyData が設定されていません！", this);
                 return;
             }
-            
+
             //ステートマシーンを自身として設定
             stateMachine = new StateMachine<AITester>();
-            
+
             //HP代入
             m_EnemyHP = m_EnemyData.m_MaxHp;
-            
+
             //初期起動時は、Idleに移行させる
             ChangeState(AIState_Type.Idle);
         }

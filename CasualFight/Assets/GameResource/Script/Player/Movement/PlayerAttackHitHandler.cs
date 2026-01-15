@@ -14,14 +14,20 @@ public class PlayerAttackHitHandler : MonoBehaviour
     [Header("判定させるレイヤー"), SerializeField]
     LayerMask m_LayerMaskEnemy;
 
-    [Header("コンボ順に")]
+    [Header("コンボ順に(段数ごと)")]
     [Header("判定の大きさ(半径)"), SerializeField]
     float[] m_Radii = { 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 2.5f };
     [Header("判定の大きさ(奥行)"), SerializeField]
     float[] m_Distance = { 1.2f, 1.2f, 1.2f, 1.2f, 1.2f, 1.5f };
 
     [Header("与えるダメージ"),SerializeField]
-    int[] m_Damages = { 10, 10, 10, 10, 10, 30 }; // 段数ごとのダメージ
+    int[] m_Damages = { 10, 10, 10, 10, 10, 30 };
+
+    [Header("ヒットしたときに表示させるエフェクト"), SerializeField]
+    GameObject m_HitEffectPrefab;
+
+    //ヒットストップの複数ヒットしたときの重複対策フラグ
+    bool m_IsHitStopping= false;
 
     /// <summary>
     /// アニメーションイベントで呼ばれる当たり判定処理
@@ -60,6 +66,9 @@ public class PlayerAttackHitHandler : MonoBehaviour
         //ダメージ処理
         target.TakeDamage(m_Damages[damageIndex]);
 
+        //エフェクトを生成
+        ShowHitEffect(target);
+
         //ヒットストップ処理
         HitStopAsync(0.06f).Forget();
 
@@ -73,6 +82,13 @@ public class PlayerAttackHitHandler : MonoBehaviour
     /// <returns></returns>
     async UniTaskVoid HitStopAsync(float time)
     {
+        //すでにヒットストップ中ならスキップ
+        if (m_IsHitStopping)
+            return;
+
+        //フラグON
+        m_IsHitStopping = true;
+
         //ゲーム時間スロー
         Time.timeScale = 0.05f;
 
@@ -81,6 +97,24 @@ public class PlayerAttackHitHandler : MonoBehaviour
 
         //元に戻す
         Time.timeScale = 1.0f;
+
+        //フラグ解除
+        m_IsHitStopping = false;
+    }
+
+    /// <summary>
+    /// エフェクトを生成する処理
+    /// </summary>
+    /// <param name="target"></param>
+    void ShowHitEffect(AITester target)
+    {
+        //敵側のヒットポジションを利用
+        Vector3 effectPos = target.m_HitPosition.position;
+
+        //回転値なしのヒットポジションし、エフェクトを生成
+        GameObject hitEffect = Instantiate(m_HitEffectPrefab, effectPos, Quaternion.identity);
+
+        Destroy(hitEffect, 0.5f);
     }
 
     /// <summary>
