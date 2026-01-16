@@ -7,6 +7,11 @@ namespace StateMachineAI
     /// <summary>
     /// ステートを持つオブジェクトの基底
     /// abstract class によって、継承が成立する
+    /// 
+    /// 【拡張機能】
+    /// - ステート履歴スタック: RevertToPreviousState()で前のステートに戻る
+    /// - 遷移イベント通知: SubscribeStateChanged()で監視
+    /// - グローバルステート: SetGlobalState()で常に実行されるステートを設定
     /// </summary>
     public abstract class StatefulObjectBase<T, TEnum> : MonoBehaviour
         where T : class where TEnum : System.IConvertible
@@ -70,6 +75,86 @@ namespace StateMachineAI
                 ///つまり、現在のステートにあるUpdate()を実行させる
                 stateMachine.Update();
             }
+        }
+
+        // ========== 拡張機能ラッパーメソッド ==========
+
+        /// <summary>
+        /// 前のステートに戻る
+        /// </summary>
+        /// <returns>戻ることができたらtrue</returns>
+        public virtual bool RevertToPreviousState()
+        {
+            if (stateMachine == null)
+                return false;
+            return stateMachine.RevertToPreviousState();
+        }
+
+        /// <summary>
+        /// グローバルステートを設定
+        /// </summary>
+        /// <param name="globalState">グローバルステート</param>
+        public virtual void SetGlobalState(State<T> globalState)
+        {
+            if (stateMachine != null)
+                stateMachine.SetGlobalState(globalState);
+        }
+
+        /// <summary>
+        /// グローバルステートを取得
+        /// </summary>
+        /// <returns>グローバルステート</returns>
+        public virtual State<T> GetGlobalState()
+        {
+            return stateMachine?.GetGlobalState();
+        }
+
+        /// <summary>
+        /// ステート変更イベントを購読
+        /// </summary>
+        /// <param name="handler">イベントハンドラ (前のステート, 新しいステート)</param>
+        public void SubscribeStateChanged(System.Action<State<T>, State<T>> handler)
+        {
+            if (stateMachine != null)
+                stateMachine.OnStateChanged += handler;
+        }
+
+        /// <summary>
+        /// ステート変更イベントの購読を解除
+        /// </summary>
+        /// <param name="handler">解除するイベントハンドラ</param>
+        public void UnsubscribeStateChanged(System.Action<State<T>, State<T>> handler)
+        {
+            if (stateMachine != null)
+                stateMachine.OnStateChanged -= handler;
+        }
+
+        /// <summary>
+        /// 履歴をクリア
+        /// </summary>
+        public void ClearStateHistory()
+        {
+            if (stateMachine != null)
+                stateMachine.ClearHistory();
+        }
+
+        /// <summary>
+        /// 履歴の最大数を設定
+        /// </summary>
+        /// <param name="count">最大数</param>
+        public void SetMaxHistoryCount(int count)
+        {
+            if (stateMachine != null)
+                stateMachine.SetMaxHistoryCount(count);
+        }
+
+        /// <summary>
+        /// 履歴の数を取得
+        /// </summary>
+        /// <returns>履歴の数</returns>
+        public int GetHistoryCount()
+        {
+            return stateMachine?.HistoryCount ?? 0;
         }
     }
 }

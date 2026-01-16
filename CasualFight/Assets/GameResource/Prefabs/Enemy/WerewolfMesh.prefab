@@ -1013,12 +1013,12 @@ PrefabInstance:
       addedObject: {fileID: 3426594911066708388}
     - targetCorrespondingSourceObject: {fileID: 100148, guid: 69fa901acc50489d8c17af8c19ba32ae,
         type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 346514871173611444}
+      insertIndex: 2
+      addedObject: {fileID: 8809142416018937766}
     - targetCorrespondingSourceObject: {fileID: 100148, guid: 69fa901acc50489d8c17af8c19ba32ae,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8809142416018937766}
+      addedObject: {fileID: 6733035890460706739}
   m_SourcePrefab: {fileID: 100100000, guid: 69fa901acc50489d8c17af8c19ba32ae, type: 3}
 --- !u!1 &1054656290572465027 stripped
 GameObject:
@@ -1051,24 +1051,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &346514871173611444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054656290572465027}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48b0913ee770ea4449e5e6baa794767d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EnemyData: {fileID: 11400000, guid: df3a11b7e5899bd48a1616af05b76256, type: 2}
-  m_EnemyHP: 0
-  m_HitPosition: {fileID: 4590348101812129841}
-  m_IsDead: 0
 --- !u!136 &8809142416018937766
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1088,10 +1072,28 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2.07
+  m_Radius: 0.7819592
+  m_Height: 2.42
   m_Direction: 1
-  m_Center: {x: 0, y: 1.16, z: 0}
+  m_Center: {x: 0, y: 1.1599998, z: 0.19412601}
+--- !u!114 &6733035890460706739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054656290572465027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48b0913ee770ea4449e5e6baa794767d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EnemyData: {fileID: 11400000, guid: df3a11b7e5899bd48a1616af05b76256, type: 2}
+  m_EnemyHP: 0
+  m_HitPosition: {fileID: 4590348101812129841}
+  m_IsDead: 0
+  m_IsSearching: 1
+  m_Counter: 0
 --- !u!4 &1054656290572496803 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400148, guid: 69fa901acc50489d8c17af8c19ba32ae,
