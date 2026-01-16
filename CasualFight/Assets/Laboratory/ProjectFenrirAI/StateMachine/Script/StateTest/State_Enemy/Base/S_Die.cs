@@ -19,9 +19,12 @@ namespace StateMachineAI
             }
             
             // 死亡アニメーション
-            if (owner.m_Animator != null)
+            if (owner.m_Animator != null && owner.m_EnemyData != null)
             {
-                // owner.m_Animator.Play("Die");
+                if (!string.IsNullOrEmpty(owner.m_EnemyData.m_DieAnimName))
+                {
+                    owner.m_Animator.Play(owner.m_EnemyData.m_DieAnimName);
+                }
             }
 
             // コライダーを消すなどの処理

@@ -13,6 +13,15 @@ namespace StateMachineAI
         public override void Enter()
         {
             Debug.Log("S_Attack: 攻撃シークエンス開始。サブステートを構築します。");
+            
+            // 攻撃アニメーション再生
+            if (owner.m_Animator != null && owner.m_EnemyData != null)
+            {
+                if (!string.IsNullOrEmpty(owner.m_EnemyData.m_AttackAnimName))
+                {
+                    owner.m_Animator.Play(owner.m_EnemyData.m_AttackAnimName);
+                }
+            }
 
             // サブステートの登録
             // Phase 1: Start (予備動作)

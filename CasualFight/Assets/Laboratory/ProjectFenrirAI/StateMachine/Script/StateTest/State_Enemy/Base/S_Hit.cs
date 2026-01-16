@@ -33,9 +33,12 @@ namespace StateMachineAI
         {
             m_Timer += Time.deltaTime;
             
-            // 硬直時間終了後、Idleへ遷移
+            // 硬直時間終了後、索敵フラグをONにしてIdleへ遷移
             if (m_Timer >= m_HitStunDuration)
             {
+                // 追跡中などに被弾した場合、フラグがfalseのままここに来るので、
+                // 復帰時にtrueに戻さないとグローバル索敵が再開されない。
+                owner.m_IsSearching = true;
                 owner.ChangeState(AIState_Type.Idle);
             }
         }

@@ -11,9 +11,13 @@ namespace StateMachineAI
         {
             Debug.Log("S_Idleに入りました: 待機中...");
             // ここで待機モーションなどを再生
-            if (owner.m_Animator != null)
+            // 待機モーション再生
+            if (owner.m_Animator != null && owner.m_EnemyData != null)
             {
-                // owner.m_Animator.Play("Idle"); // アニメーションがあれば
+                if (!string.IsNullOrEmpty(owner.m_EnemyData.m_IdleAnimName))
+                {
+                    owner.m_Animator.Play(owner.m_EnemyData.m_IdleAnimName);
+                }
             }
         }
 
