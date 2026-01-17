@@ -18,6 +18,7 @@ namespace StateMachineAI
         Tracking,   //追跡
         Hit,        //被弾
         Die,        //死亡
+        Retreat,    //後退
     }
 
     public class AITester : StatefulObjectBase<AITester, AIState_Type>

@@ -115,7 +115,8 @@ namespace StateMachineAI
     public class S_Attack_End : State<AITester>
     {
         private float m_Timer = 0f;
-        private float m_Duration = 1.0f; // 1秒硬直
+        // アニメーション指定がない場合のフォールバック時間
+        private float m_FallbackDuration = 1.0f;
 
         public S_Attack_End(AITester owner) : base(owner) { }
 
@@ -127,13 +128,61 @@ namespace StateMachineAI
 
         public override void Stay()
         {
-            m_Timer += Time.deltaTime;
-            if (m_Timer >= m_Duration)
+            bool isFinish = false;
+
+            // アニメーターがあればアニメーションの終了を判定
+            if (owner.m_Animator != null && owner.m_EnemyData != null && !string.IsNullOrEmpty(owner.m_EnemyData.m_AttackAnimName))
             {
-                // 全工程終了。索敵フラグをONにしてIdleへ
-                Debug.Log("  -> 攻撃完了。索敵フラグをONに戻します。");
-                owner.m_IsSearching = true; // 索敵フラグON
-                owner.ChangeState(AIState_Type.Idle);
+                AnimatorStateInfo stateInfo = owner.m_Animator.GetCurrentAnimatorStateInfo(0);
+                
+                // 指定のアニメーションが再生されているかチェック
+                if (stateInfo.IsName(owner.m_EnemyData.m_AttackAnimName))
+                {
+                    // 終了判定 (1.0以上で再生終了)
+                    if (stateInfo.normalizedTime >= 1.0f)
+                    {
+                        isFinish = true;
+                    }
+                }
+                else
+                {
+                    // 攻撃アニメーション以外が再生されている場合
+                    // (遷移都合で既に変わっている、あるいは再生失敗など)
+                    // タイマーで保険をかける
+                    m_Timer += Time.deltaTime;
+                    if (m_Timer >= m_FallbackDuration)
+                    {
+                        isFinish = true;
+                    }
+                }
+            }
+            else
+            {
+                // アニメーターがない場合はタイマー処理
+                m_Timer += Time.deltaTime;
+                if (m_Timer >= m_FallbackDuration)
+                {
+                    isFinish = true;
+                }
+            }
+
+            if (isFinish)
+            {
+                // 全工程終了。
+                Debug.Log("  -> 攻撃完了（アニメーション終了）。");
+
+                // 後退設定がある、かつ後退時間が0より大きい場合は後退へ、そうでなければIdleへ
+                if (owner.m_EnemyData != null && owner.m_EnemyData.m_RetreatDuration > 0f)
+                {
+                     // 後退へ遷移
+                     owner.ChangeState(AIState_Type.Retreat);
+                }
+                else
+                {
+                    // そのまま待機へ
+                    owner.m_IsSearching = true; // 索敵フラグON
+                    owner.ChangeState(AIState_Type.Idle);
+                }
             }
         }
 

@@ -137,6 +137,7 @@ public enum AIState_Type
     Tracking,   // 2: 追跡
     Hit,        // 3: 被弾
     Die,        // 4: 死亡
+    Retreat,    // 5: 後退
 }
 ```
 
@@ -182,4 +183,5 @@ public enum AIState_Type
 
 | 日付 | 内容 |
 |------|------|
+| 2026/01/17 | 後退（Retreat）ステートの追加、EnemyDataへのパラメータ追加 |
 | 2026/01/16 | 初版作成 |
