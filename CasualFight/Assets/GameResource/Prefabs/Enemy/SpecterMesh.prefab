@@ -777,6 +777,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3526805563891568630}
+    - targetCorrespondingSourceObject: {fileID: 100106, guid: d9de26fc1abd4272aac172175941aaf7,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6520792195397122526}
   m_SourcePrefab: {fileID: 100100000, guid: d9de26fc1abd4272aac172175941aaf7, type: 3}
 --- !u!1 &355327360830079352 stripped
 GameObject:
@@ -834,6 +838,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &6520792195397122526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355327360830079352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Player: {fileID: 0}
+  m_MyEnemy: {fileID: 355327360830446746}
+  m_Renderer: {fileID: 4389251625940611331}
+  m_MaxRadius: 16
+  m_IconHeight: 15
+  m_IsBoss: 0
+  m_BaseScale: 1
+  m_PulseSpeed: 0
 --- !u!4 &355327360830446746 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400104, guid: d9de26fc1abd4272aac172175941aaf7,

@@ -1128,6 +1128,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6733035890460706739}
+    - targetCorrespondingSourceObject: {fileID: 100148, guid: 69fa901acc50489d8c17af8c19ba32ae,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4955213944841030881}
   m_SourcePrefab: {fileID: 100100000, guid: 69fa901acc50489d8c17af8c19ba32ae, type: 3}
 --- !u!1 &1054656290572465027 stripped
 GameObject:
@@ -1204,6 +1208,26 @@ MonoBehaviour:
   m_IsDead: 0
   m_IsSearching: 1
   m_Counter: 0
+--- !u!114 &4955213944841030881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054656290572465027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Player: {fileID: 0}
+  m_MyEnemy: {fileID: 1054656290572496803}
+  m_Renderer: {fileID: 4738763773439159284}
+  m_MaxRadius: 16
+  m_IconHeight: 15
+  m_IsBoss: 1
+  m_BaseScale: 1
+  m_PulseSpeed: 0
 --- !u!4 &1054656290572496803 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400148, guid: 69fa901acc50489d8c17af8c19ba32ae,
