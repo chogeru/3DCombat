@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2951683892717792095}
   - component: {fileID: 2896361852854446651}
   - component: {fileID: 8028274329352962838}
+  - component: {fileID: 5928920004923465744}
   m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
@@ -105,6 +106,26 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5928920004923465744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397168597235009844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Player: {fileID: 0}
+  m_MyEnemy: {fileID: 1908371273539612461}
+  m_Renderer: {fileID: 2896361852854446651}
+  m_MaxRadius: 25
+  m_IconHeight: 15
+  m_IsBoss: 0
+  m_BaseScale: 1
+  m_PulseSpeed: 0
 --- !u!1 &411757113131665076
 GameObject:
   m_ObjectHideFlags: 0
@@ -1351,11 +1372,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2217333616866568765}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 100004, guid: 39cf14e07d0a4d9283249bf44919acef,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6753733694118448265}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39cf14e07d0a4d9283249bf44919acef, type: 3}
 --- !u!4 &1908371273539612461 stripped
 Transform:
@@ -1363,29 +1380,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1908371273539745193}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1908371273539711757 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100004, guid: 39cf14e07d0a4d9283249bf44919acef,
-    type: 3}
-  m_PrefabInstance: {fileID: 1908371273539745193}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6753733694118448265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1908371273539711757}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Player: {fileID: 0}
-  m_MyEnemy: {fileID: 1908371273539612461}
-  m_Renderer: {fileID: 2896361852854446651}
-  m_MaxRadius: 16
-  m_IconHeight: 15
-  m_IsBoss: 0
-  m_BaseScale: 1
-  m_PulseSpeed: 0

@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 8904098974100212610}
   - component: {fileID: 4389251625940611331}
   - component: {fileID: 5742054225867208777}
+  - component: {fileID: 7290842943904041174}
   m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
@@ -136,6 +137,26 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7290842943904041174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2252658908594519370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Player: {fileID: 0}
+  m_MyEnemy: {fileID: 355327360830446746}
+  m_Renderer: {fileID: 4389251625940611331}
+  m_MaxRadius: 25
+  m_IconHeight: 15
+  m_IsBoss: 0
+  m_BaseScale: 1
+  m_PulseSpeed: 0
 --- !u!1001 &355327360830047858
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -777,10 +798,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3526805563891568630}
-    - targetCorrespondingSourceObject: {fileID: 100106, guid: d9de26fc1abd4272aac172175941aaf7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6520792195397122526}
   m_SourcePrefab: {fileID: 100100000, guid: d9de26fc1abd4272aac172175941aaf7, type: 3}
 --- !u!1 &355327360830079352 stripped
 GameObject:
@@ -838,26 +855,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &6520792195397122526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 355327360830079352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Player: {fileID: 0}
-  m_MyEnemy: {fileID: 355327360830446746}
-  m_Renderer: {fileID: 4389251625940611331}
-  m_MaxRadius: 16
-  m_IconHeight: 15
-  m_IsBoss: 0
-  m_BaseScale: 1
-  m_PulseSpeed: 0
 --- !u!4 &355327360830446746 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400104, guid: d9de26fc1abd4272aac172175941aaf7,

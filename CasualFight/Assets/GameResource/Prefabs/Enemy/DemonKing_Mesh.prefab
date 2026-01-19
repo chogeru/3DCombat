@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 1728119571299499820}
   - component: {fileID: 4094336954724237087}
   - component: {fileID: 5348882069026623506}
+  - component: {fileID: 3741097603871460135}
   m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
@@ -136,6 +137,26 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3741097603871460135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6007603602459432565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Player: {fileID: 0}
+  m_MyEnemy: {fileID: 7392924831910983783}
+  m_Renderer: {fileID: 4094336954724237087}
+  m_MaxRadius: 25
+  m_IconHeight: 15
+  m_IsBoss: 0
+  m_BaseScale: 1
+  m_PulseSpeed: 0
 --- !u!1001 &6994732930539626380
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1010,11 +1031,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6942320565614081428}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a879ca13a1e4dfa95cc8b046f320609,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -5082489649854076754}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a879ca13a1e4dfa95cc8b046f320609, type: 3}
 --- !u!4 &7392924831910983783 stripped
 Transform:
@@ -1022,29 +1039,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6994732930539626380}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7913705647152538333 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a879ca13a1e4dfa95cc8b046f320609,
-    type: 3}
-  m_PrefabInstance: {fileID: 6994732930539626380}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &-5082489649854076754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7913705647152538333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89539aa14c3d20047a2886ed7ea7b669, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Player: {fileID: 0}
-  m_MyEnemy: {fileID: 7392924831910983783}
-  m_Renderer: {fileID: 4094336954724237087}
-  m_MaxRadius: 16
-  m_IconHeight: 15
-  m_IsBoss: 0
-  m_BaseScale: 1
-  m_PulseSpeed: 0
