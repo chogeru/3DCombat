@@ -777,9 +777,9 @@ Shader "Hidden/ltspass_opaque"
             #define LIL_OPTIMIZE_USE_FORWARDADD
             #define LIL_OPTIMIZE_USE_VERTEXLIGHT
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE
-            #define LIL_SRP_VERSION_MAJOR 12
-            #define LIL_SRP_VERSION_MINOR 1
-            #define LIL_SRP_VERSION_PATCH 10
+            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MINOR 0
+            #define LIL_SRP_VERSION_PATCH 12
 
             #pragma target 4.5
             #pragma fragmentoption ARB_precision_hint_fastest
@@ -833,7 +833,7 @@ Shader "Hidden/ltspass_opaque"
             #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            #pragma multi_compile _ _CLUSTERED_RENDERING
+            #pragma multi_compile _ _FORWARD_PLUS
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
@@ -898,7 +898,7 @@ Shader "Hidden/ltspass_opaque"
             #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            #pragma multi_compile _ _CLUSTERED_RENDERING
+            #pragma multi_compile _ _FORWARD_PLUS
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
@@ -1261,9 +1261,9 @@ Shader "Hidden/ltspass_opaque"
             #define LIL_OPTIMIZE_USE_FORWARDADD
             #define LIL_OPTIMIZE_USE_VERTEXLIGHT
             #pragma skip_variants LIGHTMAP_ON DYNAMICLIGHTMAP_ON LIGHTMAP_SHADOW_MIXING SHADOWS_SHADOWMASK DIRLIGHTMAP_COMBINED _MIXED_LIGHTING_SUBTRACTIVE
-            #define LIL_SRP_VERSION_MAJOR 12
-            #define LIL_SRP_VERSION_MINOR 1
-            #define LIL_SRP_VERSION_PATCH 10
+            #define LIL_SRP_VERSION_MAJOR 14
+            #define LIL_SRP_VERSION_MINOR 0
+            #define LIL_SRP_VERSION_PATCH 12
 
             #pragma target 3.5
             #pragma fragmentoption ARB_precision_hint_fastest
@@ -1317,7 +1317,7 @@ Shader "Hidden/ltspass_opaque"
             #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            #pragma multi_compile _ _CLUSTERED_RENDERING
+            #pragma multi_compile _ _FORWARD_PLUS
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
@@ -1381,7 +1381,7 @@ Shader "Hidden/ltspass_opaque"
             #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
             #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
-            #pragma multi_compile _ _CLUSTERED_RENDERING
+            #pragma multi_compile _ _FORWARD_PLUS
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
