@@ -19,6 +19,7 @@ namespace StateMachineAI
         Hit,        //被弾
         Die,        //死亡
         Retreat,    //後退
+        Return,     //初期位置へ帰還
     }
 
     public class AITester : StatefulObjectBase<AITester, AIState_Type>
@@ -50,6 +51,10 @@ namespace StateMachineAI
         // テスト用カウンタ
         public int m_Counter = 0;
 
+        // 初期位置情報
+        public Vector3 m_SpawnPosition { get; private set; }
+        public Quaternion m_SpawnRotation { get; private set; }
+
         /// <summary>
         /// コンポーネントの初期化（StateManagerから呼ばれる）
         /// </summary>
@@ -67,9 +72,16 @@ namespace StateMachineAI
                 m_EnemyHP = m_EnemyData.m_MaxHp;
             }
 
+            // 初期位置・回転を保存
+            m_SpawnPosition = transform.position;
+            m_SpawnRotation = transform.rotation;
+
             // ステートマシンの初期化
             stateMachine = new StateMachine<AITester>();
             stateList.Clear();
+
+            // S_Return は固定で追加（Inspector設定に依存しないため）
+            stateList.Add(new S_Return(this));
         }
 
         /// <summary>
@@ -138,6 +150,40 @@ namespace StateMachineAI
             {
                 Debug.LogError($"エラーが発生しました: {ex.Message}");
                 return false;
+            }
+        }
+
+        // ... (省略)
+
+        /// <summary>
+        /// ステート切り替えのオーバーライド
+        /// indexでの指定ではなく、型で検索して遷移させる（リストの順序に依存しないようにする）
+        /// </summary>
+        public override void ChangeState(AIState_Type state)
+        {
+            if (stateMachine == null) return;
+
+            State<AITester> targetState = null;
+
+            // Enum に対応するクラスをリストから検索
+            switch (state)
+            {
+                case AIState_Type.Idle: targetState = stateList.Find(s => s is S_Idle); break;
+                case AIState_Type.Attack: targetState = stateList.Find(s => s is S_Attack); break;
+                case AIState_Type.Tracking: targetState = stateList.Find(s => s is S_Tracking); break;
+                case AIState_Type.Hit: targetState = stateList.Find(s => s is S_Hit); break;
+                case AIState_Type.Die: targetState = stateList.Find(s => s is S_Die); break;
+                case AIState_Type.Retreat: targetState = stateList.Find(s => s is S_Retreat); break;
+                case AIState_Type.Return: targetState = stateList.Find(s => s is S_Return); break;
+            }
+
+            if (targetState != null)
+            {
+                stateMachine.ChangeState(targetState);
+            }
+            else
+            {
+                Debug.LogWarning($"AITester: {state} ステートが見つかりませんでした。Inspectorの設定を確認してください。");
             }
         }
 

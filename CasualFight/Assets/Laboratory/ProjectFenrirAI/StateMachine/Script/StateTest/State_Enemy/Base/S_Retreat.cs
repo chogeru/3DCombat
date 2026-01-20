@@ -64,7 +64,7 @@ namespace StateMachineAI
                     }
 
                     owner.m_IsSearching = true; // 索敵フラグON
-                    owner.ChangeState(AIState_Type.Idle);
+                    owner.ChangeState(AIState_Type.Return);
                 }
                 return;
             }

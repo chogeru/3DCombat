@@ -54,7 +54,7 @@ namespace StateMachineAI
                     BattleManager.m_BattleInstance.EnemyLostPlayer(owner.transform);
                 }
 
-                owner.ChangeState(AIState_Type.Idle);
+                owner.ChangeState(AIState_Type.Return);
                 return;
             }
 
