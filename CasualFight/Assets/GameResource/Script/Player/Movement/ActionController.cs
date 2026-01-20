@@ -19,6 +19,9 @@ public class ActionController : MonoBehaviour
     [Header("プレイヤーコントローラー"), SerializeField]
     PlayerController m_PlayerController;
 
+    [Header("PlayerHitController"), SerializeField]
+    PlayerHitController m_PHC;
+
     // クリックの経過時間
     float m_ClickTimer = 0f;
 
@@ -43,6 +46,15 @@ public class ActionController : MonoBehaviour
             (m_PlayerController != null && m_PlayerController.IsDead))
         {
             // 押しっぱなし状態などが残らないようにリセット
+            m_IsPressing = false;
+            m_InGuardMode = false;
+            m_ClickTimer = 0f;
+            return;
+        }
+
+        // 硬直中は入力を受け付けない
+        if (m_PHC != null && m_PHC.IsStunned)
+        {
             m_IsPressing = false;
             m_InGuardMode = false;
             m_ClickTimer = 0f;

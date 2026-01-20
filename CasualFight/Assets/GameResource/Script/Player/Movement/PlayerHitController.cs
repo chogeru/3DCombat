@@ -18,6 +18,7 @@ public class PlayerHitController : MonoBehaviour
     [Header("参照")]
     [SerializeField] PlayerController m_PC;
     [SerializeField] Animator m_Animator;
+    [SerializeField] ComboSystem m_CS;
 
     [Header("設定")]
     [SerializeField] float m_StunDuration = 0.5f;
@@ -29,6 +30,15 @@ public class PlayerHitController : MonoBehaviour
     public void OnDamage(int damage, Vector3 attackerPos, HitSeverity severity)
     {
         // 状態チェック（スーパーアーマー判定）
+        
+        // 攻撃中 (m_IsAttack == true) なら、ヒットアニメーションと硬直をスキップして終了する
+        if (m_PC != null && m_PC.m_IsAttack)
+        {
+            // ダメージだけ与える
+            m_PC.TakeDamage(damage);
+            return;
+        }
+
         // 「現在ダッシュ中」かつ「Lightヒット」であるか判定
         // PlayerControllerのm_IsDashがtrueならダッシュ中
         if (m_PC != null && m_PC.m_IsDash && severity == HitSeverity.Light)
@@ -36,6 +46,12 @@ public class PlayerHitController : MonoBehaviour
              // 処理を中断（スーパーアーマー状態）
              // アニメーション再生・硬直を行わない
              return;
+        }
+
+        // 被弾確定時にコンボ状態を強制リセット（内部状態のズレ防止）
+        if (m_CS != null)
+        {
+            m_CS.ForceResetCombo();
         }
 
         // HitSeverity.Heavy の場合のみ isHeavy扱い
@@ -66,16 +82,13 @@ public class PlayerHitController : MonoBehaviour
         {
             m_Animator.SetFloat("HitX", hitX);
             m_Animator.SetFloat("HitY", hitY);
+            
+            // HitSeverityパラメータを設定 (Light=0, Heavy=1)
+            m_Animator.SetFloat("HitSeverity", (float)severity);
 
             // アニメーション再生
-            if (isHeavy)
-            {
-                m_Animator.CrossFade("HeavyBlendTree", 0.1f);
-            }
-            else
-            {
-                m_Animator.CrossFade("LightBlendTree", 0.1f);
-            }
+            // Animator側のステート名 "HitCount" を再生
+            m_Animator.Play("HitCount");
         }
 
         // ヒットストップ開始

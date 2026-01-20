@@ -36,6 +36,9 @@ public class TimelineEndHandler : MonoBehaviour
     [SerializeField]
     AbilityAttackSystem m_AA;
 
+    [SerializeField]
+    SettingsManager m_SM;
+
     private void Start()
     {
         //‰ŠúOFF
@@ -46,6 +49,7 @@ public class TimelineEndHandler : MonoBehaviour
         m_SC.enabled = false;
         m_CC.enabled = false;
         m_AA.enabled = false;
+        m_SM.enabled = false;
     }
 
     private void OnEnable()
@@ -78,6 +82,7 @@ public class TimelineEndHandler : MonoBehaviour
             m_SC.enabled = true;
             m_CC.enabled = true;
             m_AA.enabled = true;
+            m_SM.enabled = true;
         }
     }
 }
