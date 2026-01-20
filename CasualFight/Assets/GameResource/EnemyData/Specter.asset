@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87a128f7df74dbf45a8db2a8eed698ec, type: 3}
+  m_Name: Specter
+  m_EditorClassIdentifier: 
+  m_EnemyName: 
+  m_MaxHp: 0
+  m_MoveSpeed: 0
+  m_AttackDamage: 10
+  m_AttackRange: 0
+  m_SearchRange: 0
+  m_IdleAnimName: 
+  m_MoveAnimName: 
+  m_AttackAnimName: 
+  m_HitAnimName: 
+  m_RetreatSpeed: 3
+  m_RetreatDuration: 1.5
+  m_RetreatAnimName: 
+  m_SearchAnimName: 
+  m_DieAnimName: 
