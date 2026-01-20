@@ -7,10 +7,10 @@ using UnityEngine;
 /// </summary>
 public class MinimapIconController : MonoBehaviour
 {
-    [Header("プレイヤーの座標"), SerializeField] 
+    [Header("プレイヤーの座標"), SerializeField]
     Transform m_PlayerTransform;
-    [Header("回転ONOFFフラグ"), SerializeField] 
-    bool m_IsPlayerIcon = true;
+    [Header("回転ONOFFフラグ")]
+    public bool m_IsPlayerIcon = true;
 
     void LateUpdate()
     {

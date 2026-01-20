@@ -13,6 +13,9 @@ public class ActionController : MonoBehaviour
     [Header("コンボシステム"), SerializeField]
     ComboSystem m_ComboSystem;
 
+    [Header("設定管理マネージャー"), SerializeField]
+    SettingsManager m_SettingsManager;
+
     // クリックの経過時間
     float m_ClickTimer = 0f;
 
@@ -32,6 +35,15 @@ public class ActionController : MonoBehaviour
 
     private void Update()
     {
+        // 設定画面が開いている場合は入力を受け付けない
+        if (m_SettingsManager != null && m_SettingsManager.IsMenuOpen)
+        {
+            // 押しっぱなし状態などが残らないようにリセット
+            m_IsPressing = false;
+            m_InGuardMode = false;
+            m_ClickTimer = 0f;
+            return;
+        }
         // 左クリック開始
         if (Input.GetMouseButtonDown(0))
         {

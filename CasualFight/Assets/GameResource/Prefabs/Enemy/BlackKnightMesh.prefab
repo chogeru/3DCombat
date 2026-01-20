@@ -1372,7 +1372,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2217333616866568765}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 100004, guid: 39cf14e07d0a4d9283249bf44919acef,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3499782710493743866}
   m_SourcePrefab: {fileID: 100100000, guid: 39cf14e07d0a4d9283249bf44919acef, type: 3}
 --- !u!4 &1908371273539612461 stripped
 Transform:
@@ -1380,3 +1384,28 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1908371273539745193}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1908371273539711757 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100004, guid: 39cf14e07d0a4d9283249bf44919acef,
+    type: 3}
+  m_PrefabInstance: {fileID: 1908371273539745193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3499782710493743866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908371273539711757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48b0913ee770ea4449e5e6baa794767d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EnemyData: {fileID: 11400000, guid: 32afc2eae970ff14f86ea6170a01a221, type: 2}
+  m_Player: {fileID: 0}
+  m_EnemyHP: 0
+  m_HitPosition: {fileID: 3231213548834144748}
+  m_IsDead: 0
+  m_IsSearching: 1
+  m_Counter: 0
