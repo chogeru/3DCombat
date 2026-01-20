@@ -27,7 +27,10 @@ public class BattleManager : MonoBehaviour
     /// </summary>
     public void EnemyFoundPlayer(Transform enemyTransform)
     {
-        m_ActiveEnemies.Add(enemyTransform);
+        if (!m_ActiveEnemies.Contains(enemyTransform))
+        {
+            m_ActiveEnemies.Add(enemyTransform);
+        }
     }
 
     /// <summary>
@@ -36,5 +39,6 @@ public class BattleManager : MonoBehaviour
     public void EnemyLostPlayer(Transform enemyTransform)
     {
         m_ActiveEnemies.Remove(enemyTransform);
+        Debug.Log("見失いました。");
     }
 }

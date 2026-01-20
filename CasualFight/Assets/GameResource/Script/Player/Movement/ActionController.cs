@@ -16,6 +16,9 @@ public class ActionController : MonoBehaviour
     [Header("設定管理マネージャー"), SerializeField]
     SettingsManager m_SettingsManager;
 
+    [Header("プレイヤーコントローラー"), SerializeField]
+    PlayerController m_PlayerController;
+
     // クリックの経過時間
     float m_ClickTimer = 0f;
 
@@ -35,8 +38,9 @@ public class ActionController : MonoBehaviour
 
     private void Update()
     {
-        // 設定画面が開いている場合は入力を受け付けない
-        if (m_SettingsManager != null && m_SettingsManager.IsMenuOpen)
+        // 設定画面が開いている、またはプレイヤーが死亡している場合は入力を受け付けない
+        if ((m_SettingsManager != null && m_SettingsManager.IsMenuOpen) || 
+            (m_PlayerController != null && m_PlayerController.IsDead))
         {
             // 押しっぱなし状態などが残らないようにリセット
             m_IsPressing = false;

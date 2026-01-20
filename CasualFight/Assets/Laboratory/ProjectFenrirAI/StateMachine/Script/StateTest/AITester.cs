@@ -163,6 +163,40 @@ namespace StateMachineAI
 
 
         /// <summary>
+        /// アニメーションイベントから呼ばれる攻撃判定処理
+        /// Animation Eventの設定: Function = CheckHit, Int = 0 (Light) or 1 (Heavy)
+        /// </summary>
+        public void CheckHit(int severityValue)
+        {
+            if (m_EnemyData == null) return;
+
+            // int -> Enum 変換
+            HitSeverity severity = (HitSeverity)severityValue;
+
+            // 自身を中心に判定を行う
+            Vector3 center = transform.position + transform.forward * (m_EnemyData.m_AttackRange * 0.5f);
+            float radius = m_EnemyData.m_AttackRange * 0.5f;
+
+            // 判定用コライダー配列
+            Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+
+            foreach (var hitCollider in hitColliders)
+            {
+                // プレイヤーのタグ判定
+                if (hitCollider.CompareTag("Player"))
+                {
+                   var playerHit = hitCollider.GetComponent<PlayerHitController>();
+                   if (playerHit != null)
+                   {
+                       // ダメージ値、攻撃者の位置、Severity
+                       playerHit.OnDamage(m_EnemyData.m_AttackDamage, transform.position, severity);
+                       Debug.Log($"プレイヤーに攻撃 Hit! Severity: {severity}");
+                   }
+                }
+            }
+        }
+
+        /// <summary>
         /// ダメージ処理
         /// </summary>
         /// <param name="damage"></param>

@@ -91,9 +91,8 @@ namespace StateMachineAI
 
         public override void Enter()
         {
-            Debug.Log("  -> SubState [Exec]: とりゃあ！！(攻撃判定発生)");
+            Debug.Log("  -> SubState [Exec]: 攻撃実行中（判定はアニメーションイベント CheckHit で発生）");
             m_Timer = 0f;
-            // ここで攻撃判定を出す処理など
         }
 
         public override void Stay()
@@ -179,9 +178,27 @@ namespace StateMachineAI
                 }
                 else
                 {
-                    // そのまま待機へ
-                    owner.m_IsSearching = true; // 索敵フラグON
-                    owner.ChangeState(AIState_Type.Idle);
+                    // プレイヤーとの距離を確認
+                    float distance = Vector3.Distance(owner.transform.position, owner.m_Player.position);
+
+                    // 索敵範囲内なら追跡へ遷移（戦闘継続）
+                    if (distance <= owner.m_EnemyData.m_SearchRange)
+                    {
+                        owner.ChangeState(AIState_Type.Tracking);
+                    }
+                    else
+                    {
+                        // 範囲外なら見失い処理
+                        Debug.Log("S_Attack_End: プレイヤーを見失いました。");
+                        
+                        if (BattleManager.m_BattleInstance != null)
+                        {
+                            BattleManager.m_BattleInstance.EnemyLostPlayer(owner.transform);
+                        }
+
+                        owner.m_IsSearching = true; // 索敵フラグON
+                        owner.ChangeState(AIState_Type.Idle);
+                    }
                 }
             }
         }

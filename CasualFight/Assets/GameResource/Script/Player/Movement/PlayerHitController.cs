@@ -2,6 +2,15 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 
 /// <summary>
+/// ヒットの強弱判定
+/// </summary>
+public enum HitSeverity
+{
+    Light = 0,
+    Heavy = 1
+}
+
+/// <summary>
 /// Playerのヒット処理
 /// </summary>
 public class PlayerHitController : MonoBehaviour
@@ -17,16 +26,31 @@ public class PlayerHitController : MonoBehaviour
     public bool IsStunned { get; private set; } = false;
 
     // ダメージ処理のメインメソッド
-    public void OnDamage(int damage, Vector3 attackerPos, bool isHeavy)
+    public void OnDamage(int damage, Vector3 attackerPos, HitSeverity severity)
     {
         // 状態チェック（スーパーアーマー判定）
-        // 「現在ダッシュ中」かつ「攻撃が『軽いヒット』」であるか判定
+        // 「現在ダッシュ中」かつ「Lightヒット」であるか判定
         // PlayerControllerのm_IsDashがtrueならダッシュ中
-        if (m_PC != null && m_PC.m_IsDash && !isHeavy)
+        if (m_PC != null && m_PC.m_IsDash && severity == HitSeverity.Light)
         {
              // 処理を中断（スーパーアーマー状態）
              // アニメーション再生・硬直を行わない
              return;
+        }
+
+        // HitSeverity.Heavy の場合のみ isHeavy扱い
+        bool isHeavy = (severity == HitSeverity.Heavy);
+
+        // PlayerControllerへダメージを通知（HP減少・無敵時間発生）
+        if (m_PC != null)
+        {
+            m_PC.TakeDamage(damage);
+
+            // 死亡していたらここで終了（ヒットリアクションをとらない）
+            if (m_PC.IsDead)
+            {
+                return;
+            }
         }
 
         // 方向計算（相対ベクトル算出）

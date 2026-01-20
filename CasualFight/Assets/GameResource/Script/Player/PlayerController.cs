@@ -58,7 +58,11 @@ public class PlayerController : MonoBehaviour
 
     [Header("HP設定")]
     [SerializeField] int m_MaxHP = 100;
-    int m_CurrentHP;
+    protected int m_CurrentHP;
+
+    // 死亡フラグ
+    bool m_IsDead = false;
+    public bool IsDead => m_IsDead;
 
     [Header("ダメージ設定")]
     [SerializeField] float m_InvincibleTime = 1.0f; // ダメージ後の無敵時間
@@ -124,6 +128,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // 死亡時は操作不能
+        if (m_IsDead) return;
+
         // 硬直中は入力を無視
         if (m_PHC != null && m_PHC.IsStunned) return;
 
@@ -323,6 +330,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        // 死亡時は物理挙動も停止
+        if (m_IsDead) return;
+
         // 硬直中は物理移動も停止（念のため）
         if (m_PHC != null && m_PHC.IsStunned) return;
 
@@ -373,6 +383,9 @@ public class PlayerController : MonoBehaviour
         //一定期間中高速移動
         while (timer < m_BlinkTime)
         {
+            // 死亡していたら中断
+            if (m_IsDead) return;
+
             //入力値取得
             Vector3 inputDir = new Vector3(m_MoveInput.x, 0f, m_MoveInput.z);
 
@@ -466,10 +479,12 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         Debug.Log("プレイヤーが死亡しました。");
+        m_IsDead = true;
+
         // アニメーションがある場合はここで発動
         if (m_Animator != null)
         {
-            m_Animator.CrossFade("Die", 0.1f);
+            m_Animator.CrossFade("Hit_Death", 0.1f);
         }
     }
 

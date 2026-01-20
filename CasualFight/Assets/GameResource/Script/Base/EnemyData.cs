@@ -16,6 +16,8 @@ public class EnemyData : ScriptableObject
     [Space]
 
     [Header("戦闘設定")]
+    [Header("攻撃力")]
+    public int m_AttackDamage = 10;
     [Header("攻撃が届く距離")]
     public float m_AttackRange;
     [Header("プレイヤーを見つける距離")]
