@@ -12,18 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87a128f7df74dbf45a8db2a8eed698ec, type: 3}
   m_Name: DemonKing
   m_EditorClassIdentifier: 
-  m_EnemyName: 
+  m_EnemyName: DemonKing
   m_MaxHp: 100
   m_MoveSpeed: 10
   m_AttackDamage: 10
   m_AttackRange: 10
   m_SearchRange: 10
-  m_IdleAnimName: 
-  m_MoveAnimName: 
-  m_AttackAnimName: 
-  m_HitAnimName: 
+  m_TargetLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  m_IdleAnimName: DemonKing_IdleNormal
+  m_MoveAnimName: DemonKing_WalkFWD
+  m_AttackAnimName: DemonKing_Attack01
+  m_HitEffectPrefab: {fileID: 5238538877814813142, guid: 47096eff328e11a418ace7db2d72aa97,
+    type: 3}
+  m_HitAnimName: DemonKing_GetHit
   m_RetreatSpeed: 3
   m_RetreatDuration: 1.5
-  m_RetreatAnimName: 
-  m_SearchAnimName: 
-  m_DieAnimName: 
+  m_RetreatAnimName: DemonKing_WalkBWD
+  m_SearchAnimName: DemonKing_SenseSomethingMaint
+  m_DieAnimName: DemonKing_Die

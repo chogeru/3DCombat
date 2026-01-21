@@ -92,6 +92,11 @@ public class State_Attack : State<AITester>
     /// <summary>
     /// Animation Event から呼ばれる攻撃判定
     /// </summary>
+    /// <summary>
+    /// Animation Event から呼ばれる攻撃判定
+    /// ※ 現在はAITester側で判定しているため、このメソッドは呼ばれていません。
+    /// 将来的にState側で判定したい場合は、AnimationEventの呼び出し先を変更してください。
+    /// </summary>
     public void OnCheckHit()
     {
         // 既に攻撃済みなら二重発生を防ぐ
@@ -103,23 +108,16 @@ public class State_Attack : State<AITester>
         // 位置は自キャラ中心 + 前方少し
         Vector3 center = owner.transform.position + owner.transform.forward * 1.0f;
         float radius = owner.m_EnemyData.m_AttackRange;
+        LayerMask targetLayer = owner.m_EnemyData.m_TargetLayer;
 
-        Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+        Collider[] hitColliders = Physics.OverlapSphere(center, radius, targetLayer);
         foreach (var hitCollider in hitColliders)
         {
             // 自分自身は無視
             if (hitCollider.gameObject == owner.gameObject) continue;
 
-            // プレイヤーかどうかの判定（タグやコンポーネントで判断）
-            if (hitCollider.CompareTag("Player"))
-            {
-                // ここでダメージ処理を行う
-                Debug.Log($"Hit Player: {hitCollider.name}");
-
-                // 例: PlayerController等のHPを減らす処理
-                // var player = hitCollider.GetComponent<PlayerController>();
-                // if(player != null) player.TakingDamage(10);
-            }
+            // デバッグログ
+            Debug.Log($"State_Attack: Hit Target: {hitCollider.name}");
         }
 
         // デバッグ描画（Sceneビューで確認用）

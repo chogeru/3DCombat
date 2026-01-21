@@ -18,9 +18,14 @@ MonoBehaviour:
   m_AttackDamage: 10
   m_AttackRange: 5
   m_SearchRange: 20
+  m_TargetLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   m_IdleAnimName: Werewolf_IdleNormal
   m_MoveAnimName: Werewolf_WalkFWD
   m_AttackAnimName: Werewolf_Attack02
+  m_HitEffectPrefab: {fileID: 5238538877814813142, guid: 47096eff328e11a418ace7db2d72aa97,
+    type: 3}
   m_HitAnimName: Werewolf_GetHit
   m_RetreatSpeed: 3
   m_RetreatDuration: 1.5

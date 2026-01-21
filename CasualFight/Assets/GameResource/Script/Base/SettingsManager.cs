@@ -64,6 +64,10 @@ public class SettingsManager : MonoBehaviour
 
         //設定画面非表示
         m_Menu.SetActive(false);
+
+        // カーソル初期化処理
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
     }
 
     private void Update()

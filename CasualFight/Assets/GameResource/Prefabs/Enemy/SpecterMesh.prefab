@@ -871,7 +871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48b0913ee770ea4449e5e6baa794767d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EnemyData: {fileID: 11400000, guid: df3a11b7e5899bd48a1616af05b76256, type: 2}
+  m_EnemyData: {fileID: 11400000, guid: 5f0a6c81f5550124ab7a69cc6bb8cced, type: 2}
   m_Player: {fileID: 0}
   m_EnemyHP: 0
   m_HitPosition: {fileID: 7921242010493739177}

@@ -1402,7 +1402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48b0913ee770ea4449e5e6baa794767d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EnemyData: {fileID: 11400000, guid: 32afc2eae970ff14f86ea6170a01a221, type: 2}
+  m_EnemyData: {fileID: 11400000, guid: e6856237f3ca5244b9e1c32ea28de0a8, type: 2}
   m_Player: {fileID: 0}
   m_EnemyHP: 0
   m_HitPosition: {fileID: 3231213548834144748}

@@ -60,6 +60,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int m_MaxHP = 100;
     protected int m_CurrentHP;
 
+    [Header("ヒット時にエフェクトを出す場所")]
+    public Transform m_HitPosition;
+
     // 死亡フラグ
     bool m_IsDead = false;
     public bool IsDead => m_IsDead;

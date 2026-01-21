@@ -223,21 +223,70 @@ namespace StateMachineAI
             Vector3 center = transform.position + transform.forward * (m_EnemyData.m_AttackRange * 0.5f);
             float radius = m_EnemyData.m_AttackRange * 0.5f;
 
-            // 判定用コライダー配列
-            Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+            // レイヤーマスクを使用するように変更
+            LayerMask targetLayer = m_EnemyData.m_TargetLayer;
+            // もしLayerMaskが何も設定されていなければ（0なら）、SafetyとしてPlayerタグ判定用コードを残すか、
+            // あるいはDefaultを含むすべてを対象にするか等は考慮必要だが、今回は設定済み前提で進める。
+            // ただし、LayerMaskが0(Nothing)だと何もヒットしないため、未設定時は従来のOverlapSphere(全レイヤー対象)にする手もあるが、
+            // ここでは実装計画通り LayerMask を引数に渡す。
+            
+            Collider[] hitColliders;
+            if (targetLayer.value != 0)
+            {
+                hitColliders = Physics.OverlapSphere(center, radius, targetLayer);
+            }
+            else
+            {
+                // LayerMask未設定時は従来どおり全レイヤー取得してタグ判定させる（互換性維持）
+                hitColliders = Physics.OverlapSphere(center, radius);
+            }
 
             foreach (var hitCollider in hitColliders)
             {
-                // プレイヤーのタグ判定
-                if (hitCollider.CompareTag("Player"))
+                // 自分自身は無視
+                if (hitCollider.gameObject == gameObject) continue;
+
+                // レイヤー指定がある場合はタグ判定不要だが、LayerMaskが未設定の場合のバックアップとしてタグ判定も残す
+                bool isTarget = false;
+                if (targetLayer.value != 0)
                 {
-                   var playerHit = hitCollider.GetComponent<PlayerHitController>();
-                   if (playerHit != null)
-                   {
-                       // ダメージ値、攻撃者の位置、Severity
-                       playerHit.OnDamage(m_EnemyData.m_AttackDamage, transform.position, severity);
-                       Debug.Log($"プレイヤーに攻撃 Hit! Severity: {severity}");
-                   }
+                    // レイヤーマスクでフィルタリング済みなので対象とみなす
+                    isTarget = true;
+                }
+                else if (hitCollider.CompareTag("Player"))
+                {
+                    isTarget = true;
+                }
+
+                if (isTarget)
+                {
+                    // ヒットエフェクト生成処理
+                    if (m_EnemyData.m_HitEffectPrefab != null)
+                    {
+                         // 接触点（近似）を計算
+                        Vector3 preciseHitPoint = hitCollider.ClosestPoint(transform.position + transform.forward + Vector3.up);
+                        Vector3 effectPos = preciseHitPoint;
+
+                        // PlayerControllerを持っていてHitPositionがあれば使う
+                        // HitController経由でPlayerController取れるか確認、あるいは直接取る
+                        if (hitCollider.TryGetComponent<PlayerController>(out var player) && player.m_HitPosition != null)
+                        {
+                             effectPos.y = player.m_HitPosition.position.y;
+                        }
+                        // 親や兄弟にPlayerControllerがある場合も考慮したいが、ひとまず上記で実装
+
+                        GameObject effect = Instantiate(m_EnemyData.m_HitEffectPrefab, effectPos, Quaternion.identity);
+                        Destroy(effect, 0.5f);
+                    }
+
+                    // ダメージ処理
+                    var playerHit = hitCollider.GetComponent<PlayerHitController>();
+                    if (playerHit != null)
+                    {
+                        // ダメージ値、攻撃者の位置、Severity
+                        playerHit.OnDamage(m_EnemyData.m_AttackDamage, transform.position, severity);
+                        Debug.Log($"プレイヤーに攻撃 Hit! Severity: {severity}");
+                    }
                 }
             }
         }

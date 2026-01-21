@@ -22,6 +22,8 @@ public class EnemyData : ScriptableObject
     public float m_AttackRange;
     [Header("プレイヤーを見つける距離")]
     public float m_SearchRange;
+    [Header("攻撃対象レイヤー")]
+    public LayerMask m_TargetLayer;
 
     [Space]
 
@@ -31,6 +33,8 @@ public class EnemyData : ScriptableObject
     public string m_MoveAnimName;
     [Header("攻撃アニメ名")]
     public string m_AttackAnimName;
+    [Header("ヒットエフェクト")]
+    public GameObject m_HitEffectPrefab;
     [Header("ヒットアニメ名")]
     public string m_HitAnimName;
 
