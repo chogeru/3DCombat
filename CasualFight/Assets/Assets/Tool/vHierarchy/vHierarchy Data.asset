@@ -15,6 +15,7 @@ MonoBehaviour:
   sceneDatas_byGuid:
     keys:
     - 901668eb744c17f40a6c7edc19f92775
+    - 609285b5b6635e944a66168742bbdd4b
     values:
     - goDatas_byGlobalId:
         keys:
@@ -27,6 +28,15 @@ MonoBehaviour:
         - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-1004725790-0
         - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-1067695106-0
         - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-1940107505-0
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-4834466580092072138-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-8703335690197969918-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-860865615520032-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-1771347547717668074-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-834944181664874800-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-2995798395929521330-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-5863697416045244372-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-3679033608735835703-8710286290712214253
+        - globalObjectIdString: GlobalObjectId_V1-2-901668eb744c17f40a6c7edc19f92775-1405979118210716844-8710286290712214253
         values:
         - colorIndex: 5
           iconNameOrGuid: 
@@ -45,4 +55,64 @@ MonoBehaviour:
         - colorIndex: 9
           iconNameOrGuid: 
         - colorIndex: 4
+          iconNameOrGuid: 
+        - colorIndex: 9
+          iconNameOrGuid: 
+        - colorIndex: 8
+          iconNameOrGuid: 
+        - colorIndex: 7
+          iconNameOrGuid: 
+        - colorIndex: 6
+          iconNameOrGuid: 
+        - colorIndex: 5
+          iconNameOrGuid: 
+        - colorIndex: 4
+          iconNameOrGuid: 
+        - colorIndex: 3
+          iconNameOrGuid: 
+        - colorIndex: 2
+          iconNameOrGuid: 
+        - colorIndex: 7
+          iconNameOrGuid: 
+    - goDatas_byGlobalId:
+        keys:
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-4834466580092072138-1174312219
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-462999411060011161-1174312219
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-8703335690197969918-1174312219
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-1405979118210716844-1174312219
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-834944181664874800-1174312219
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-2995798395929521330-1174312219
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-4834466580092072138-151620133
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-8703335690197969918-151620133
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-1405979118210716844-151620133
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-834944181664874800-151620133
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-2995798395929521330-151620133
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-3679033608735835703-151620133
+        - globalObjectIdString: GlobalObjectId_V1-2-609285b5b6635e944a66168742bbdd4b-462999411060011161-151620133
+        values:
+        - colorIndex: 8
+          iconNameOrGuid: 
+        - colorIndex: 9
+          iconNameOrGuid: 
+        - colorIndex: 7
+          iconNameOrGuid: 
+        - colorIndex: 6
+          iconNameOrGuid: 
+        - colorIndex: 5
+          iconNameOrGuid: 
+        - colorIndex: 3
+          iconNameOrGuid: 
+        - colorIndex: 9
+          iconNameOrGuid: 
+        - colorIndex: 8
+          iconNameOrGuid: 
+        - colorIndex: 7
+          iconNameOrGuid: 
+        - colorIndex: 6
+          iconNameOrGuid: 
+        - colorIndex: 5
+          iconNameOrGuid: 
+        - colorIndex: 4
+          iconNameOrGuid: 
+        - colorIndex: 2
           iconNameOrGuid: 
