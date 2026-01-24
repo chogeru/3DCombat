@@ -10,6 +10,9 @@ public class TeleportPoint : MonoBehaviour
     [Header("地点名"), SerializeField]
     string m_PointName = "新エリア";
 
+    [Header("プレビュー画像"), SerializeField] 
+    Sprite m_AreaSprite;
+    
     [Header("着地地点（空のGameObjectを指定）"), SerializeField]
     Transform m_TeleportTarget;
 

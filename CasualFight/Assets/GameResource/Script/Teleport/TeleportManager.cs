@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// テレポート管理オブジェクト
@@ -51,7 +52,10 @@ public class TeleportManager : MonoBehaviour
     /// </summary>
     public Vector3? GetNearestUnlockedPosition(Vector3 currentPos)
     {
+        //最初は空っぽにしておいて、見つかったら上書きする。最後まで空っぽなら、見つからなかったということ
         TeleportPoint nearestPoint = null;
+
+        // 「仮の最小距離」として、あえて最初に最大値を入れておく
         float minDistanceSqr = float.MaxValue;
 
         foreach (var point in m_AllPoints)
@@ -62,6 +66,7 @@ public class TeleportManager : MonoBehaviour
             if (point.IsUnlocked)
             {
                 float distSqr = (point.TeleportPosition - currentPos).sqrMagnitude;
+                // 距離が短ければ更新
                 if (distSqr < minDistanceSqr)
                 {
                     minDistanceSqr = distSqr;

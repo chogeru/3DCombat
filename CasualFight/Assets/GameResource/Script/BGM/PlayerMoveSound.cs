@@ -16,6 +16,9 @@ public class PlayerMoveSound : MonoBehaviour
     [Header("走り"), SerializeField]
     AudioClip m_DashSound;
 
+    [Header("ブリンク"), SerializeField]
+    AudioClip m_BlinkSound;
+
     //再生中の種類
     int m_CurrentState = -1;
 
@@ -44,6 +47,17 @@ public class PlayerMoveSound : MonoBehaviour
             //1なら歩き2ならは走りサウンド再生
             m_AudioSource.clip=(no == 1) ? m_WalkSound : m_DashSound;
             m_AudioSource.Play();
+        }
+    }
+
+    /// <summary>
+    /// ブリンク音再生
+    /// </summary>
+    public void PlayBlinkSound()
+    {
+        if (m_BlinkSound != null && m_AudioSource != null)
+        {
+            m_AudioSource.PlayOneShot(m_BlinkSound);
         }
     }
 }

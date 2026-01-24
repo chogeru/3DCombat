@@ -79,6 +79,15 @@ public class PlayerController : MonoBehaviour
     [Header("死亡時設定"), SerializeField]
     float m_DeathDelay = 3.0f; // 死亡アニメーション待ち時間
 
+    [Header("ダッシュ制限設定"), SerializeField]
+    int m_MaxConsecutiveDashes = 2; // 最大連続回数
+    
+    [SerializeField]
+    float m_DashResetTime = 1.0f; // リセットまでのクールタイム
+    
+    int m_CurrentDashCount = 0; // 現在の使用回数
+    float m_LastDashTime = -10f; // 最後にダッシュした時間
+
     [Header("待機設定")]
     [SerializeField, Tooltip("待機アニメーションを開始するまでの時間(秒)")]
     float m_StandbyThreshold = 5.0f;
@@ -167,6 +176,12 @@ public class PlayerController : MonoBehaviour
         // 攻撃中でもダッシュでキャンセル可能
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
+            // 回数制限チェック
+            if (m_CurrentDashCount >= m_MaxConsecutiveDashes)
+            {
+                return;
+            }
+
             // ブリンク開始前にフラグを立てて移動アニメーションの上書きを防ぐ
             m_isBlink = true;
 
@@ -177,10 +192,23 @@ public class PlayerController : MonoBehaviour
                 m_CS?.ForceResetCombo();
             }
 
+            // 音再生
+            if(m_PMS != null)
+            {
+                 m_PMS.PlayBlinkSound();
+            }
+
             // ダッシュ開始
             m_Animator.CrossFade("Dash_Start", 0.1f);
             DashProcess().Forget();
             m_IsDash = true;
+
+            // 回数加算
+            m_CurrentDashCount++;
+            m_LastDashTime = Time.time;
+            
+            // リセットタイマー開始
+            DashCountResetTimer().Forget();
         }
         else if (Input.GetKey(KeyCode.Mouse1))
         {
@@ -576,5 +604,21 @@ public class PlayerController : MonoBehaviour
         m_IsInvincible = true;
         await UniTask.Delay(System.TimeSpan.FromSeconds(m_InvincibleTime));
         m_IsInvincible = false;
+    }
+
+    /// <summary>
+    /// ダッシュ回数のリセットタイマー
+    /// </summary>
+    private async UniTaskVoid DashCountResetTimer()
+    {
+        // クールタイム待機
+        await UniTask.Delay(System.TimeSpan.FromSeconds(m_DashResetTime));
+
+        // 待機完了後、「最終ダッシュ時間」から十分経過しているか再確認
+        // (待機中に再度ダッシュしていた場合、このタスクは何もしない)
+        if (Time.time - m_LastDashTime >= m_DashResetTime)
+        {
+            m_CurrentDashCount = 0;
+        }
     }
 }
