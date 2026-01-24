@@ -73,6 +73,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] HPBarController m_HPBar; // UI参照
 
+    [Header("エフェクト設定"), SerializeField]
+    GameObject m_DeathEffect;
+
+    [Header("死亡時設定"), SerializeField]
+    float m_DeathDelay = 3.0f; // 死亡アニメーション待ち時間
+
     [Header("待機設定")]
     [SerializeField, Tooltip("待機アニメーションを開始するまでの時間(秒)")]
     float m_StandbyThreshold = 5.0f;
@@ -124,6 +130,12 @@ public class PlayerController : MonoBehaviour
     {
         // HP初期化
         m_CurrentHP = m_MaxHP;
+
+        // エフェクト初期化
+        if (m_DeathEffect != null)
+        {
+            m_DeathEffect.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -479,15 +491,80 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// 死亡処理
     /// </summary>
-    private void Die()
+    private async UniTaskVoid Die()
     {
         Debug.Log("プレイヤーが死亡しました。");
         m_IsDead = true;
+
+        // エフェクトの有効化
+        if (m_DeathEffect != null)
+        {
+            m_DeathEffect.SetActive(true);
+        }
 
         // アニメーションがある場合はここで発動
         if (m_Animator != null)
         {
             m_Animator.CrossFade("Hit_Death", 0.1f);
+        }
+
+        // 死亡演出待ち
+        await UniTask.Delay(System.TimeSpan.FromSeconds(m_DeathDelay));
+
+        // テレポート先検索
+        if (TeleportManager.TPInstance != null)
+        {
+            Vector3? targetPos = TeleportManager.TPInstance.GetNearestUnlockedPosition(transform.position);
+
+            //変数の中身がnullじゃなければ
+            if (targetPos.HasValue)
+            {
+                //変数の中身を取得
+                Vector3 dest = targetPos.Value;
+                // Y座標はプレイヤーの現在地を使用（リクエスト対応）
+                Vector3 finalPos = new Vector3(dest.x, transform.position.y, dest.z);
+
+                // 移動処理 (CharacterController使用時はenabledを切る必要がある)
+                m_Controller.enabled = false;
+                transform.position = finalPos;
+                m_Controller.enabled = true;
+
+                Debug.Log($"最寄りのテレポート地点に移動しました: {finalPos}");
+
+                // 復活処理
+                Revive();
+            }
+            else
+            {
+                Debug.LogWarning("開放済みのテレポート地点が見つかりませんでした。");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 復活処理
+    /// </summary>
+    private void Revive()
+    {
+        m_IsDead = false;
+        m_CurrentHP = m_MaxHP; // 全回復
+
+        // HPバー更新
+        if (m_HPBar != null)
+        {
+            m_HPBar.OnTakeDamage(1.0f); // 100%
+        }
+        
+        // エフェクトを戻す
+        if (m_DeathEffect != null)
+        {
+            m_DeathEffect.SetActive(false);
+        }
+
+        // アニメーションを待機に戻す
+        if (m_Animator != null)
+        {
+             m_Animator.Play("Idle"); // または Move
         }
     }
 
