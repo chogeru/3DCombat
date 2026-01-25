@@ -41,9 +41,13 @@ public class ActionController : MonoBehaviour
 
     private void Update()
     {
-        // 設定画面が開いている、またはプレイヤーが死亡している場合は入力を受け付けない
+        // テレポートUIが開いているかどうかチェック
+        bool isTeleportUIOpen = TeleportManager.TPInstance != null && TeleportManager.TPInstance.IsUIOpen;
+
+        // 設定画面が開いている、またはプレイヤーが死亡している、またはテレポートUIが開いている場合は入力を受け付けない
         if ((m_SettingsManager != null && m_SettingsManager.IsMenuOpen) || 
-            (m_PlayerController != null && m_PlayerController.IsDead))
+            (m_PlayerController != null && m_PlayerController.IsDead) ||
+            isTeleportUIOpen)
         {
             // 押しっぱなし状態などが残らないようにリセット
             m_IsPressing = false;
