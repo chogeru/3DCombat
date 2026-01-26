@@ -59,4 +59,20 @@ public class ForceFieldController : MonoBehaviour
             m_Material.SetVector(m_PlayerPosID, m_PlayerTransform.position);
         }
     }
+
+    void OnDrawGizmos()
+    {
+        // レンダラーを取得（ローカル変数は小文字開始）
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            // 枠線を描画（シアン）
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(renderer.bounds.center, renderer.bounds.size);
+
+            // 半透明の塗りつぶしを描画（少し薄いシアン）
+            Gizmos.color = new Color(0, 1, 1, 1f);
+            Gizmos.DrawCube(renderer.bounds.center, renderer.bounds.size);
+        }
+    }
 }
