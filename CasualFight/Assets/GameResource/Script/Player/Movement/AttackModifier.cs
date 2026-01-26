@@ -43,7 +43,8 @@ public class AttackModifier : MonoBehaviour
     }
 
     /// <summary>
-    /// 敵の方を向く
+    /// 近くにいる敵を探索し、攻撃時の自動追尾（移動・回転）を行うメソッド
+    /// コンボ攻撃時などに呼び出され、攻撃を敵に当てやすくする
     /// </summary>
     public void LookAtenemy()
     {
@@ -81,6 +82,9 @@ public class AttackModifier : MonoBehaviour
         // ホーミング移動（振り向きより優先または同時に行う）
         if (closestEnemyHoming != null)
         {
+            // 敵をターゲットしたら、まずはRootMotionをOFFにする
+            if (anim != null) anim.applyRootMotion = false;
+
             Vector3 targetPos = closestEnemyHoming.transform.position;
             Vector3 playerPos = transform.position;
             
@@ -121,8 +125,12 @@ public class AttackModifier : MonoBehaviour
     }
 
     /// <summary>
-    /// 目標地点まで滑らかに移動する
+    /// 攻撃時の踏み込み移動（ホーミング）を非同期で行う処理
+    /// 指定された時間(m_HomingDuration)で目標地点へ滑らかに移動する
     /// </summary>
+    /// <param name="destination">移動先の座標（敵の手前など）</param>
+    /// <param name="cc">移動に使用するCharacterController</param>
+    /// <param name="anim">RootMotion制御用のAnimator</param>
     private async UniTaskVoid StartSmoothHoming(Vector3 destination, CharacterController cc, Animator anim)
     {
         CancelHomingTask();
