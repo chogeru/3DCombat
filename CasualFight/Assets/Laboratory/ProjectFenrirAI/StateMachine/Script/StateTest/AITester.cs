@@ -55,6 +55,9 @@ namespace StateMachineAI
         public Vector3 m_SpawnPosition { get; private set; }
         public Quaternion m_SpawnRotation { get; private set; }
 
+        // DissolveController
+        public EnemyDissolveController m_DissolveController { get; private set; }
+
         /// <summary>
         /// コンポーネントの初期化（StateManagerから呼ばれる）
         /// </summary>
@@ -65,6 +68,7 @@ namespace StateMachineAI
             // コンポーネントの取得
             m_Animator = GetComponent<Animator>();
             m_Rigidbody = GetComponent<Rigidbody>();
+            m_DissolveController = GetComponent<EnemyDissolveController>();
 
             // EnemyDataのnullチェック
             if (m_EnemyData != null)

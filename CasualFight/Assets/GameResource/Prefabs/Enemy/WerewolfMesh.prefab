@@ -1122,9 +1122,19 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 13700000, guid: 69fa901acc50489d8c17af8c19ba32ae, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 69fa901acc50489d8c17af8c19ba32ae, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 02169a29bc93499d91fdd5dd16ead51a, type: 2}
+      objectReference: {fileID: -876546973899608171, guid: 64aa65939aa1d8547977c84bbfb756be,
+        type: 3}
+    - target: {fileID: 13700000, guid: 69fa901acc50489d8c17af8c19ba32ae, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: -876546973899608171, guid: 64aa65939aa1d8547977c84bbfb756be,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1149,7 +1159,17 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6733035890460706739}
+    - targetCorrespondingSourceObject: {fileID: 100148, guid: 69fa901acc50489d8c17af8c19ba32ae,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5203775934006864123}
   m_SourcePrefab: {fileID: 100100000, guid: 69fa901acc50489d8c17af8c19ba32ae, type: 3}
+--- !u!137 &1054656290567192343 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13700000, guid: 69fa901acc50489d8c17af8c19ba32ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 1054656290572367031}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1054656290572465027 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100148, guid: 69fa901acc50489d8c17af8c19ba32ae,
@@ -1225,6 +1245,20 @@ MonoBehaviour:
   m_IsDead: 0
   m_IsSearching: 1
   m_Counter: 0
+--- !u!114 &5203775934006864123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054656290572465027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68424ccfab941d64381baed1ebe8f2cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Renderer: {fileID: 1054656290567192343}
+  m_DissolveDuration: 3
 --- !u!4 &1054656290572496803 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400148, guid: 69fa901acc50489d8c17af8c19ba32ae,
