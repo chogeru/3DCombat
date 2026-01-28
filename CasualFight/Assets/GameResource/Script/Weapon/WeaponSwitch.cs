@@ -76,6 +76,17 @@ public class WeaponSwitch : MonoBehaviour
         HideWeaponTimer(m_Cts.Token).Forget();
     }
 
+    // 納刀タイマー一時停止フラグ
+    bool m_IsSheathePaused = false;
+
+    /// <summary>
+    /// 納刀タイマーの一時停止を設定
+    /// </summary>
+    public void SetSheathePaused(bool isPaused)
+    {
+        m_IsSheathePaused = isPaused;
+    }
+
     async UniTask HideWeaponTimer(CancellationToken token)
     {
         try
@@ -83,6 +94,13 @@ public class WeaponSwitch : MonoBehaviour
             float timer = 0f;
             while (timer < m_AutoSheatheDuration)
             {
+                // 一時停止中はタイマーを進めない
+                if (m_IsSheathePaused)
+                {
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken: token);
+                    continue;
+                }
+
                 // 移動入力がある場合
                 if (m_PC.m_MoveInput.sqrMagnitude > 0.01f)
                 {
