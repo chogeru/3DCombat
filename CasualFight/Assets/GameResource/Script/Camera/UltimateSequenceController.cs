@@ -21,7 +21,7 @@ public class UltimateSequenceController : MonoBehaviour
 
     [Header("ズーム設定")]
     [SerializeField]
-    float m_StartFov = 60f;
+    float m_StartFov = 70f;
 
     [SerializeField]
     float m_EndFov = 15f;
@@ -31,10 +31,19 @@ public class UltimateSequenceController : MonoBehaviour
 
     [Header("カメラの配置設定")]
     [Header("終着点の何m前に置くか"),SerializeField]
-    float m_FrontOffset = 6.0f;
+    float m_FrontOffset = 0.5f;
 
     [Header("カメラの高さ"),SerializeField]
-    float m_CameraHight = 1.2f;
+    float m_CameraHight = 0.2f;
+
+    [Header("注視点の高さ"), SerializeField] 
+    float m_LookAtHeight = 0.8f;
+
+    [Header("注視点を右にずらす量"),SerializeField] 
+    float m_LookAtSideOffset = 1.0f; 
+
+    [Header("横へのズレ（プラスでキャラが左に寄る）")]
+    [SerializeField] float m_SideOffset = 1.5f;
 
     [Header("WeaponSwitch"), SerializeField]
     WeaponSwitch m_WeaponSwitch;
@@ -68,12 +77,35 @@ public class UltimateSequenceController : MonoBehaviour
     [SerializeField] int m_HighPriority = 20;
     [SerializeField] int m_LowPriority = 0;
 
+    [Header("Main Camera Brain"), SerializeField]
+    CinemachineBrain m_MainBrain;
+
+    // 元のブレンド設定保存用
+    CinemachineBlendDefinition m_OriginalBlend;
+
+    [Header("視点操作用カメラオブジェクト"), SerializeField]
+    GameObject m_ControlCameraObj;
+
     /// <summary>
     /// アニメーションに合わせてズームしつつ、刀の表示切り替えと納刀タイマー制御を行う
     /// </summary>
     /// <returns></returns>
     private async UniTask SyncZoomToAnimationAsync()
     {
+        // 視点操作用カメラをOFFにする
+        if (m_ControlCameraObj != null)
+        {
+            m_ControlCameraObj.SetActive(false);
+        }
+
+        // ブレンド設定をCutに変更
+        if (m_MainBrain != null)
+        {
+            // 現在の設定を保存
+            m_OriginalBlend = m_MainBrain.m_DefaultBlend;
+            // カット（一瞬）に変更
+            m_MainBrain.m_DefaultBlend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Style.Cut, 0);
+        }
 
         // 演出開始：納刀タイマー一時停止、刀切り替え、カメラ優先度変更
         if (m_WeaponSwitch != null)
@@ -81,8 +113,7 @@ public class UltimateSequenceController : MonoBehaviour
             m_WeaponSwitch.SetSheathePaused(true);
         }
         
-        if (m_RightHandSword != null) m_RightHandSword.SetActive(false);
-        if (m_LeftHandSword != null) m_LeftHandSword.SetActive(true);
+
 
         if (m_KamaeCamera != null)
         {
@@ -117,22 +148,8 @@ public class UltimateSequenceController : MonoBehaviour
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
 
-        // 演出停止（アニメーション終了後）：刀戻し、納刀タイマー再開・リセット、カメラ優先度戻す
-        
-        if (m_LeftHandSword != null) m_LeftHandSword.SetActive(false);
-        if (m_RightHandSword != null) m_RightHandSword.SetActive(true);
 
-        if (m_KamaeCamera != null)
-        {
-            m_KamaeCamera.m_Priority = m_LowPriority;
-        }
-        
-        if (m_WeaponSwitch != null)
-        {
-            m_WeaponSwitch.SetSheathePaused(false);
-            // 機能を再スタート（再表示扱いにしてタイマーリセット）
-            m_WeaponSwitch.DrawWeapon(); 
-        }
+
     }
 
     /// <summary>
@@ -155,44 +172,45 @@ public class UltimateSequenceController : MonoBehaviour
                 m_SwingCamera.transform.SetParent(null);
             }
 
+            m_SwingCamera.Follow = null;
+            m_SwingCamera.LookAt = null;
+
             //プレイヤーの正面方向取得
             Vector3 forwardDir=m_Player.transform.forward;
-        
-            //プレイヤーの向いている方向に指定した距離を掛け算し、プレイヤーの終着点を足す（カメラの設置座標）
-            Vector3 cameraPos=endPosition+forwardDir*m_FrontOffset;
 
-            //高さの適応
-            cameraPos.y = endPosition.y+m_CameraHight;
+            //プレイヤーの右方向取得
+            Vector3 rightDir = m_Player.transform.right;
+
+            // m_SideOffset で右に寄せることで、キャラを相対的に左へ配置する準備をします
+            Vector3 cameraPos = endPosition + (forwardDir * m_FrontOffset) + (rightDir * m_SideOffset);
+
+            // 0.2m などの低さにする
+            cameraPos.y = endPosition.y + m_CameraHight;
 
             //実際にカメラを設置する
             m_SwingCamera.transform.position = cameraPos;
 
-            //キャラクターが突っ込んでくる地点（地面から1m上＝腰付近）を見つめる
-            m_SwingCamera.transform.LookAt(endPosition + Vector3.up * 1.0f);
+            //キャラクターが突っ込んでくる地点を見つめる
+            Vector3 lookTarget = endPosition + (Vector3.up * m_LookAtHeight) + (rightDir * m_LookAtSideOffset);
+
+            m_SwingCamera.transform.LookAt(lookTarget);
 
             //前回のカメラ（構え用）の優先度を0にする
-            if(m_KamaeCamera != null)
+            if (m_KamaeCamera != null)
             {
                 m_KamaeCamera.m_Priority = 0;
             }
 
-            //こちらのカメラ（スイング用）の有効化（優先度を20にする）
+            //こちらのカメラ（スイング用）の有効化（優先度を40にする）
             if(m_SwingCamera != null)
             {
-                m_SwingCamera.m_Priority = 20;
+                m_SwingCamera.m_Priority = 40;
             }
 
-            //アニメーションの長さ（秒）を取得
-            float animationDuration = stateInfo.length;
+            // Swingスタート: 右手ON、左手OFF
+            if (m_RightHandSword != null) m_RightHandSword.SetActive(true);
+            if (m_LeftHandSword != null) m_LeftHandSword.SetActive(false);
 
-            //アニメーション終了まで待機
-            await UniTask.Delay(TimeSpan.FromSeconds(animationDuration), cancellationToken: this.GetCancellationTokenOnDestroy());
-
-            //アニメーションが終わると同時に優先度を0に戻す
-            if(m_SwingCamera != null)
-            {
-                m_SwingCamera.m_Priority = 0;
-            }
         }
         catch (OperationCanceledException) 
         {
@@ -240,6 +258,43 @@ public class UltimateSequenceController : MonoBehaviour
         {
             // 構えカメラの優先度を20に設定
             m_KamaeCamera.m_Priority = 20;
+        }
+
+        // 構えスタート: 右手OFF、左手ON
+        if (m_RightHandSword != null) m_RightHandSword.SetActive(false);
+        if (m_LeftHandSword != null) m_LeftHandSword.SetActive(true);
+    }
+
+    /// <summary>
+    /// アニメーションイベントから呼び出し。Swing終了時の処理（カメラ戻しなど）
+    /// </summary>
+    public void OnSwingEndEvent()
+    {
+        // 1. スイングカメラ、構えカメラの優先度を戻す
+        if (m_SwingCamera != null) m_SwingCamera.m_Priority = 0;
+        if (m_KamaeCamera != null) m_KamaeCamera.m_Priority = m_LowPriority;
+
+        // 2. 武器表示を戻す（左手ON、右手OFF）
+        if (m_LeftHandSword != null) m_LeftHandSword.SetActive(false);
+        if (m_RightHandSword != null) m_RightHandSword.SetActive(true);
+
+        // 3. WeaponSwitch再開
+        if (m_WeaponSwitch != null)
+        {
+            m_WeaponSwitch.SetSheathePaused(false);
+            m_WeaponSwitch.DrawWeapon(); 
+        }
+
+        // 4. ブレンド設定を元に戻す
+        if (m_MainBrain != null)
+        {
+            m_MainBrain.m_DefaultBlend = m_OriginalBlend;
+        }
+
+        // 5. 視点操作用カメラをONに戻す
+        if (m_ControlCameraObj != null)
+        {
+            m_ControlCameraObj.SetActive(true);
         }
     }
 }
