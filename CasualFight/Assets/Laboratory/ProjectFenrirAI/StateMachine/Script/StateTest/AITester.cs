@@ -22,7 +22,7 @@ namespace StateMachineAI
         Return,     //初期位置へ帰還
     }
 
-    public class AITester : StatefulObjectBase<AITester, AIState_Type>
+    public class AITester : StatefulObjectBase<AITester, AIState_Type>, IDamageable
     {
         // 自分のアニメーター
         public Animator m_Animator { get; private set; }
@@ -44,6 +44,9 @@ namespace StateMachineAI
 
         // 死亡判定フラグ
         public bool m_IsDead = false;
+
+        // フリーズ状態フラグ
+        bool m_IsFrozen = false;
 
         // 索敵中かどうかのフラグ
         public bool m_IsSearching = true;
@@ -158,6 +161,33 @@ namespace StateMachineAI
         }
 
         // ... (省略)
+
+        protected override void Update()
+        {
+            // フリーズ中は更新しない（アニメーションも止まるが、念のため論理更新も止める）
+            if (m_IsFrozen) return;
+
+            base.Update();
+        }
+
+        // IDamageableの実装
+        public void SetFreeze(bool isFrozen)
+        {
+            m_IsFrozen = isFrozen;
+
+            // アニメーションの停止/再開
+            if (m_Animator != null)
+            {
+                m_Animator.speed = isFrozen ? 0 : 1;
+            }
+
+            // 必要であればRigidbodyの停止処理などもここに追加
+            if (m_Rigidbody != null && isFrozen)
+            {
+                m_Rigidbody.velocity = Vector3.zero;
+                m_Rigidbody.angularVelocity = Vector3.zero;
+            }
+        }
 
         /// <summary>
         /// ステート切り替えのオーバーライド

@@ -18,6 +18,8 @@ public class UltimateSequenceController : MonoBehaviour
 
     [Header("プレイヤー"), SerializeField]
     Animator m_Player;
+    [SerializeField]
+    PlayerController m_PlayerController;
 
     [Header("ズーム設定")]
     [SerializeField]
@@ -53,6 +55,20 @@ public class UltimateSequenceController : MonoBehaviour
 
     [Header("Left Hand Sword (Ultimate)"), SerializeField]
     GameObject m_LeftHandSword;
+
+    [Header("攻撃判定の設定")]
+    [SerializeField] Vector3 m_AttackBoxSize = new Vector3(8.0f, 2.0f, 1.0f); // 横8m, 高2m, 厚1m
+    [SerializeField] int m_Damage = 100;
+    [SerializeField] LayerMask m_EnemyLayer;
+
+    [Header("レイヤー設定")]
+    [SerializeField] string m_PlayerLayerName = "Player";
+    [SerializeField] string m_EnemyLayerName = "Enemy";
+
+    // 演出中に当たった敵を保存しておくリスト
+    private List<IDamageable> m_MarkedTargets = new List<IDamageable>();
+
+
 
     /// <summary>
     /// アニメーションイベントなどから呼び出す想定
@@ -293,6 +309,21 @@ public class UltimateSequenceController : MonoBehaviour
         // 構えスタート: 右手OFF、左手ON
         if (m_RightHandSword != null) m_RightHandSword.SetActive(false);
         if (m_LeftHandSword != null) m_LeftHandSword.SetActive(true);
+
+        // プレイヤーを無敵にする（ここから開始）
+        if (m_PlayerController != null)
+        {
+            m_PlayerController.SetInvincible(true);
+        }
+
+        // 衝突判定を無効化
+        SetCollisionIgnore(true);
+
+        // プレイヤーの操作をロック
+        if (m_PlayerController != null)
+        {
+            m_PlayerController.SetEventLock(true);
+        }
     }
 
     /// <summary>
@@ -327,5 +358,101 @@ public class UltimateSequenceController : MonoBehaviour
             m_ControlCamera.enabled = true;
             m_ControlCamera.m_Priority = m_OriginalControlPriority;
         }
+
+        // 無敵解除（念のためここでも呼ぶ）
+        EndInvincibility();
+    }
+
+    /// <summary>
+    /// 【アニメーションイベントから呼ぶ】
+    /// プレイヤーの無敵時間を終了させる
+    /// </summary>
+    public void EndInvincibility()
+    {
+        if (m_PlayerController != null)
+        {
+            m_PlayerController.SetInvincible(false);
+        }
+
+        // 衝突判定を元に戻す
+        SetCollisionIgnore(false);
+
+        // プレイヤーの操作ロック解除
+        if (m_PlayerController != null)
+        {
+            m_PlayerController.SetEventLock(false);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // 念のため衝突設定を元に戻す
+        SetCollisionIgnore(false);
+        
+        // 操作ロック解除
+        if (m_PlayerController != null)
+        {
+            m_PlayerController.SetEventLock(false);
+        }
+    }
+
+    /// <summary>
+    /// プレイヤーと敵の衝突判定を設定する
+    /// </summary>
+    private void SetCollisionIgnore(bool ignore)
+    {
+        int playerLayer = LayerMask.NameToLayer(m_PlayerLayerName);
+        int enemyLayer = LayerMask.NameToLayer(m_EnemyLayerName);
+
+        if (playerLayer >= 0 && enemyLayer >= 0)
+        {
+            Physics.IgnoreLayerCollision(playerLayer, enemyLayer, ignore);
+        }
+    }
+
+    /// <summary>
+    /// 【アニメーションイベントから呼ぶ】
+    /// 移動中や連続斬り中に呼び出し、範囲内の敵をフリーズさせてリストに溜める
+    /// </summary>
+    public void MarkTargets()
+    {
+        // 判定の中心点を計算
+        Vector3 center = m_Player.transform.position + m_Player.transform.forward * 0.5f;
+        Quaternion rotation = m_Player.transform.rotation;
+
+        // 横線の判定（OverlapBox）
+        Collider[] hitEnemies = Physics.OverlapBox(center, m_AttackBoxSize / 2f, rotation, m_EnemyLayer);
+
+        foreach (Collider enemy in hitEnemies)
+        {
+            var target = enemy.GetComponent<IDamageable>();
+            
+            // まだリストに入っていない敵だけを処理
+            if (target != null && !m_MarkedTargets.Contains(target))
+            {
+                m_MarkedTargets.Add(target);
+                
+                // 敵を一時停止（フリーズ）させる
+                target.SetFreeze(true);
+                
+                Debug.Log($"{enemy.name} をマーク＆フリーズしました");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 【アニメーションイベントから呼ぶ】
+    /// 最後の振り下ろし（納刀）の瞬間に呼び出し、溜めた敵に一斉ダメージ
+    /// </summary>
+    public void ResolveDamage()
+    {
+        foreach (var target in m_MarkedTargets)
+        {
+            target.SetFreeze(false); // 停止解除
+            target.TakeDamage(m_Damage); // ダメージ適用
+        }
+
+        // リストをクリアして次の必殺技に備える
+        m_MarkedTargets.Clear();
     }
 }

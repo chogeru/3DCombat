@@ -31,6 +31,12 @@ public class PlayerHitController : MonoBehaviour
     {
         // 状態チェック（スーパーアーマー判定）
         
+        // プレイヤーが無敵状態なら、ヒット処理（アニメーション、硬直、ダメージ通知）を全てスキップする
+        if (m_PC != null && m_PC.IsInvincible)
+        {
+            return;
+        }
+
         // 攻撃中 (m_IsAttack == true) なら、ヒットアニメーションと硬直をスキップして終了する
         if (m_PC != null && m_PC.m_IsAttack)
         {

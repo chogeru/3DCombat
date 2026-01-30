@@ -288,6 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_KamaeCamera: {fileID: 2124773601}
   m_Player: {fileID: 769137394}
+  m_PlayerController: {fileID: 769137404}
   m_StartFov: 70
   m_EndFov: 15
   m_SwingCamera: {fileID: 2028756429}
@@ -299,10 +300,29 @@ MonoBehaviour:
   m_WeaponSwitch: {fileID: 769137393}
   m_RightHandSword: {fileID: 1749532302}
   m_LeftHandSword: {fileID: 692021821}
+  m_AttackBoxSize: {x: 8, y: 8, z: 8}
+  m_Damage: 100
+  m_EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  m_PlayerLayerName: Player
+  m_EnemyLayerName: Enemy
   m_HighPriority: 20
   m_LowPriority: 0
   m_MainBrain: {fileID: 1526645528}
   m_ControlCamera: {fileID: 757222619}
+--- !u!114 &769137404 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 720364965311926367, guid: 11b8bda51e23cbf41be5049953750d07,
+    type: 3}
+  m_PrefabInstance: {fileID: 8710286290712214253}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769137364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00913644e3c346e4cba190de085f5958, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &787373342
 GameObject:
   m_ObjectHideFlags: 3

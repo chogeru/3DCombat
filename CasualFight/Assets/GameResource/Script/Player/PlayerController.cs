@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
     [Header("ダメージ設定")]
     [SerializeField] float m_InvincibleTime = 1.0f; // ダメージ後の無敵時間
     bool m_IsInvincible = false;
+    public bool IsInvincible => m_IsInvincible;
 
     [SerializeField] HPBarController m_HPBar; // UI参照
 
@@ -122,6 +123,9 @@ public class PlayerController : MonoBehaviour
     // ガードアニメーション発火済みフラグ
     bool m_IsGuardAnimatorTriggered = false;
 
+    // イベント演出中の操作ロックフラグ
+    bool m_IsEventLocked = false;
+
     /// <summary>
     /// 初期化処理
     /// </summary>
@@ -157,6 +161,9 @@ public class PlayerController : MonoBehaviour
 
         // 硬直中は入力を無視
         if (m_PHC != null && m_PHC.IsStunned) return;
+
+        // 【追加】イベントロック中は操作不能
+        if (m_IsEventLocked) return;
 
         //入力取得
         float h = Input.GetAxisRaw("Horizontal");
@@ -378,6 +385,9 @@ public class PlayerController : MonoBehaviour
 
         // 硬直中は物理移動も停止（念のため）
         if (m_PHC != null && m_PHC.IsStunned) return;
+
+        // 【追加】イベントロック中は物理移動も停止
+        if (m_IsEventLocked) return;
 
         //ブリンク中はRigidbodyによる移動を停止
         if (m_isBlink)
@@ -604,6 +614,33 @@ public class PlayerController : MonoBehaviour
         m_IsInvincible = true;
         await UniTask.Delay(System.TimeSpan.FromSeconds(m_InvincibleTime));
         m_IsInvincible = false;
+    }
+
+    /// <summary>
+    /// 外部から無敵状態を設定する
+    /// </summary>
+    public void SetInvincible(bool isInvincible)
+    {
+        m_IsInvincible = isInvincible;
+    }
+
+    /// <summary>
+    /// イベント演出などによる操作ロックを設定する
+    /// </summary>
+    public void SetEventLock(bool isLocked)
+    {
+        m_IsEventLocked = isLocked;
+
+        // ロック時は入力をリセットして移動アニメーションも止める
+        if (isLocked)
+        {
+            m_MoveInput = Vector3.zero;
+            if (m_Animator != null)
+            {
+                m_Animator.SetFloat("X", 0);
+                m_Animator.SetFloat("Y", 0);
+            }
+        }
     }
 
     /// <summary>
