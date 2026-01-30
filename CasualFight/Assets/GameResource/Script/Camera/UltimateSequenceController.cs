@@ -83,8 +83,31 @@ public class UltimateSequenceController : MonoBehaviour
     // 元のブレンド設定保存用
     CinemachineBlendDefinition m_OriginalBlend;
 
-    [Header("視点操作用カメラオブジェクト"), SerializeField]
-    GameObject m_ControlCameraObj;
+    [Header("視点操作用カメラ(FreeLook)"), SerializeField]
+    CinemachineFreeLook m_ControlCamera;
+
+    // 視点操作カメラの元の優先度保存用
+    int m_OriginalControlPriority = 10;
+
+    void Start()
+    {
+        if (m_ControlCamera != null)
+        {
+            m_OriginalControlPriority = m_ControlCamera.m_Priority;
+        }
+
+        // 1回目の開始時から2回目と同じ状態（構えカメラ有効＆低優先度）にしておく
+        if (m_KamaeCamera != null)
+        {
+            m_KamaeCamera.gameObject.SetActive(true);
+            m_KamaeCamera.m_Priority = m_LowPriority;
+        }
+
+        if (m_SwingCamera != null)
+        {
+            m_SwingCamera.m_Priority = 0;
+        }
+    }
 
     /// <summary>
     /// アニメーションに合わせてズームしつつ、刀の表示切り替えと納刀タイマー制御を行う
@@ -92,12 +115,6 @@ public class UltimateSequenceController : MonoBehaviour
     /// <returns></returns>
     private async UniTask SyncZoomToAnimationAsync()
     {
-        // 視点操作用カメラをOFFにする
-        if (m_ControlCameraObj != null)
-        {
-            m_ControlCameraObj.SetActive(false);
-        }
-
         // ブレンド設定をCutに変更
         if (m_MainBrain != null)
         {
@@ -107,19 +124,27 @@ public class UltimateSequenceController : MonoBehaviour
             m_MainBrain.m_DefaultBlend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Style.Cut, 0);
         }
 
+        //カメラの優先度の変更
+        if (m_KamaeCamera != null)
+        {
+            m_KamaeCamera.gameObject.SetActive(true);
+            m_KamaeCamera.m_Priority = m_HighPriority;
+        }
+
+
+        // 視点操作用カメラをOFFにする
+        if (m_ControlCamera != null)
+        {
+            m_ControlCamera.m_Priority = 0;
+            m_ControlCamera.enabled = false;
+        }
+
         // 演出開始：納刀タイマー一時停止、刀切り替え、カメラ優先度変更
         if (m_WeaponSwitch != null)
         {
             m_WeaponSwitch.SetSheathePaused(true);
         }
         
-
-
-        if (m_KamaeCamera != null)
-        {
-            m_KamaeCamera.m_Priority = m_HighPriority;
-        }
-
         // アニメーション情報取得
         AnimatorStateInfo stateInfo = m_Player.GetCurrentAnimatorStateInfo(0);
 
@@ -147,9 +172,6 @@ public class UltimateSequenceController : MonoBehaviour
             // 1フレーム待機
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
-
-
-
     }
 
     /// <summary>
@@ -257,7 +279,15 @@ public class UltimateSequenceController : MonoBehaviour
         if (m_KamaeCamera != null)
         {
             // 構えカメラの優先度を20に設定
+            m_KamaeCamera.gameObject.SetActive(true);
             m_KamaeCamera.m_Priority = 20;
+        }
+
+        // 視点操作用カメラを無効化
+        if (m_ControlCamera != null)
+        {
+             m_ControlCamera.m_Priority = 0;
+             m_ControlCamera.enabled = false;
         }
 
         // 構えスタート: 右手OFF、左手ON
@@ -292,9 +322,10 @@ public class UltimateSequenceController : MonoBehaviour
         }
 
         // 5. 視点操作用カメラをONに戻す
-        if (m_ControlCameraObj != null)
+        if (m_ControlCamera != null)
         {
-            m_ControlCameraObj.SetActive(true);
+            m_ControlCamera.enabled = true;
+            m_ControlCamera.m_Priority = m_OriginalControlPriority;
         }
     }
 }

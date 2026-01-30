@@ -232,12 +232,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8710286290712214253}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &757222618 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7938523834192359747, guid: 11b8bda51e23cbf41be5049953750d07,
+--- !u!114 &757222619 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8139966859584402500, guid: 11b8bda51e23cbf41be5049953750d07,
     type: 3}
   m_PrefabInstance: {fileID: 8710286290712214253}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 319d2fe34a804e245819465c9505ea59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &769137364 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 834944181664874800, guid: 11b8bda51e23cbf41be5049953750d07,
@@ -296,7 +302,7 @@ MonoBehaviour:
   m_HighPriority: 20
   m_LowPriority: 0
   m_MainBrain: {fileID: 1526645528}
-  m_ControlCameraObj: {fileID: 757222618}
+  m_ControlCamera: {fileID: 757222619}
 --- !u!1 &787373342
 GameObject:
   m_ObjectHideFlags: 3
@@ -948,6 +954,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5971951815852219007, guid: 11b8bda51e23cbf41be5049953750d07,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6457196526538119051, guid: 11b8bda51e23cbf41be5049953750d07,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1013,9 +1024,24 @@ PrefabInstance:
       propertyPath: field of view
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 7771504007511908254, guid: 11b8bda51e23cbf41be5049953750d07,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7938523834192359747, guid: 11b8bda51e23cbf41be5049953750d07,
+        type: 3}
+      propertyPath: m_Name
+      value: FreeLookCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 7938523834192359747, guid: 11b8bda51e23cbf41be5049953750d07,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8139966859584402500, guid: 11b8bda51e23cbf41be5049953750d07,
+        type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8233475320168974966, guid: 11b8bda51e23cbf41be5049953750d07,
@@ -1026,6 +1052,11 @@ PrefabInstance:
     - target: {fileID: 8233475320168974966, guid: 11b8bda51e23cbf41be5049953750d07,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8438485143367619217, guid: 11b8bda51e23cbf41be5049953750d07,
+        type: 3}
+      propertyPath: m_DefaultBlend.m_Time
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8807191481319277464, guid: 11b8bda51e23cbf41be5049953750d07,
