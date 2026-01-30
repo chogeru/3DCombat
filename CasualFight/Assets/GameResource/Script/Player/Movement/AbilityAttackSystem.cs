@@ -48,6 +48,9 @@ public class AbilityAttackSystem : MonoBehaviour
     [Header("プレイヤーコントローラー"), SerializeField]
     PlayerController m_PC;
 
+    [Header("テレポート攻撃用コントローラー"), SerializeField]
+    TeleportAttackController m_TeleportController;
+
     //Ultが発動できるか判定
     bool m_IsUlt = false;
 
@@ -96,6 +99,14 @@ public class AbilityAttackSystem : MonoBehaviour
 
         //ゲージ追加
         AddEnergy(10f);
+
+        // テレポート攻撃コントローラーがあればそちらを実行
+        if (m_TeleportController != null)
+        {
+            m_TeleportController.ExecuteTeleportAttack().Forget();
+            AbilityCoolTimer(m_Ability).Forget();
+            return;
+        }
 
         //アニメーション再生
         if (m_Animator != null)
