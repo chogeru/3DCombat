@@ -300,7 +300,7 @@ MonoBehaviour:
   m_WeaponSwitch: {fileID: 769137393}
   m_RightHandSword: {fileID: 1749532302}
   m_LeftHandSword: {fileID: 692021821}
-  m_AttackBoxSize: {x: 8, y: 8, z: 8}
+  m_AttackBoxSize: {x: 15, y: 15, z: 15}
   m_Damage: 100
   m_EnemyLayer:
     serializedVersion: 2
