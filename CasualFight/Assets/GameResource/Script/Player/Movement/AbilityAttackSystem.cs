@@ -59,6 +59,17 @@ public class AbilityAttackSystem : MonoBehaviour
             m_IsUlt = true;
         }
 
+        // 【追加】イベント中や会話中は入力をブロックするが、クールタイム処理（UniTask）は動き続ける
+        // これにより、UIが表示されていなくても裏でクールダウンは進行する
+        if (GameStateManager.Instance != null)
+        {
+            var state = GameStateManager.Instance.CurrentState;
+            if (state == GameStateManager.GameState.Event || state == GameStateManager.GameState.Dialogue)
+            {
+                return;
+            }
+        }
+
         // ダッシュ中は発動不可
         bool isDashing = m_PC != null && m_PC.m_IsDash;
 

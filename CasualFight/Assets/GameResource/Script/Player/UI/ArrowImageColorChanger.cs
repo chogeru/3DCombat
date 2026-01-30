@@ -29,6 +29,13 @@ public class ArrowImageColorChanger : MonoBehaviour
 
     private void Update()
     {
+        // イベント中は処理しない（負荷軽減＆エラー防止）
+        if (GameStateManager.Instance != null)
+        {
+            var state = GameStateManager.Instance.CurrentState;
+            if (state == GameStateManager.GameState.Event || state == GameStateManager.GameState.Dialogue) return;
+        }
+
         if (m_TargetImage == null) return;
 
         //サイン波を使って0.0〜1.0の間を滑らかに行き来させる

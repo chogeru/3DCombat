@@ -61,6 +61,10 @@ public class UltimateSequenceController : MonoBehaviour
     [SerializeField] int m_Damage = 100;
     [SerializeField] LayerMask m_EnemyLayer;
 
+    [Header("エフェクト設定")]
+    [SerializeField, Tooltip("ダッシュ時に表示するパーティクル等のオブジェクト")]
+    GameObject m_DashParticleObject;
+
     [Header("レイヤー設定")]
     [SerializeField] string m_PlayerLayerName = "Player";
     [SerializeField] string m_EnemyLayerName = "Enemy";
@@ -160,6 +164,13 @@ public class UltimateSequenceController : MonoBehaviour
         {
             m_WeaponSwitch.SetSheathePaused(true);
         }
+        // プレイヤーを無敵にする
+        if (m_PlayerController != null)
+        {
+            m_PlayerController.SetInvincible(true);
+        }
+
+        // アニメーション情報取得
         
         // アニメーション情報取得
         AnimatorStateInfo stateInfo = m_Player.GetCurrentAnimatorStateInfo(0);
@@ -324,6 +335,17 @@ public class UltimateSequenceController : MonoBehaviour
         {
             m_PlayerController.SetEventLock(true);
         }
+        // プレイヤーの操作をロック
+        if (m_PlayerController != null)
+        {
+            m_PlayerController.SetEventLock(true);
+        }
+
+        // ゲームステートをイベントに変更（UI非表示など）
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.ChangeState(GameStateManager.GameState.Event);
+        }
     }
 
     /// <summary>
@@ -361,6 +383,9 @@ public class UltimateSequenceController : MonoBehaviour
 
         // 無敵解除（念のためここでも呼ぶ）
         EndInvincibility();
+
+        // パーティクルを消す（念のため）
+        OnDashParticleEnd();
     }
 
     /// <summary>
@@ -382,17 +407,33 @@ public class UltimateSequenceController : MonoBehaviour
         {
             m_PlayerController.SetEventLock(false);
         }
+
+        // ゲームステートを戦闘中に戻す（UI再表示）
+        if (GameStateManager.Instance != null)
+        {
+            // ※状況に応じて Exploration に戻すべき場合は調整が必要ですが、必殺技終わりは基本的に戦闘中とみなします
+            GameStateManager.Instance.ChangeState(GameStateManager.GameState.Combat);
+        }
     }
 
     private void OnDestroy()
     {
         // 念のため衝突設定を元に戻す
         SetCollisionIgnore(false);
+
+        // パーティクルを消す
+        OnDashParticleEnd();
         
         // 操作ロック解除
         if (m_PlayerController != null)
         {
             m_PlayerController.SetEventLock(false);
+        }
+
+        // ゲームステートを元に戻す（安全策）
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.ChangeState(GameStateManager.GameState.Exploration); // 探索に戻しておく
         }
     }
 
@@ -454,5 +495,29 @@ public class UltimateSequenceController : MonoBehaviour
 
         // リストをクリアして次の必殺技に備える
         m_MarkedTargets.Clear();
+    }
+
+    /// <summary>
+    /// 【アニメーションイベントから呼ぶ】
+    /// ダッシュ演出用のパーティクルを表示する
+    /// </summary>
+    public void OnDashParticleStart()
+    {
+        if (m_DashParticleObject != null)
+        {
+            m_DashParticleObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// 【アニメーションイベントから呼ぶ】
+    /// ダッシュ演出用のパーティクルを非表示にする
+    /// </summary>
+    public void OnDashParticleEnd()
+    {
+        if (m_DashParticleObject != null)
+        {
+            m_DashParticleObject.SetActive(false);
+        }
     }
 }
