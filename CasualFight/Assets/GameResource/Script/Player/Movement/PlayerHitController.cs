@@ -102,14 +102,29 @@ public class PlayerHitController : MonoBehaviour
     }
 
     // ヒットストップ処理
+    // ヒットストップ処理用のキャンセルトークンソース
+    System.Threading.CancellationTokenSource m_StunCTS;
+
+    // ヒットストップ処理
     private async UniTaskVoid StartHitStop()
     {
+        // 前回の待機をキャンセル（上書き）
+        m_StunCTS?.Cancel();
+        m_StunCTS = new System.Threading.CancellationTokenSource();
+        var token = m_StunCTS.Token;
+
         // 動作停止開始
-        
         IsStunned = true;
 
-        // 待機
-        await UniTask.Delay(System.TimeSpan.FromSeconds(m_StunDuration));
+        // 待機（キャンセル時は例外を投げずにboolで返す）
+        bool canceled = await UniTask.Delay(System.TimeSpan.FromSeconds(m_StunDuration), cancellationToken: token).SuppressCancellationThrow();
+
+        if (canceled)
+        {
+            // キャンセルされた＝次の被弾が来て上書きされた、ということなので
+            // フラグはいじらずに終了する（新しいタスクに任せる）
+            return;
+        }
 
         // 動作再開
         IsStunned = false;
