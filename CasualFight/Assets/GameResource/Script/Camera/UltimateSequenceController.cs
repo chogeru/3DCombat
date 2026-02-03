@@ -20,6 +20,11 @@ public class UltimateSequenceController : MonoBehaviour
     Animator m_Player;
     [SerializeField]
     PlayerController m_PlayerController;
+    
+    [Header("AbilityAttackSystem"), SerializeField]
+    AbilityAttackSystem m_AAS;
+
+    [Header("ズーム設定")]
 
     [Header("ズーム設定")]
     [SerializeField]
@@ -114,6 +119,11 @@ public class UltimateSequenceController : MonoBehaviour
         if (m_ControlCamera != null)
         {
             m_OriginalControlPriority = m_ControlCamera.m_Priority;
+        }
+
+        if (m_AAS == null && m_Player != null)
+        {
+            m_AAS = m_Player.GetComponent<AbilityAttackSystem>();
         }
 
         // 1回目の開始時から2回目と同じ状態（構えカメラ有効＆低優先度）にしておく
@@ -386,6 +396,12 @@ public class UltimateSequenceController : MonoBehaviour
 
         // パーティクルを消す（念のため）
         OnDashParticleEnd();
+
+        // 6. スキル実行中フラグの解除
+        if (m_AAS != null)
+        {
+            m_AAS.ResetSkillFlags();
+        }
     }
 
     /// <summary>

@@ -16,7 +16,10 @@ public class AbilityAttackSystem : MonoBehaviour
         [Header("表示用Text")]
         public Text m_CoolTimeText;
         [Header("表示用UI")]
+        [Header("表示用UI")]
         public Image m_KeyCodeImage;
+        [Header("チャージ(Fill)用画像")]
+        public Image m_FillImage;
         [HideInInspector] public bool m_IsCoolingDown;
     }
 
@@ -51,6 +54,9 @@ public class AbilityAttackSystem : MonoBehaviour
     [Header("テレポート攻撃用コントローラー"), SerializeField]
     TeleportAttackController m_TeleportController;
 
+    [Header("必殺技演出コントローラー"), SerializeField]
+    UltimateSequenceController m_USC;
+
     //Ultが発動できるか判定
     bool m_IsUlt = false;
 
@@ -84,13 +90,13 @@ public class AbilityAttackSystem : MonoBehaviour
         bool isStunned = m_PC != null && m_PC.IsStunned;
 
         //Eキーを押したらアビリティ発動
-        if (Input.GetKeyDown(KeyCode.E) && !m_Ability.m_IsCoolingDown && m_WeaponSwitch.IsWeaponDrawn && !isDashing && !isStunned)
+        if (Input.GetKeyDown(KeyCode.E) && !m_Ability.m_IsCoolingDown && m_WeaponSwitch.IsWeaponDrawn && !isDashing && !isStunned && !m_IsSkillActive)
         {
             AbilityAttack();
         }
 
         //Qキーを押したら必殺技発動
-        if (Input.GetKeyDown(KeyCode.Q) && !m_Ult.m_IsCoolingDown && m_IsUlt && m_WeaponSwitch.IsWeaponDrawn && !isDashing && !isStunned)
+        if (Input.GetKeyDown(KeyCode.Q) && !m_Ult.m_IsCoolingDown && m_IsUlt && m_WeaponSwitch.IsWeaponDrawn && !isDashing && !isStunned && !m_IsSkillActive)
         {
             UltimateAttack();
         }
@@ -104,8 +110,7 @@ public class AbilityAttackSystem : MonoBehaviour
     {
         Debug.Log("アビリティ発動");
 
-        //ゲージ追加
-        AddEnergy(10f);
+
 
         // テレポート攻撃コントローラーがあればそちらを実行
         if (m_TeleportController != null)
@@ -145,13 +150,50 @@ public class AbilityAttackSystem : MonoBehaviour
             m_IsSkillActive = true; // スキル実行中フラグON
             m_Animator.Play(m_UltraSlash);
             // 移動制限（攻撃フラグON）
-            if (m_PC != null) m_PC.m_IsAttack = true;
+            if (m_PC != null)
+            {
+                m_PC.m_IsAttack = true;
+                // 必殺技中は無敵（スーパーアーマー）にする
+                m_PC.SetInvincible(true);
+            }
             
-            // アニメーション終了後にフラグ解除
-            WaitForAnimationEnd(m_UltraSlash).Forget();
+            // 修正：ここにWaitForAnimationEndを入れると、最初の予備動作クリップが終わった時点で
+            // 強制終了処理（OnSwingEndEvent）が走ってしまい、本番の攻撃やカメラワークが中断される。
+            // そのため、通常のWaitは行わず、UltimateSequenceControllerからの完了通知（OnSwingEndEvent）を待つ。
+            // ただし、万が一のために長時間のフェイルセーフのみ仕掛けておく。
+            UltimateFailsafeTimer().Forget();
         }
 
         AbilityCoolTimer(m_Ult).Forget();
+    }
+
+    /// <summary>
+    /// 必殺技のフェイルセーフ（何らかの理由でイベントが来なかった場合、5秒後に強制解除）
+    /// </summary>
+    async UniTaskVoid UltimateFailsafeTimer()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(5.0f));
+        if (m_IsSkillActive)
+        {
+            Debug.LogWarning("必殺技の完了イベントが来なかったため、フェイルセーフで強制終了します。");
+            ResetSkillFlags();
+            if (m_USC != null) m_USC.OnSwingEndEvent();
+        }
+    }
+
+    /// <summary>
+    /// 外部（UltimateSequenceController）から呼ばれる終了処理
+    /// </summary>
+    public void ResetSkillFlags()
+    {
+        if (m_PC != null)
+        {
+             m_PC.m_IsAttack = false;
+             // 無敵解除はUSC側で行われるが念のため
+             m_PC.SetInvincible(false);
+        }
+        m_IsSkillActive = false;
+        Debug.Log("ResetSkillFlags: スキル実行中フラグを解除しました。");
     }
 
     /// <summary>
@@ -192,8 +234,28 @@ public class AbilityAttackSystem : MonoBehaviour
             m_PC.m_IsAttack = false;
             Debug.Log($"{stateName} アニメーション終了：攻撃フラグを解除しました。");
         }
+
+        // 必殺技の終了時は、カメラや演出の強制リセットを行う（アニメーションイベント漏れ対策）
+        if (stateName == m_UltraSlash && m_USC != null)
+        {
+            m_USC.OnSwingEndEvent();
+            Debug.Log("必殺技終了：UltimateSequenceControllerの終了処理を呼び出しました。");
+        }
         
         m_IsSkillActive = false; // スキル実行中フラグOFF
+    }
+
+    private void Start()
+    {
+        if (m_USC == null)
+        {
+            m_USC = GetComponent<UltimateSequenceController>();
+        }
+        // まだ見つからない場合（別オブジェクトにある場合など）はシーン内から検索
+        if (m_USC == null)
+        {
+            m_USC = FindObjectOfType<UltimateSequenceController>();
+        }
     }
 
     /// <summary>
@@ -204,30 +266,50 @@ public class AbilityAttackSystem : MonoBehaviour
     {
         //クールタイム開始
         data.m_IsCoolingDown = true;
-
-        //非表示
-        data.m_KeyCodeImage.enabled = false;
+        
+        // アビリティの場合: FillAmountでクールダウン表現（Ultはエネルギー連動なのでここでは操作しない）
+        if (data != m_Ult && data.m_FillImage != null)
+        {
+            data.m_FillImage.fillAmount = 0f;
+        }
 
         //クールタイム代入
         float timer = data.m_CoolTime;
+        float maxTime = data.m_CoolTime;
 
         //指定した時間待機
         while (timer > 0)
         {
             //0.1まで表示
-            data.m_CoolTimeText.text = timer.ToString("F1");
+            if (data.m_CoolTimeText != null)
+            {
+                data.m_CoolTimeText.text = timer.ToString("F1");
+            }
 
             //減算
             timer -= Time.deltaTime;
 
+            // FillAmount更新（0から1へ回復）※Ult以外
+            if (data != m_Ult && data.m_FillImage != null)
+            {
+                data.m_FillImage.fillAmount = 1.0f - (timer / maxTime);
+            }
+
             //1フレームの待機
             await UniTask.Yield();
         }
+        
         //カウントが終わったので空白
-        data.m_CoolTimeText.text = "";
+        if (data.m_CoolTimeText != null)
+        {
+            data.m_CoolTimeText.text = "";
+        }
 
-        //表示
-        data.m_KeyCodeImage.enabled = true;
+        // FillAmountを確実に1にする ※Ult以外
+        if (data != m_Ult && data.m_FillImage != null)
+        {
+            data.m_FillImage.fillAmount = 1.0f;
+        }
 
         //bool値解除
         data.m_IsCoolingDown = false;
@@ -237,7 +319,8 @@ public class AbilityAttackSystem : MonoBehaviour
     /// チャージ処理
     /// </summary>
     /// <param name="amount"></param>
-    void AddEnergy(float amount)
+    /// <param name="amount"></param>
+    public void AddEnergy(float amount)
     {
         //溢れないように
         m_CurrentEnergy = Mathf.Clamp(m_CurrentEnergy + amount, 0, m_MaximumEnergy);
@@ -249,7 +332,18 @@ public class AbilityAttackSystem : MonoBehaviour
     /// </summary>
     void UpdateEnergyUI()
     {
-        m_EnergySlider.value = m_CurrentEnergy / m_MaximumEnergy;
+        float ratio = m_CurrentEnergy / m_MaximumEnergy;
+        
+        if (m_EnergySlider != null)
+        {
+            m_EnergySlider.value = ratio;
+        }
+
+        // 必殺技アイコンのFillAmountも更新
+        if (m_Ult.m_FillImage != null)
+        {
+            m_Ult.m_FillImage.fillAmount = ratio;
+        }
     }
 
     /// <summary>

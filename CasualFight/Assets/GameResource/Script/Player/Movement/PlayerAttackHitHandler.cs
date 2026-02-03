@@ -32,6 +32,21 @@ public class PlayerAttackHitHandler : MonoBehaviour
     [SerializeField] float m_TeleportAttackDistance2 = 1.0f;
     [SerializeField] int m_TeleportAttackDamage2 = 20;
 
+    [Header("ゲージ増加量")]
+    [SerializeField] float m_NormalAttackGain = 5f;
+    [SerializeField] float m_AbilityAttackGain = 10f;
+
+    [Header("システム参照")]
+    [SerializeField] AbilityAttackSystem m_AAS;
+
+    private void Start()
+    {
+        if (m_AAS == null)
+        {
+            m_AAS = GetComponent<AbilityAttackSystem>();
+        }
+    }
+
     [Header("ヒットエフェクト"), SerializeField]
     GameObject m_HitEffectPrefab;
 
@@ -100,6 +115,12 @@ public class PlayerAttackHitHandler : MonoBehaviour
                 // 専用ダメージ値を適用
                 hitEnemy.TakeDamage(damage);
 
+                // ゲージ増加（テレポートはアビリティ扱い）
+                if (m_AAS != null)
+                {
+                    m_AAS.AddEnergy(m_AbilityAttackGain);
+                }
+
                 // エフェクト生成
                 Vector3 preciseHitPoint = enemy.ClosestPoint(hitCenter);
                 ShowHitEffect(hitEnemy, preciseHitPoint);
@@ -124,6 +145,14 @@ public class PlayerAttackHitHandler : MonoBehaviour
 
         //ダメージ
         target.TakeDamage(m_Damages[damageIndex]);
+
+        // ゲージ増加
+        if (m_AAS != null)
+        {
+            // スキル（アビリティ）発動中なら専用の増加量、そうでなければ通常攻撃の増加量
+            float gain = (m_AAS.IsSkillActive) ? m_AbilityAttackGain : m_NormalAttackGain;
+            m_AAS.AddEnergy(gain);
+        }
 
         //エフェクト生成
         ShowHitEffect(target, preciseHitPoint);

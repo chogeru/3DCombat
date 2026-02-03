@@ -22,22 +22,24 @@ public class ActionController : MonoBehaviour
     [Header("PlayerHitController"), SerializeField]
     PlayerHitController m_PHC;
 
+    [Header("AbilityAttackSystem")]
+    [SerializeField] AbilityAttackSystem m_AAS;
+
     // クリックの経過時間
     float m_ClickTimer = 0f;
 
     // マウス左ボタンを押し続けているか
     bool m_IsPressing = false;
 
-    // ガード中フラグ
-    bool m_InGuardMode = false;
 
-    [Header("ガード移行までの長押し時間"), SerializeField]
-    float m_ChangeGuardTime = 0.2f;
 
-    /// <summary>
-    /// ガード中かどうかを取得
-    /// </summary>
-    public bool IsGuarding => m_InGuardMode;
+    private void Start()
+    {
+        if (m_AAS == null && m_PlayerController != null)
+        {
+            m_AAS = m_PlayerController.GetComponent<AbilityAttackSystem>();
+        }
+    }
 
     private void Update()
     {
@@ -51,7 +53,6 @@ public class ActionController : MonoBehaviour
         {
             // 押しっぱなし状態などが残らないようにリセット
             m_IsPressing = false;
-            m_InGuardMode = false;
             m_ClickTimer = 0f;
             return;
         }
@@ -60,15 +61,21 @@ public class ActionController : MonoBehaviour
         if (m_PHC != null && m_PHC.IsStunned)
         {
             m_IsPressing = false;
-            m_InGuardMode = false;
             m_ClickTimer = 0f;
             return;
+        }
+
+        // スキル攻撃中（必殺技など）は入力を受け付けない
+        if (m_AAS != null && m_AAS.IsSkillActive)
+        {
+             m_IsPressing = false;
+             m_ClickTimer = 0f;
+             return;
         }
         // 左クリック開始
         if (Input.GetMouseButtonDown(0))
         {
             m_IsPressing = true;
-            m_InGuardMode = false;
             m_ClickTimer = 0f;
         }
 
@@ -76,24 +83,14 @@ public class ActionController : MonoBehaviour
         {
             m_ClickTimer += Time.deltaTime;
 
-            // 一定時間経過かつ攻撃中でないならガードモードへ
-            if (m_ClickTimer >= m_ChangeGuardTime)
-            {
-                m_InGuardMode = true;
-            }
-
             // マウスを離したとき
             if (Input.GetMouseButtonUp(0))
             {
-                // まだガードに移行していなければ通常攻撃
-                if (!m_InGuardMode)
-                {
-                    m_ComboSystem.InputAttack();
-                }
+                // 通常攻撃
+                 m_ComboSystem.InputAttack();
 
                 // リセット
                 m_IsPressing = false;
-                m_InGuardMode = false;
                 m_ClickTimer = 0f;
             }
         }
@@ -101,7 +98,6 @@ public class ActionController : MonoBehaviour
         {
             // ボタンが押されていない間は確実にリセット
             m_IsPressing = false;
-            m_InGuardMode = false;
             m_ClickTimer = 0f;
         }
 

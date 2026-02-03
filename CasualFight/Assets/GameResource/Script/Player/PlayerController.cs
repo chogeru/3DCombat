@@ -47,8 +47,7 @@ public class PlayerController : MonoBehaviour
     [Header("AbilityAttackSystem"), SerializeField]
     AbilityAttackSystem m_AAS;
 
-    [Header("GuardSystem"), SerializeField]
-    GuardSystem m_GS;
+
 
     [Header("ActionController"), SerializeField]
     ActionController m_AC;
@@ -109,8 +108,7 @@ public class PlayerController : MonoBehaviour
     //ブリンク中判定フラグ
     bool m_isBlink = false;
 
-    //ガード中判定フラグ
-    bool m_IsGuard = false;
+
 
     //その他プレイヤー情報
     Camera m_MainCamera;
@@ -120,8 +118,7 @@ public class PlayerController : MonoBehaviour
     // 移動アニメーション再生中フラグ
     bool m_IsMovingAnimator = false;
 
-    // ガードアニメーション発火済みフラグ
-    bool m_IsGuardAnimatorTriggered = false;
+
 
     // イベント演出中の操作ロックフラグ
     bool m_IsEventLocked = false;
@@ -271,42 +268,13 @@ public bool IsStunned => m_PHC != null && m_PHC.IsStunned;
             m_Animator.applyRootMotion = true;
         }
 
-        // 攻撃中またはガード中は歩行不可
-        bool isGuardBreaking = m_GS != null && m_GS.IsGuardBreaking;
-        bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
-        bool canGuard = m_GS != null && m_GS.CanGuard;
-        m_IsGuard = m_AC != null && m_AC.IsGuarding && !m_isBlink && !m_IsAttack && !isGuardBreaking && isWeaponDrawn && canGuard;
-
-        if (m_IsGuard)
-        {
-            // ガードアニメーションを一度だけ発火
-            if (!m_IsGuardAnimatorTriggered)
-            {
-                m_Animator.Play("ARPG_Samurai_Guard_B", 0, 0f);
-                m_IsGuardAnimatorTriggered = true;
-            }
-        }
-        else
-        {
-            // ガード解除時：フラグリセットと移動遷移
-            if (m_IsGuardAnimatorTriggered)
-            {
-                m_IsGuardAnimatorTriggered = false;
-
-                // ガードブレイク中でなければ移動遷移（ブレイク中はブレイクアニメを優先させる）
-                if (!isGuardBreaking)
-                {
-                    m_Animator.Play("Move", 0, 0f);
-                    // 移動入力があればフラグを立てて重複Playを防ぐ
-                    m_IsMovingAnimator = true;
-                }
-            }
-        }
-
-        if ((m_IsAttack || m_IsGuard || isGuardBreaking) && !m_isBlink)
+        // 攻撃中またはスキルアクション中は移動不可
+        if ((m_IsAttack || (m_AAS != null && m_AAS.IsSkillActive)) && !m_isBlink)
         {
             m_MoveInput = Vector3.zero;
         }
+
+        bool isWeaponDrawn = m_WeaponSwitch != null && m_WeaponSwitch.IsWeaponDrawn;
 
         // 移動入力がある場合、一度だけ Move に Play する
         bool isMoving = (h != 0 || v != 0); // zeroにされる前の入力値で判定
@@ -322,12 +290,12 @@ public bool IsStunned => m_PHC != null && m_PHC.IsStunned;
         }
 
         // ダッシュ中やブリンク中は移動アニメーションを再生しない（ダッシュアニメーションを優先）
-        if (isMoving && !m_IsAttack && !m_IsGuard && !m_isBlink && !m_IsDash && !isGuardBreaking && !m_IsMovingAnimator)
+        if (isMoving && !m_IsAttack && !m_isBlink && !m_IsDash && !m_IsMovingAnimator)
         {
             m_Animator.Play("Move", 0, 0f);
             m_IsMovingAnimator = true;
         }
-        else if (!isMoving || m_IsAttack || m_IsGuard || m_isBlink || m_IsDash || isGuardBreaking)
+        else if (!isMoving || m_IsAttack || m_isBlink || m_IsDash)
         {
             m_IsMovingAnimator = false;
         }
@@ -350,7 +318,7 @@ public bool IsStunned => m_PHC != null && m_PHC.IsStunned;
         //待機タイマー処理
         isMoving = m_MoveInput.sqrMagnitude > 0.01f;
         // 何らかの活動を行っている、または刀を抜いているか判定
-        if (isMoving || m_IsAttack || m_isBlink || m_IsGuard || m_IsDash || isWeaponDrawn)
+        if (isMoving || m_IsAttack || m_isBlink || m_IsDash || isWeaponDrawn)
         {
             m_IdleTimer = 0f;
             m_IsStandbyTriggered = false;
@@ -495,16 +463,7 @@ public bool IsStunned => m_PHC != null && m_PHC.IsStunned;
         m_IdleTimer = 0f;
         m_IsStandbyTriggered = false;
 
-        // ガード判定
-        if (m_IsGuard)
-        {
-            Debug.Log("ガード成功！ダメージを無効化しました。");
-            if (m_GS != null)
-            {
-                m_GS.OnGuardSuccess();
-            }
-            return; // ダメージを受けずに終了
-        }
+
 
         // 武器を構える
         m_WeaponSwitch?.DrawWeapon();
