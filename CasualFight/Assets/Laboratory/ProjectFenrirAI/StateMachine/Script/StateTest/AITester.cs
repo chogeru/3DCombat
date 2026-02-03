@@ -49,6 +49,10 @@ namespace StateMachineAI
         // フリーズ状態フラグ
         bool m_IsFrozen = false;
 
+        [Header("中ボス判定")]
+        [Tooltip("これがtrueの場合、BossObjectDestroyerによって検知されます")]
+        public bool m_IsBoss = false;
+
         // 索敵中かどうかのフラグ
         public bool m_IsSearching = true;
 
