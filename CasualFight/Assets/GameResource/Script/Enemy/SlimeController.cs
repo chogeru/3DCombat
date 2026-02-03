@@ -37,6 +37,22 @@ namespace Enemy
         [SerializeField]
         float m_AttackCooldown = 2f;
 
+        [Header("HP設定")]
+        [SerializeField]
+        int m_MaxHP = 100;
+
+        [Header("HPバーUI")]
+        [Tooltip("EnemyHPUnitのPrefab")]
+        [SerializeField]
+        GameObject m_HPUnitPrefab;
+
+        [Tooltip("HPバーの親Canvas（HPContainer等）")]
+        [SerializeField]
+        Transform m_HPUnitParent;
+
+        // 内部変数
+        int m_CurrentHP;
+        EnemyHPUnit m_HPUnit;
         float m_LastAttackTime;
         bool m_IsDead = false;
 
@@ -63,6 +79,20 @@ namespace Enemy
                     {
                         m_Target = playerController.transform;
                     }
+                }
+            }
+
+            // HP初期化
+            m_CurrentHP = m_MaxHP;
+
+            // HPバーUI生成
+            if (m_HPUnitPrefab != null && m_HPUnitParent != null)
+            {
+                GameObject hpUnitObj = Instantiate(m_HPUnitPrefab, m_HPUnitParent);
+                m_HPUnit = hpUnitObj.GetComponent<EnemyHPUnit>();
+                if (m_HPUnit != null)
+                {
+                    m_HPUnit.Initialize(transform);
                 }
             }
         }
@@ -192,17 +222,59 @@ namespace Enemy
             }
         }
 
-        // ダメージを受ける処理（外部から呼ばれる想定）
+        /// <summary>
+        /// ダメージを受ける処理
+        /// </summary>
         public void TakeDamage(int damage)
         {
             if (m_IsDead) return;
 
-            // HP処理など...
-            
-            // 死亡処理（例）
-            // m_IsDead = true;
-            // if (m_Animator != null) m_Animator.SetTrigger("Die");
-            // if (BattleManager.m_BattleInstance != null) BattleManager.m_BattleInstance.EnemyLostPlayer(transform);
+            // HP減算
+            m_CurrentHP -= damage;
+            m_CurrentHP = Mathf.Max(0, m_CurrentHP);
+
+            // HPバーUI更新
+            if (m_HPUnit != null)
+            {
+                m_HPUnit.UpdateHP((float)m_CurrentHP / m_MaxHP);
+            }
+
+            // 死亡判定
+            if (m_CurrentHP <= 0)
+            {
+                Die();
+            }
+        }
+
+        /// <summary>
+        /// 死亡処理
+        /// </summary>
+        void Die()
+        {
+            if (m_IsDead) return;
+            m_IsDead = true;
+
+            // アニメーション
+            if (m_Animator != null)
+            {
+                m_Animator.SetTrigger("Die");
+            }
+
+            // HPバーUI削除
+            if (m_HPUnit != null)
+            {
+                m_HPUnit.OnEnemyDeath();
+                m_HPUnit = null;
+            }
+
+            // BattleManagerへ通知
+            if (BattleManager.m_BattleInstance != null)
+            {
+                BattleManager.m_BattleInstance.EnemyLostPlayer(transform);
+            }
+
+            // 敵オブジェクト削除（アニメーション後に削除したい場合はDelayを使う）
+            Destroy(gameObject, 2f);
         }
 
         private void OnDrawGizmosSelected()

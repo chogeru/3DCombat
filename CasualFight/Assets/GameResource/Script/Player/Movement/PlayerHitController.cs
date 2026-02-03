@@ -18,7 +18,18 @@ public class PlayerHitController : MonoBehaviour
     [Header("参照")]
     [SerializeField] PlayerController m_PC;
     [SerializeField] Animator m_Animator;
+
     [SerializeField] ComboSystem m_CS;
+    [SerializeField] AbilityAttackSystem m_AAS;
+
+    private void Start()
+    {
+        if (m_AAS == null)
+        {
+            // 同じオブジェクトについていると仮定
+            m_AAS = GetComponent<AbilityAttackSystem>();
+        }
+    }
 
     [Header("設定")]
     [SerializeField] float m_StunDuration = 0.5f;
@@ -130,9 +141,13 @@ public class PlayerHitController : MonoBehaviour
         IsStunned = false;
         
         // 硬直解除後、移動入力があれば移動アニメーションへ遷移
+        // ただし、イベント中や必殺技中（ロック中）の場合は遷移しない
         if (m_Animator != null && m_PC != null)
         {
-            if (m_PC.m_MoveInput.sqrMagnitude > 0.01f)
+            bool isEventLocked = m_PC.IsEventLocked;
+            bool isSkillActive = m_AAS != null && m_AAS.IsSkillActive;
+
+            if (!isEventLocked && !isSkillActive && m_PC.m_MoveInput.sqrMagnitude > 0.01f)
             {
                 m_Animator.CrossFade("Move", 0.1f);
             }

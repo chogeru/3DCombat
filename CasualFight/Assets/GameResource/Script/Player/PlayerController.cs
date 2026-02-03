@@ -134,10 +134,14 @@ public class PlayerController : MonoBehaviour
         //プレイヤー情報のコンポーネント
         m_MainCamera = Camera.main;
 
-        //ダッシュ値代入
-        m_Speed = m_WalkSpeed;
+    //ダッシュ値代入
+    m_Speed = m_WalkSpeed;
+}
 
-    }
+public bool IsEventLocked => m_IsEventLocked;
+
+// PlayerHitControllerの状態を公開
+public bool IsStunned => m_PHC != null && m_PHC.IsStunned;
 
     private void Start()
     {

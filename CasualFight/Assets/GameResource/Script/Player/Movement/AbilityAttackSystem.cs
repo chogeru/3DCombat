@@ -54,6 +54,10 @@ public class AbilityAttackSystem : MonoBehaviour
     //Ultが発動できるか判定
     bool m_IsUlt = false;
 
+    // スキル（アビリティ・必殺技）のアニメーション実行中フラグ
+    bool m_IsSkillActive = false;
+    public bool IsSkillActive => m_IsSkillActive;
+
     private void Update()
     {
         //ゲージがMaxになったら
@@ -76,14 +80,17 @@ public class AbilityAttackSystem : MonoBehaviour
         // ダッシュ中は発動不可
         bool isDashing = m_PC != null && m_PC.m_IsDash;
 
+        // 硬直中は発動不可
+        bool isStunned = m_PC != null && m_PC.IsStunned;
+
         //Eキーを押したらアビリティ発動
-        if (Input.GetKeyDown(KeyCode.E) && !m_Ability.m_IsCoolingDown && m_WeaponSwitch.IsWeaponDrawn && !isDashing)
+        if (Input.GetKeyDown(KeyCode.E) && !m_Ability.m_IsCoolingDown && m_WeaponSwitch.IsWeaponDrawn && !isDashing && !isStunned)
         {
             AbilityAttack();
         }
 
         //Qキーを押したら必殺技発動
-        if (Input.GetKeyDown(KeyCode.Q) && !m_Ult.m_IsCoolingDown && m_IsUlt && m_WeaponSwitch.IsWeaponDrawn && !isDashing)
+        if (Input.GetKeyDown(KeyCode.Q) && !m_Ult.m_IsCoolingDown && m_IsUlt && m_WeaponSwitch.IsWeaponDrawn && !isDashing && !isStunned)
         {
             UltimateAttack();
         }
@@ -111,6 +118,7 @@ public class AbilityAttackSystem : MonoBehaviour
         //アニメーション再生
         if (m_Animator != null)
         {
+            m_IsSkillActive = true; // スキル実行中フラグON
             m_Animator.Play(m_SpeedSlash);
             // 移動制限（攻撃フラグON）
             if (m_PC != null) m_PC.m_IsAttack = true;
@@ -134,6 +142,7 @@ public class AbilityAttackSystem : MonoBehaviour
         //アニメーション再生
         if (m_Animator != null)
         {
+            m_IsSkillActive = true; // スキル実行中フラグON
             m_Animator.Play(m_UltraSlash);
             // 移動制限（攻撃フラグON）
             if (m_PC != null) m_PC.m_IsAttack = true;
@@ -148,16 +157,33 @@ public class AbilityAttackSystem : MonoBehaviour
     /// <summary>
     /// アニメーション終了を待ってフラグを解除する
     /// </summary>
+    /// <summary>
+    /// アニメーション終了を待ってフラグを解除する
+    /// </summary>
     async UniTaskVoid WaitForAnimationEnd(string stateName)
     {
-        // 1フレーム待ってアニメーション状態を取得
-        await UniTask.Yield();
+        // アニメーションが切り替わるまで待機（タイムアウト付き）
+        float timeout = 0.5f; // 最大0.5秒待つ
+        while (timeout > 0f)
+        {
+            await UniTask.Yield();
+            timeout -= Time.deltaTime;
+
+            if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+            {
+                break;
+            }
+        }
         
         // 現在のアニメーション状態を取得
         AnimatorStateInfo stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
         
         // アニメーション長を取得して待機
         float animLength = stateInfo.length;
+        
+        // 念のため、長さが極端に短い（取得失敗）場合はデフォルト値を設定
+        if (animLength < 0.1f) animLength = 1.0f;
+
         await UniTask.Delay(TimeSpan.FromSeconds(animLength));
         
         // 攻撃フラグ解除
@@ -166,6 +192,8 @@ public class AbilityAttackSystem : MonoBehaviour
             m_PC.m_IsAttack = false;
             Debug.Log($"{stateName} アニメーション終了：攻撃フラグを解除しました。");
         }
+        
+        m_IsSkillActive = false; // スキル実行中フラグOFF
     }
 
     /// <summary>

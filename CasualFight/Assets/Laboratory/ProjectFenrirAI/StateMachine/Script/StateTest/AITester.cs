@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,6 +62,16 @@ namespace StateMachineAI
         // DissolveController
         public EnemyDissolveController m_DissolveController { get; private set; }
 
+        [Header("HPバーUI")]
+        [Tooltip("EnemyHPUnitのPrefab")]
+        public GameObject m_HPUnitPrefab;
+
+        [Tooltip("HPバーの親Canvas（HPContainer等）")]
+        public Transform m_HPUnitParent;
+
+        // HPUnit参照
+        EnemyHPUnit m_HPUnit;
+
         /// <summary>
         /// コンポーネントの初期化（StateManagerから呼ばれる）
         /// </summary>
@@ -89,6 +100,48 @@ namespace StateMachineAI
 
             // S_Return は固定で追加（Inspector設定に依存しないため）
             stateList.Add(new S_Return(this));
+
+            // HPバーUI生成
+            if (m_HPUnitPrefab != null)
+            {
+                // 親Transformを決定
+                Transform hpParent = m_HPUnitParent;
+
+                // 親がnullまたはPersistent（Prefab等）の場合はシーン上で検索
+                if (hpParent == null || !hpParent.gameObject.scene.isLoaded)
+                {
+                    // "HPContainer" という名前のオブジェクトを検索
+                    GameObject container = GameObject.Find("HPContainer");
+                    if (container != null)
+                    {
+                        hpParent = container.transform;
+                    }
+                    else
+                    {
+                        // Canvas全体を検索
+                        Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+                        if (canvas != null)
+                        {
+                            hpParent = canvas.transform;
+                        }
+                    }
+                }
+
+                // 親が見つかった場合のみ生成
+                if (hpParent != null)
+                {
+                    GameObject hpUnitObj = UnityEngine.Object.Instantiate(m_HPUnitPrefab, hpParent);
+                    m_HPUnit = hpUnitObj.GetComponent<EnemyHPUnit>();
+                    if (m_HPUnit != null)
+                    {
+                        m_HPUnit.Initialize(this);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("AITester: HPUnitParentが見つかりません。HPバーUIは生成されません。");
+                }
+            }
         }
 
         /// <summary>

@@ -1245,6 +1245,10 @@ MonoBehaviour:
   m_IsDead: 0
   m_IsSearching: 1
   m_Counter: 0
+  m_HPUnitPrefab: {fileID: 5797672864792636229, guid: 5ea3e27984f569646b3247a55d886f2f,
+    type: 3}
+  m_HPUnitParent: {fileID: 3512285573383954236, guid: 5ea3e27984f569646b3247a55d886f2f,
+    type: 3}
 --- !u!114 &5203775934006864123
 MonoBehaviour:
   m_ObjectHideFlags: 0

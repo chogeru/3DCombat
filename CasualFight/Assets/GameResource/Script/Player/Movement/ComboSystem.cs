@@ -129,6 +129,12 @@ public class ComboSystem : MonoBehaviour
     /// </summary>
     public void ResetCombo(Animator anim)
     {
+        // 必殺技中はリセット処理（特に攻撃フラグ解除）を行わない
+        if (m_AbilityAttackSystem != null && m_AbilityAttackSystem.IsSkillActive)
+        {
+            return;
+        }
+
         //攻撃してないなら何もしない
         if (m_ComboNo == 0)
             return;
@@ -158,6 +164,13 @@ public class ComboSystem : MonoBehaviour
     /// </summary>
     public void OnAttackEnd()
     {
+        // 必殺技などのスキルアクション実行中なら、通常攻撃の終了処理（移動遷移など）を行わない
+        // これにより、通常攻撃キャンセル必殺技時に移動入力で必殺技が中断されるのを防ぐ
+        if (m_AbilityAttackSystem != null && m_AbilityAttackSystem.IsSkillActive)
+        {
+            return;
+        }
+
         // 追記：もし次のコンボが入力された直後の Exit イベントなら、リセットをスキップする
         if (m_InputJustUpdated)
         {
