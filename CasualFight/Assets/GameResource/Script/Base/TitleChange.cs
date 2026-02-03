@@ -10,17 +10,6 @@ public class TitleChange : MonoBehaviour
     [SerializeField]
     string m_SceneName;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     /// <summary>
     /// シーン変更処理（ボタン用）
@@ -29,6 +18,8 @@ public class TitleChange : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(m_SceneName))
         {
+            Resources.UnloadUnusedAssets();
+
             SceneManager.LoadScene(m_SceneName);
         }
         else
