@@ -76,6 +76,9 @@ namespace StateMachineAI
         // HPUnit参照
         EnemyHPUnit m_HPUnit;
 
+        // 死亡時イベント
+        public event Action OnDeathEvent;
+
         /// <summary>
         /// コンポーネントの初期化（StateManagerから呼ばれる）
         /// </summary>
@@ -400,6 +403,8 @@ namespace StateMachineAI
                 if (m_EnemyHP == 0)
                 {
                     ChangeState(AIState_Type.Die);
+                    // 死亡イベント発行
+                    OnDeathEvent?.Invoke();
                 }
                 else
                 {
