@@ -1233,7 +1233,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054656290572465027}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48b0913ee770ea4449e5e6baa794767d, type: 3}
   m_Name: 
@@ -1243,6 +1243,7 @@ MonoBehaviour:
   m_EnemyHP: 0
   m_HitPosition: {fileID: 4590348101812129841}
   m_IsDead: 0
+  m_IsBoss: 0
   m_IsSearching: 1
   m_Counter: 0
   m_HPUnitPrefab: {fileID: 5797672864792636229, guid: 5ea3e27984f569646b3247a55d886f2f,

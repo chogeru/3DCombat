@@ -124,6 +124,11 @@ public class AbilityAttackSystem : MonoBehaviour
         if (m_Animator != null)
         {
             m_IsSkillActive = true; // スキル実行中フラグON
+            SetIgnoreCollision(true); // 衝突無効化
+            
+            // 【修正】ルートモーションを確実に優先（ダッシュ直後などOFFの場合があるため）
+            m_Animator.applyRootMotion = true;
+
             m_Animator.Play(m_SpeedSlash);
             // 移動制限（攻撃フラグON）
             if (m_PC != null) m_PC.m_IsAttack = true;
@@ -148,6 +153,11 @@ public class AbilityAttackSystem : MonoBehaviour
         if (m_Animator != null)
         {
             m_IsSkillActive = true; // スキル実行中フラグON
+            SetIgnoreCollision(true); // 衝突無効化
+
+            // 【修正】ルートモーションを確実に優先
+            m_Animator.applyRootMotion = true;
+
             m_Animator.Play(m_UltraSlash);
             // 移動制限（攻撃フラグON）
             if (m_PC != null)
@@ -192,6 +202,7 @@ public class AbilityAttackSystem : MonoBehaviour
              // 無敵解除はUSC側で行われるが念のため
              m_PC.SetInvincible(false);
         }
+        SetIgnoreCollision(false); // 衝突有効化
         m_IsSkillActive = false;
         Debug.Log("ResetSkillFlags: スキル実行中フラグを解除しました。");
     }
@@ -243,7 +254,11 @@ public class AbilityAttackSystem : MonoBehaviour
         }
         
         m_IsSkillActive = false; // スキル実行中フラグOFF
+        SetIgnoreCollision(false); // 衝突有効化
     }
+
+    int m_PlayerLayer;
+    int m_EnemyLayer;
 
     private void Start()
     {
@@ -255,6 +270,27 @@ public class AbilityAttackSystem : MonoBehaviour
         if (m_USC == null)
         {
             m_USC = FindObjectOfType<UltimateSequenceController>();
+        }
+
+        // レイヤーインデックスを取得
+        m_PlayerLayer = LayerMask.NameToLayer("Player");
+        m_EnemyLayer = LayerMask.NameToLayer("Enemy");
+    }
+
+    /// <summary>
+    /// スキル中のプレイヤー対敵の衝突無効化切替
+    /// </summary>
+    /// <param name="ignore"></param>
+    void SetIgnoreCollision(bool ignore)
+    {
+        if (m_PlayerLayer >= 0 && m_EnemyLayer >= 0)
+        {
+            Physics.IgnoreLayerCollision(m_PlayerLayer, m_EnemyLayer, ignore);
+            Debug.Log($"SetIgnoreCollision: Player(Layer {m_PlayerLayer}) vs Enemy(Layer {m_EnemyLayer}) collision ignored = {ignore}");
+        }
+        else
+        {
+            Debug.LogError($"SetIgnoreCollision Error: Invalid Layers - Player: {m_PlayerLayer}, Enemy: {m_EnemyLayer}");
         }
     }
 

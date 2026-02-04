@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
+    // シングルトンインスタンス
+    public static SettingsManager Instance { get; private set; }
+
     [Header("設定画面のパネル"), SerializeField]
     GameObject m_Menu;
 
@@ -40,6 +43,11 @@ public class SettingsManager : MonoBehaviour
     const string Key_Volume = "VolumeValue";
     const string Key_X = "SensXValue";
     const string Key_Y = "SensYValue";
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -75,6 +83,13 @@ public class SettingsManager : MonoBehaviour
         //エスケープキーを押したら
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            // TPキャンバスが開いていたら、それを閉じるだけにして終了(優先度高)
+            if (TeleportManager.TPInstance != null && TeleportManager.TPInstance.IsUIOpen)
+            {
+                TeleportManager.TPInstance.CloseUI();
+                return;
+            }
+
             ToggleSettings();
         }
     }

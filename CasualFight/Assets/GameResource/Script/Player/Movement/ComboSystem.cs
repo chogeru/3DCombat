@@ -101,7 +101,14 @@ public class ComboSystem : MonoBehaviour
         //敵の方向に向かせる
         if (m_AM!=null)
         {
-            m_AM.LookAtenemy();
+            try
+            {
+                m_AM.LookAtenemy();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"LookAtenemy Error: {e.Message}");
+            }
         }
 
         m_InputReserved = false;

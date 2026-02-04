@@ -70,6 +70,12 @@ public class TeleportManager : MonoBehaviour
         // デバッグ用: TabキーでUI表示切り替え
         if (Input.GetKeyDown(KeyCode.Tab))
         {
+            // Settings画面が開いていたら反応しない
+            if (SettingsManager.Instance != null && SettingsManager.Instance.IsMenuOpen)
+            {
+                return;
+            }
+
             if (m_TeleportUIRoot != null)
             {
                 bool isActive = m_TeleportUIRoot.activeSelf;
@@ -98,6 +104,24 @@ public class TeleportManager : MonoBehaviour
                     Cursor.visible = false;
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// 外部からUIを強制的に閉じる
+    /// </summary>
+    public void CloseUI()
+    {
+        if (m_TeleportUIRoot != null && m_TeleportUIRoot.activeSelf)
+        {
+            m_TeleportUIRoot.SetActive(false);
+
+            // UIを閉じたので時間を再開する
+            Time.timeScale = 1f;
+
+            // カーソルを非表示・ロック
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 

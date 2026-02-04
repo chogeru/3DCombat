@@ -371,6 +371,16 @@ PrefabInstance:
       propertyPath: m_DefaultBlend.m_Style
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1478776873713003368, guid: 0fc17f1059923d74db86b3547f2ee6e2,
+        type: 3}
+      propertyPath: m_SceneName
+      value: GameScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274453753202343372, guid: 0fc17f1059923d74db86b3547f2ee6e2,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: c1db0ab9b8dba2b428cc3e3d280a49d5, type: 2}
     - target: {fileID: 2291628790129987897, guid: 0fc17f1059923d74db86b3547f2ee6e2,
         type: 3}
       propertyPath: m_Colors.m_NormalColor.a

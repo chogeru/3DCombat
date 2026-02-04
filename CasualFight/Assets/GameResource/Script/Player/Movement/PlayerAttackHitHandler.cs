@@ -180,14 +180,19 @@ public class PlayerAttackHitHandler : MonoBehaviour
         //時間停止
         Time.timeScale = 0.05f;
 
-        //待機
-        await UniTask.Delay(TimeSpan.FromSeconds(time), ignoreTimeScale: true);
+        try
+        {
+            //待機
+            await UniTask.Delay(TimeSpan.FromSeconds(time), ignoreTimeScale: true);
+        }
+        finally
+        {
+            //戻す
+            Time.timeScale = 1.0f;
 
-        //戻す
-        Time.timeScale = 1.0f;
-
-        //フラグOFF
-        m_IsHitStopping = false;
+            //フラグOFF
+            m_IsHitStopping = false;
+        }
     }
 
     /// <summary>
