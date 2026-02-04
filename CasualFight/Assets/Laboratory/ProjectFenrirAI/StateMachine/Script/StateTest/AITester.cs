@@ -53,6 +53,10 @@ namespace StateMachineAI
         [Tooltip("これがtrueの場合、BossObjectDestroyerによって検知されます")]
         public bool m_IsBoss = false;
 
+        [Header("ラスボス判定")]
+        [Tooltip("これがtrueの場合、FinalBossObjectDestroyerによって検知されます")]
+        public bool m_IsFinalBoss = false;
+
         // 索敵中かどうかのフラグ
         public bool m_IsSearching = true;
 

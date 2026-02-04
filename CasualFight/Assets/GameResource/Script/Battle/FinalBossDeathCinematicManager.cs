@@ -4,11 +4,11 @@ using Cysharp.Threading.Tasks;
 using StateMachineAI;
 
 /// <summary>
-/// 中ボス撃破時の演出管理マネージャー
+/// ラスボス撃破時の演出管理マネージャー
 /// </summary>
-public class BossDeathCinematicManager : MonoBehaviour
+public class FinalBossDeathCinematicManager : MonoBehaviour
 {
-    [Header("監視対象の中ボス")]
+    [Header("監視対象のラスボス")]
     [SerializeField] AITester m_BossEnemy;
 
     [Header("演出用カメラ")]
@@ -48,11 +48,11 @@ public class BossDeathCinematicManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 1秒ごとに中ボス（m_IsBoss=true）を探すループ
+    /// 1秒ごとにラスボス（m_IsFinalBoss=true）を探すループ
     /// </summary>
     async UniTaskVoid SearchBossLoop()
     {
-        Debug.Log("BossDeathCinematicManager: 中ボスの自動検索を開始します...");
+        Debug.Log("FinalBossDeathCinematicManager: ラスボスの自動検索を開始します...");
 
         while (m_BossEnemy == null)
         {
@@ -62,16 +62,16 @@ public class BossDeathCinematicManager : MonoBehaviour
             // 自身の破棄チェック
             if (this == null) return;
 
-            // 中ボス探索
+            // ラスボス探索
             var allEnemies = FindObjectsOfType<AITester>();
             foreach (var enemy in allEnemies)
             {
-                // IsBossフラグが立っていて、かつまだ生きている敵を対象とする
-                if (enemy != null && enemy.m_IsBoss && !enemy.m_IsDead)
+                // IsFinalBossフラグが立っていて、かつまだ生きている敵を対象とする
+                if (enemy != null && enemy.m_IsFinalBoss && !enemy.m_IsDead)
                 {
                     m_BossEnemy = enemy;
                     m_BossEnemy.OnDeathEvent += OnBossDead;
-                    Debug.Log($"BossDeathCinematicManager: 中ボス({enemy.name})を発見し、追跡を開始しました。");
+                    Debug.Log($"FinalBossDeathCinematicManager: ラスボス({enemy.name})を発見し、追跡を開始しました。");
                     return; // ループ終了
                 }
             }
@@ -98,7 +98,7 @@ public class BossDeathCinematicManager : MonoBehaviour
         if (m_IsPlayed) return;
         m_IsPlayed = true;
 
-        Debug.Log("BossDeathCinematicManager: 中ボス撃破、演出を開始します。");
+        Debug.Log("FinalBossDeathCinematicManager: ラスボス撃破、演出を開始します。");
         PlayCinematicSequence().Forget();
     }
 
@@ -112,7 +112,7 @@ public class BossDeathCinematicManager : MonoBehaviour
             await UniTask.Yield(PlayerLoopTiming.Update);
         }
 
-        Debug.Log("BossDeathCinematicManager: 中ボスの消滅を確認しました。演出を開始します。");
+        Debug.Log("FinalBossDeathCinematicManager: ラスボスの消滅を確認しました。演出を開始します。");
 
         // 全ての敵をフリーズ
         SetAllEnemiesFreeze(true);
@@ -172,10 +172,10 @@ public class BossDeathCinematicManager : MonoBehaviour
         if (m_EnableTargetObject != null)
         {
             m_EnableTargetObject.SetActive(true);
-            Debug.Log($"BossDeathCinematicManager: {m_EnableTargetObject.name} を有効化しました。");
+            Debug.Log($"FinalBossDeathCinematicManager: {m_EnableTargetObject.name} を有効化しました。");
         }
 
-        Debug.Log("BossDeathCinematicManager: 全ての処理が完了したので指定オブジェクトを削除します。");
+        Debug.Log("FinalBossDeathCinematicManager: 全ての処理が完了したので指定オブジェクトを削除します。");
 
         // 指定されたオブジェクトを削除
         if (m_DestroyTargetObject != null)
@@ -183,9 +183,10 @@ public class BossDeathCinematicManager : MonoBehaviour
             Destroy(m_DestroyTargetObject);
         }
 
-        Debug.Log("BossDeathCinematicManager: 自身を削除します。");
+        Debug.Log("FinalBossDeathCinematicManager: 自身を削除します。");
         Destroy(gameObject);
     }
+
     /// <summary>
     /// 全ての敵(AITester)のフリーズ状態を設定する
     /// </summary>

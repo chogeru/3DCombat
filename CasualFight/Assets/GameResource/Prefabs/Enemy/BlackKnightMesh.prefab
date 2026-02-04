@@ -1440,6 +1440,7 @@ MonoBehaviour:
   m_HitPosition: {fileID: 3231213548834144748}
   m_IsDead: 0
   m_IsBoss: 0
+  m_IsFinalBoss: 1
   m_IsSearching: 1
   m_Counter: 0
   m_HPUnitPrefab: {fileID: 5797672864792636229, guid: 5ea3e27984f569646b3247a55d886f2f,
