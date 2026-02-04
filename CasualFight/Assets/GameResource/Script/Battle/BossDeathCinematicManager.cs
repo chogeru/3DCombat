@@ -106,20 +106,6 @@ public class BossDeathCinematicManager : MonoBehaviour
         {
             m_TargetCamera.gameObject.SetActive(true);
             m_TargetCamera.Priority = 999;
-
-            // ノイズ（シェイク）コンポーネントの取得
-            var noise = m_TargetCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-            if (noise != null)
-            {
-                // シェイク開始（数値は仮置き、Inspectorで設定できるようにするとベスト）
-                noise.m_AmplitudeGain = 2.0f; // 揺れの大きさ
-                noise.m_FrequencyGain = 2.0f; // 揺れの速さ
-                Debug.Log("BossDeathCinematicManager: カメラシェイク開始");
-            }
-            else
-            {
-                Debug.LogWarning("BossDeathCinematicManager: VirtualCameraにNoise(Perlin)が設定されていません。シェイクできません。");
-            }
         }
 
         // 2. アニメーターのトリガーBarkを1回だけ呼び出す
@@ -155,14 +141,6 @@ public class BossDeathCinematicManager : MonoBehaviour
         // 3. アニメーション終了時バーチャルカメラを優先度0にした後、falseにする
         if (m_TargetCamera != null)
         {
-            // シェイク停止
-            var noise = m_TargetCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-            if (noise != null)
-            {
-                noise.m_AmplitudeGain = 0f;
-                noise.m_FrequencyGain = 0f;
-            }
-
             m_TargetCamera.Priority = 0;
             m_TargetCamera.gameObject.SetActive(false);
         }
