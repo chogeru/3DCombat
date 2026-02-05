@@ -607,6 +607,44 @@ public bool IsStunned => m_PHC != null && m_PHC.IsStunned;
     }
 
     /// <summary>
+    /// 設定画面から呼び出す手動リスポーン処理
+    /// 最寄りのテレポート地点に移動し、全快する
+    /// </summary>
+    public void ManualRespawn()
+    {
+        if (TeleportManager.TPInstance != null)
+        {
+            Vector3? targetPos = TeleportManager.TPInstance.GetNearestUnlockedPosition(transform.position);
+
+            if (targetPos.HasValue)
+            {
+                Vector3 dest = targetPos.Value;
+                // Y座標は現在地維持ではなく、安全のためテレポート地点のYを使うか、あるいは現在地か。
+                // Die()では現在地Yを使っていたが、スタック脱出の意味合いもあるため、
+                // テレポート地点の高さに合わせるのが無難だが、
+                // Die()の実装に合わせて `dest.x, transform.position.y, dest.z` にするか、
+                // 完全な安全地帯への移動なら `dest` そのものが良い。
+                // ここでは Die() と同じく現在地Yを維持する。（地形抜けしている場合は危険だが、テレポート地点が地面にある前提）
+                Vector3 finalPos = new Vector3(dest.x, transform.position.y, dest.z);
+
+                // 移動
+                m_Controller.enabled = false;
+                transform.position = finalPos;
+                m_Controller.enabled = true;
+
+                Debug.Log($"手動リスポーン実行: {finalPos}");
+
+                // 回復
+                Revive();
+            }
+            else
+            {
+                Debug.LogWarning("開放済みのテレポート地点が見つかりませんでした。");
+            }
+        }
+    }
+
+    /// <summary>
     /// ダッシュ回数のリセットタイマー
     /// </summary>
     private async UniTaskVoid DashCountResetTimer()

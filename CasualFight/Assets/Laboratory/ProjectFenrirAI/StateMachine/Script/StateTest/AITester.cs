@@ -406,9 +406,19 @@ namespace StateMachineAI
                 // HPが0になると
                 if (m_EnemyHP == 0)
                 {
-                    ChangeState(AIState_Type.Die);
                     // 死亡イベント発行
                     OnDeathEvent?.Invoke();
+
+                    if (m_IsFinalBoss)
+                    {
+                        // ラスボスの場合は死亡アニメーションを待たずに即削除
+                        // (演出はFinalBossDeathCinematicManagerと別オブジェクトが担当するため)
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        ChangeState(AIState_Type.Die);
+                    }
                 }
                 else
                 {

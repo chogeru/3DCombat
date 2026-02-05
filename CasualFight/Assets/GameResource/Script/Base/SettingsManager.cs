@@ -178,6 +178,25 @@ public class SettingsManager : MonoBehaviour
     public void OnMiniMapRotationChanged()
     {
         m_MIC.m_IsPlayerIcon=!m_MIC.m_IsPlayerIcon;
+
+        // 設定画面を閉じる(自動)
+        ToggleSettings();
+    }
+
+    /// <summary>
+    /// 手動リスポーンボタン処理（新規追加）
+    /// </summary>
+    public void OnRespawnButtonClicked()
+    {
+        // プレイヤーを探してリスポーン実行
+        var player = FindObjectOfType<PlayerController>();
+        if (player != null)
+        {
+            player.ManualRespawn();
+        }
+
+        // 設定画面を閉じる(自動)
+        ToggleSettings();
     }
 
     /// <summary>
@@ -251,6 +270,9 @@ public class SettingsManager : MonoBehaviour
         SetSliderValue(m_VolumeSlider, defaV);
         SetSliderValue(m_XSlider, defaX);
         SetSliderValue(m_YSlider, defaY);
+
+        // 設定画面を閉じる(自動)
+        ToggleSettings();
     }
 
     /// <summary>

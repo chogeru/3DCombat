@@ -5,6 +5,8 @@ using StateMachineAI;
 
 /// <summary>
 /// ラスボス撃破時の演出管理マネージャー
+/// 改修版：待機ロジックを廃止し、ボスのDissolveControllerに委譲
+/// さらに改修：自身は削除せず、演出用オブジェクトの消滅を監視する
 /// </summary>
 public class FinalBossDeathCinematicManager : MonoBehaviour
 {
@@ -20,11 +22,8 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
     [Header("Barkトリガー名")]
     [SerializeField] string m_BarkTriggerName = "Bark";
 
-    [Header("演出後に有効化するオブジェクト")]
+    [Header("演出後に有効化するオブジェクト（監視対象）")]
     [SerializeField] GameObject m_EnableTargetObject;
-
-    [Header("演出後に削除するオブジェクト")]
-    [SerializeField] GameObject m_DestroyTargetObject;
 
     private void Start()
     {
@@ -39,7 +38,7 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
             SearchBossLoop().Forget();
         }
 
-        // 初期状態の確認（カメラ等は無効化しておくべきだが、Inspector設定に任せる）
+        // 初期状態の確認
         if (m_TargetCamera != null)
         {
             m_TargetCamera.Priority = 0;
@@ -99,21 +98,13 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
         m_IsPlayed = true;
 
         Debug.Log("FinalBossDeathCinematicManager: ラスボス撃破、演出を開始します。");
-        PlayCinematicSequence().Forget();
+
+        // 即座に演出開始
+        StartCinematicSequence().Forget();
     }
 
-    async UniTaskVoid PlayCinematicSequence()
+    async UniTaskVoid StartCinematicSequence()
     {
-        // ボス(AITester)が消滅するまで待機
-        // UnityのObjectはDestroyされるとnull扱いになるため、これを利用して待機します
-        while (m_BossEnemy != null)
-        {
-            // 1フレーム待機して再チェック
-            await UniTask.Yield(PlayerLoopTiming.Update);
-        }
-
-        Debug.Log("FinalBossDeathCinematicManager: ラスボスの消滅を確認しました。演出を開始します。");
-
         // 全ての敵をフリーズ
         SetAllEnemiesFreeze(true);
         // プレイヤーの操作ロック
@@ -123,6 +114,7 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
         if (m_TargetCamera != null)
         {
             m_TargetCamera.gameObject.SetActive(true);
+            // カメラの優先度を上げて切り替え
             m_TargetCamera.Priority = 999;
         }
 
@@ -130,33 +122,70 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
         if (m_CinematicAnimator != null)
         {
             m_CinematicAnimator.SetTrigger(m_BarkTriggerName);
-            
-            // アニメーションの遷移と終了を待機する
-            // 遷移待ち
-            await UniTask.DelayFrame(1); 
-            
-            // 現在のステート情報を取得して長さを得る (Barkステートに遷移している前提)
-            AnimatorStateInfo stateInfo = m_CinematicAnimator.GetCurrentAnimatorStateInfo(0);
-            
-            // もし遷移中なら、遷移先の情報を取る
-            if (m_CinematicAnimator.IsInTransition(0))
-            {
-                stateInfo = m_CinematicAnimator.GetNextAnimatorStateInfo(0);
-            }
+        }
 
-            // stateInfo.length 分だけ待機 (長さが取得できない場合は安全策で2秒)
-            float waitTime = stateInfo.length > 0 ? stateInfo.length : 2.0f;
-            Debug.Log($"演出アニメーション待機: {waitTime}秒");
-            
-            await UniTask.Delay(System.TimeSpan.FromSeconds(waitTime));
+        // 3. 指定した演出用オブジェクトの有効化
+        if (m_EnableTargetObject != null)
+        {
+            m_EnableTargetObject.SetActive(true);
+        }
+
+        // 4. ボスのアニメーション再生とDissolve開始
+        // AITester（戦闘用ボス）は即削除されている可能性があるため、
+        // 演出用オブジェクト（m_EnableTargetObject）に対してアニメーション指示を送る
+        if (m_EnableTargetObject != null)
+        {
+            var dissolveController = m_EnableTargetObject.GetComponent<FinalBossDissolveController>();
+            if (dissolveController != null)
+            {
+                dissolveController.PlayDeathAnimation();
+            }
+            else
+            {
+                // まだAITesterが生きている、あるいはAITester側で演出する場合のバックアップ
+                if (m_BossEnemy != null)
+                {
+                    var enemyController = m_BossEnemy.GetComponent<FinalBossDissolveController>();
+                    if (enemyController != null)
+                    {
+                        enemyController.PlayDeathAnimation();
+                    }
+                }
+            }
+        }
+        else if (m_BossEnemy != null)
+        {
+             // 演出用オブジェクトが無い場合は旧仕様通りボス自身を操作
+            var dissolveController = m_BossEnemy.GetComponent<FinalBossDissolveController>();
+            if (dissolveController != null)
+            {
+                dissolveController.PlayDeathAnimation();
+            }
+        }
+
+        // 5. 演出用オブジェクトが消滅するまで監視する
+        // m_EnableTargetObject が演出用ボスそのものである場合、これが消える（Destroyまたは非アクティブ）のを待つ。
+        Debug.Log($"FinalBossDeathCinematicManager: 監視対象({m_EnableTargetObject?.name})の消滅を待ちます...");
+
+        if (m_EnableTargetObject != null)
+        {
+            // オブジェクトが破棄される(nullになる)まで待機
+            // ※Activeがfalseになるのを待つか、Destroyでnullになるのを待つか。
+            // DissolveControllerはDestroy(gameObject)しているので、nullチェックでOK。
+            await UniTask.WaitWhile(() => m_EnableTargetObject != null, cancellationToken: this.GetCancellationTokenOnDestroy());
         }
         else
         {
-            // アニメーターが無い場合は適当な待機時間
+            // オブジェクトが無い場合は適当な時間で終わる（あるいは即終了）
+            Debug.LogWarning("FinalBossDeathCinematicManager: 監視対象が設定されていません。安全のため2秒待機します。");
             await UniTask.Delay(System.TimeSpan.FromSeconds(2.0f));
         }
 
-        // 3. アニメーション終了時バーチャルカメラを優先度0にした後、falseにする
+        Debug.Log("FinalBossDeathCinematicManager: 監視対象の消滅を確認しました。終了処理を実行します。");
+        
+        // 6. 終了処理
+
+        // カメラを戻す
         if (m_TargetCamera != null)
         {
             m_TargetCamera.Priority = 0;
@@ -168,23 +197,8 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
         // プレイヤーの操作ロック解除
         SetPlayerLock(false);
 
-        // 4. その後に指定したオブジェクトのSetActiveをtrueにしたい
-        if (m_EnableTargetObject != null)
-        {
-            m_EnableTargetObject.SetActive(true);
-            Debug.Log($"FinalBossDeathCinematicManager: {m_EnableTargetObject.name} を有効化しました。");
-        }
-
-        Debug.Log("FinalBossDeathCinematicManager: 全ての処理が完了したので指定オブジェクトを削除します。");
-
-        // 指定されたオブジェクトを削除
-        if (m_DestroyTargetObject != null)
-        {
-            Destroy(m_DestroyTargetObject);
-        }
-
-        Debug.Log("FinalBossDeathCinematicManager: 自身を削除します。");
-        Destroy(gameObject);
+        // ※Manager自身は削除しない
+        Debug.Log("FinalBossDeathCinematicManager: 演出終了。");
     }
 
     /// <summary>
