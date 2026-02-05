@@ -105,6 +105,12 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
 
     async UniTaskVoid StartCinematicSequence()
     {
+        // UI非表示のためにステートをイベントに変更
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.ChangeState(GameStateManager.GameState.Event);
+        }
+
         // 全ての敵をフリーズ
         SetAllEnemiesFreeze(true);
         // プレイヤーの操作ロック
@@ -196,6 +202,12 @@ public class FinalBossDeathCinematicManager : MonoBehaviour
         SetAllEnemiesFreeze(false);
         // プレイヤーの操作ロック解除
         SetPlayerLock(false);
+
+        // UI表示を戻すためにステートを探索に戻す
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.ChangeState(GameStateManager.GameState.Exploration);
+        }
 
         // ※Manager自身は削除しない
         Debug.Log("FinalBossDeathCinematicManager: 演出終了。");

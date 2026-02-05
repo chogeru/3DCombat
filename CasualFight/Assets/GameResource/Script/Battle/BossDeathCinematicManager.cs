@@ -114,6 +114,12 @@ public class BossDeathCinematicManager : MonoBehaviour
 
         Debug.Log("BossDeathCinematicManager: 中ボスの消滅を確認しました。演出を開始します。");
 
+        // UI非表示のためにステートをイベントに変更
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.ChangeState(GameStateManager.GameState.Event);
+        }
+
         // 全ての敵をフリーズ
         SetAllEnemiesFreeze(true);
         // プレイヤーの操作ロック
@@ -167,6 +173,12 @@ public class BossDeathCinematicManager : MonoBehaviour
         SetAllEnemiesFreeze(false);
         // プレイヤーの操作ロック解除
         SetPlayerLock(false);
+
+        // UI表示を戻すためにステートを探索に戻す
+        if (GameStateManager.Instance != null)
+        {
+            GameStateManager.Instance.ChangeState(GameStateManager.GameState.Exploration);
+        }
 
         // 4. その後に指定したオブジェクトのSetActiveをtrueにしたい
         if (m_EnableTargetObject != null)

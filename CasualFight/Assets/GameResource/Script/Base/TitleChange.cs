@@ -11,6 +11,10 @@ public class TitleChange : MonoBehaviour
     string m_SceneName;
 
 
+    [Header("非表示にするキャンバスグループ")]
+    [SerializeField]
+    CanvasGroup m_HideCanvasGroup;
+
     /// <summary>
     /// シーン変更処理（ボタン用）
     /// </summary>
@@ -18,9 +22,36 @@ public class TitleChange : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(m_SceneName))
         {
+            // 既存UIを非表示にする
+            if (m_HideCanvasGroup != null)
+            {
+                m_HideCanvasGroup.alpha = 0f;
+                m_HideCanvasGroup.blocksRaycasts = false;
+            }
+
+            // タイムライン(PlayableDirector)が動いていたら停止する
+            var directors = FindObjectsOfType<UnityEngine.Playables.PlayableDirector>();
+            foreach (var director in directors)
+            {
+                if (director.state == UnityEngine.Playables.PlayState.Playing)
+                {
+                    director.Stop();
+                }
+            }
+
             Resources.UnloadUnusedAssets();
 
-            SceneManager.LoadScene(m_SceneName);
+            // LoadingManagerを使ってロード
+            if (LoadingManager.Instance != null)
+            {
+                LoadingManager.Instance.LoadSceneAsync(m_SceneName).Forget();
+            }
+            else
+            {
+                // LoadingManagerがない場合のフォールバック
+                Debug.LogWarning("TitleChange: LoadingManager.Instance is null. 使用する際はシーンにLoadingManagerを配置してください。");
+                SceneManager.LoadScene(m_SceneName);
+            }
         }
         else
         {
