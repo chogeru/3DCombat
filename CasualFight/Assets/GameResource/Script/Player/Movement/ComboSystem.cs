@@ -39,6 +39,24 @@ public class ComboSystem : MonoBehaviour
     //ゲーム側がOK出してるか判定フラグ
     bool m_CanNextCombo = true;
 
+    private void Update()
+    {
+        // フェイルセーフ: アニメーションと攻撃フラグの不整合を監視
+        if (m_PC != null && m_PC.m_IsAttack)
+        {
+            var stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+            
+            // 完全に（遷移中でなく）Idle または Move、あるいは停止モーションに戻っている場合
+            if (!m_Animator.IsInTransition(0))
+            {
+                if (stateInfo.IsName("Idle") || stateInfo.IsName("Move") || stateInfo.IsName("Run_Fast_Stop"))
+                {
+                    Debug.LogWarning("攻撃フラグが残ったままIdle状態に戻っています。強制リセットを実行します。");
+                    ForceResetCombo();
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// クリックされたときの処理
