@@ -22,6 +22,23 @@ public class EnemyIndicator : MonoBehaviour
     [Tooltip("敵とUIのペア辞書")]
     Dictionary<Transform, RectTransform> m_Indicators = new Dictionary<Transform, RectTransform>();
 
+    private void Start()
+    {
+        // 設定値のバリデーション（デバッグ用）
+        if (m_Radius <= 0)
+        {
+            Debug.LogError($"[EnemyIndicator] Radius is set to {m_Radius}! The arrow will stick to the center. Please set a positive value in the Inspector.");
+        }
+
+        if (m_CenterScreen != null)
+        {
+            if (m_CenterScreen.GetComponent<UnityEngine.UI.LayoutGroup>() != null)
+            {
+                Debug.LogError($"[EnemyIndicator] LayoutGroup detected on '{m_CenterScreen.name}'! This will override the arrow's position and force it to the center/layout position. Please remove the LayoutGroup.");
+            }
+        }
+    }
+
     private void Update()
     {
         UpdateIndicators();

@@ -232,6 +232,13 @@ public class EnemyHPUnit : MonoBehaviour
     {
         if (m_IsDestroying) return false;
 
+        // 設定画面が開いている場合は強制非表示
+        if (SettingsManager.Instance != null && SettingsManager.Instance.IsMenuOpen)
+        {
+            SetVisible(false);
+            return false;
+        }
+
         Transform targetTransform = GetTargetTransform();
         if (m_Player == null || targetTransform == null) return false;
 
