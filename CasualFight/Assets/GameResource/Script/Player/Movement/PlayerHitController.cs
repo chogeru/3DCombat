@@ -48,12 +48,34 @@ public class PlayerHitController : MonoBehaviour
             return;
         }
 
-        // 攻撃中 (m_IsAttack == true) なら、ヒットアニメーションと硬直をスキップして終了する
+        // 攻撃中 (m_IsAttack == true) なら
         if (m_PC != null && m_PC.m_IsAttack)
         {
-            // ダメージだけ与える
-            m_PC.TakeDamage(damage);
-            return;
+            // フェイルセーフ: フラグはTrueだが、アニメーションがまだ攻撃動作に入っていない場合は
+            // 「攻撃の出掛かり」や「遷移失敗」とみなして被弾処理（中断）を優先する。
+            var stateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+
+            // ステート名に "Attack" が含まれているか、または "Combo" が含まれているかで判定
+            bool isPlayingAttackAnim = stateInfo.IsName("Combo_Attack_02_01") ||
+                                       stateInfo.IsName("Combo_Attack_02_02") ||
+                                       stateInfo.IsName("Combo_Attack_02_03") ||
+                                       stateInfo.IsName("Combo_Attack_02_04");
+
+            // トランジション中（次の攻撃へ遷移中）も攻撃中とみなす
+            bool isInTransitionToAttack = m_Animator.IsInTransition(0);
+
+            // アニメーションが攻撃でないなら、スーパーアーマー無効＝被弾処理続行（リセットがかかる）
+            if (!isPlayingAttackAnim && !isInTransitionToAttack)
+            {
+                // ここで処理を中断せず、下の処理（ヒットリアクション）へ進むことで
+                // ForceResetCombo() が呼ばれ、m_IsAttack がリセットされる
+            }
+            else
+            {
+                // ちゃんと攻撃動作中なので、既存通りダメージだけ与えてリターン（スーパーアーマー）
+                m_PC.TakeDamage(damage);
+                return;
+            }
         }
 
         // 「現在ダッシュ中」かつ「Lightヒット」であるか判定
