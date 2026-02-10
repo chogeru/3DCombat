@@ -148,6 +148,37 @@ public class GameSubtitleManager : MonoBehaviour
         return currentText;
     }
 
+    // 一時停止前のアルファ値を保存する変数
+    private float m_PrePauseAlpha = 0f;
+
+    /// <summary>
+    /// 字幕を一時的に非表示にする（ポーズ画面用）
+    /// 時間停止中に画面から消すために使用します。
+    /// </summary>
+    public void Pause()
+    {
+        if (m_CanvasGroup != null)
+        {
+            // 現在のアルファ値を保存
+            m_PrePauseAlpha = m_CanvasGroup.alpha;
+            // 完全に透明にする
+            m_CanvasGroup.alpha = 0;
+        }
+    }
+
+    /// <summary>
+    /// 字幕の表示を再開する
+    /// ポーズ画面から戻った時に呼び出します。
+    /// </summary>
+    public void Resume()
+    {
+        if (m_CanvasGroup != null)
+        {
+            // 保存しておいたアルファ値に戻す
+            m_CanvasGroup.alpha = m_PrePauseAlpha;
+        }
+    }
+
     /// <summary>
     /// CanvasGroupのアルファ値を徐々に下げてフェードアウトさせる処理。
     /// </summary>

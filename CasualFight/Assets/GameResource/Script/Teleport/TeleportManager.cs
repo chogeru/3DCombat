@@ -87,6 +87,9 @@ public class TeleportManager : MonoBehaviour
                     // UIを開いたので時間を止める
                     Time.timeScale = 0f;
                     
+                    // 字幕を一時非表示
+                    if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Pause();
+                    
                     // カーソルを表示・ロック解除
                     Cursor.lockState = CursorLockMode.None;
                     Cursor.visible = true;
@@ -98,6 +101,9 @@ public class TeleportManager : MonoBehaviour
                 {
                     // UIを閉じたので時間を再開する
                     Time.timeScale = 1f;
+
+                    // 字幕を復帰
+                    if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Resume();
 
                     // カーソルを非表示・ロック
                     Cursor.lockState = CursorLockMode.Locked;
@@ -118,6 +124,9 @@ public class TeleportManager : MonoBehaviour
 
             // UIを閉じたので時間を再開する
             Time.timeScale = 1f;
+
+            // 字幕を復帰
+            if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Resume();
 
             // カーソルを非表示・ロック
             Cursor.lockState = CursorLockMode.Locked;
@@ -252,6 +261,9 @@ public class TeleportManager : MonoBehaviour
 
             // 時間を再開する
             Time.timeScale = 1f;
+
+            // 字幕を復帰
+            if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Resume();
 
             // カーソルを非表示・ロック
             Cursor.lockState = CursorLockMode.Locked;

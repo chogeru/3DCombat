@@ -116,6 +116,9 @@ public class SettingsManager : MonoBehaviour
 
             //カーソルの表示
             UnityEngine.Cursor.visible = true;
+            
+            // 字幕を一時非表示
+            if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Pause();
         }
         else
         {
@@ -127,6 +130,9 @@ public class SettingsManager : MonoBehaviour
 
             //カーソル非表示
             UnityEngine.Cursor.visible = false;
+            
+            // 字幕を復帰
+            if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Resume();
         }
     }
 
