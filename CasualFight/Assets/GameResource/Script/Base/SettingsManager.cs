@@ -119,6 +119,8 @@ public class SettingsManager : MonoBehaviour
             
             // 字幕を一時非表示
             if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Pause();
+            // ガイドを一時非表示
+            if (OperationGuideManager.Instance != null) OperationGuideManager.Instance.Pause();
         }
         else
         {
@@ -133,6 +135,8 @@ public class SettingsManager : MonoBehaviour
             
             // 字幕を復帰
             if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Resume();
+            // ガイドを復帰
+            if (OperationGuideManager.Instance != null) OperationGuideManager.Instance.Resume();
         }
     }
 

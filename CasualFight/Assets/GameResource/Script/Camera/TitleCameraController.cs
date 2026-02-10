@@ -36,11 +36,13 @@ public class TitleCameraController : MonoBehaviour
     /// </summary>
     private async UniTaskVoid MonitorBlendListAsync()
     {
+        Debug.Log($"TitleCameraController: MonitorBlendListAsync started. BlendListCamera={m_BlendListCamera != null}, Vcam2={m_Vcam2 != null}");
         if (m_BlendListCamera == null || m_Vcam2 == null) return;
 
         // 1. LiveChild が Vcam2 になるのを待つ
-        // LiveChildインターフェースとの参照比較
+        Debug.Log("TitleCameraController: Waiting for LiveChild to become Vcam2...");
         await UniTask.WaitUntil(() => IsLiveChild(m_Vcam2));
+        Debug.Log("TitleCameraController: Vcam2 detected as LiveChild.");
 
         // 2. ブレンド（移動）時間を取得して待機する
         float blendTime = 0f;
