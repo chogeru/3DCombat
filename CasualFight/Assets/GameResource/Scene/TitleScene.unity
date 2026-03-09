@@ -647,6 +647,31 @@ PrefabInstance:
       propertyPath: m_DefaultBlend.m_Style
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1338984394729152559, guid: 0fc17f1059923d74db86b3547f2ee6e2,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1338984394729152559, guid: 0fc17f1059923d74db86b3547f2ee6e2,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1338984394729152559, guid: 0fc17f1059923d74db86b3547f2ee6e2,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1338984394729152559, guid: 0fc17f1059923d74db86b3547f2ee6e2,
+        type: 3}
+      propertyPath: m_FontData.m_FontStyle
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1338984394729152559, guid: 0fc17f1059923d74db86b3547f2ee6e2,
+        type: 3}
+      propertyPath: m_FontData.m_AlignByGeometry
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1478776873713003368, guid: 0fc17f1059923d74db86b3547f2ee6e2,
         type: 3}
       propertyPath: m_SceneName
