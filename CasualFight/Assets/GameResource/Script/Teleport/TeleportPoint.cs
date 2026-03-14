@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// プレイヤーテレポート場所管理クラス
@@ -18,6 +19,9 @@ public class TeleportPoint : MonoBehaviour
 
     [Header("解放時エフェクト"), SerializeField]
     GameObject m_ActiveEffect;
+
+    [Header("解放時に実行するイベント (UnlockManager連携用)"), SerializeField]
+    UnityEvent m_OnUnlockedEvent;
 
     //一度通ったかの判定
     bool m_IsUnlocked = false;
@@ -63,5 +67,8 @@ public class TeleportPoint : MonoBehaviour
             m_ActiveEffect.SetActive(true);
 
         Debug.Log($"{m_PointName}解放");
+
+        // UnlockManagerなどの外部処理を呼び出す
+        m_OnUnlockedEvent?.Invoke();
     }
 }
