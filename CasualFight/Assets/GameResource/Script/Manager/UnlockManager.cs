@@ -13,12 +13,23 @@ public class UnlockManager : MonoBehaviour
     [Tooltip("全対象オブジェクトで共通のメモの名前（キー）にするのが最大のポイントです")]
     [SerializeField] private string m_UnlockGroupKey = "HasUnlocked_DefaultGroup";
 
+    [Header("デバッグ用: ゲーム起動時にこのキーのセーブデータをリセットするか")]
+    [SerializeField] private bool m_ResetOnStart = false;
+
     // 停止中フラグ
     private bool m_IsDisplaying = false;
 
     // 停止前の状態を記憶
     private float m_PreviousTimeScale = 1f;
     private GameStateManager.GameState m_PreviousGameState;
+
+    private void Start()
+    {
+        if (m_ResetOnStart)
+        {
+            ResetSaveData();
+        }
+    }
 
     private void Update()
     {
@@ -92,5 +103,18 @@ public class UnlockManager : MonoBehaviour
 
         m_IsDisplaying = false;
         Debug.Log($"[{m_UnlockGroupKey}] 解放UIを閉じ、ゲームを再開しました。");
+    }
+
+    /// <summary>
+    /// このマネージャーで管理しているセーブデータをリセットする
+    /// </summary>
+    public void ResetSaveData()
+    {
+        if (PlayerPrefs.HasKey(m_UnlockGroupKey))
+        {
+            PlayerPrefs.DeleteKey(m_UnlockGroupKey);
+            PlayerPrefs.Save();
+            Debug.Log($"[{m_UnlockGroupKey}] セーブデータをリセットしました。");
+        }
     }
 }
