@@ -19,6 +19,9 @@ public class UnlockManager : MonoBehaviour
     // 停止中フラグ
     private bool m_IsDisplaying = false;
 
+    public static int m_ActiveUnlockUICount { get; private set; }
+    public static int m_LastClosedFrame { get; private set; }
+
     // 停止前の状態を記憶
     private float m_PreviousTimeScale = 1f;
     private GameStateManager.GameState m_PreviousGameState;
@@ -78,6 +81,7 @@ public class UnlockManager : MonoBehaviour
             }
 
             m_IsDisplaying = true;
+            m_ActiveUnlockUICount++;
         }
     }
 
@@ -102,6 +106,8 @@ public class UnlockManager : MonoBehaviour
         }
 
         m_IsDisplaying = false;
+        m_ActiveUnlockUICount--;
+        m_LastClosedFrame = Time.frameCount;
         Debug.Log($"[{m_UnlockGroupKey}] 解放UIを閉じ、ゲームを再開しました。");
     }
 
@@ -115,6 +121,15 @@ public class UnlockManager : MonoBehaviour
             PlayerPrefs.DeleteKey(m_UnlockGroupKey);
             PlayerPrefs.Save();
             Debug.Log($"[{m_UnlockGroupKey}] セーブデータをリセットしました。");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        //安全対策としてUI表示中のまま破棄された場合に減算する
+        if (m_IsDisplaying)
+        {
+            m_ActiveUnlockUICount--;
         }
     }
 }

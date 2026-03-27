@@ -90,6 +90,12 @@ public class SettingsManager : MonoBehaviour
                 return;
             }
 
+            //UnlockManagerのUIが開いているか今のフレームで閉じた場合
+            if (UnlockManager.m_ActiveUnlockUICount > 0 || UnlockManager.m_LastClosedFrame == Time.frameCount)
+            {
+                return;
+            }
+
             ToggleSettings();
         }
     }
