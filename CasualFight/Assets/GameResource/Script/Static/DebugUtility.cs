@@ -10,7 +10,7 @@ namespace AbubuResouse.Log
             Debug.Log(message);
 #endif
         }
-        // エディタ上でのみエラーログを表示するメソッド
+        //エディタ上でのみエラーログを表示するメソッド
         public static void LogError(string message)
         {
 #if UNITY_EDITOR

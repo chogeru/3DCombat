@@ -7,3 +7,7 @@ UserSettings
 .vsconfig
 *.csproj
 *.sln
+BuildFolder
+
+CasualFight.zip
+CasualFight/Architecture_Implementation_Status.md

@@ -4,18 +4,18 @@ using AbubuResouse.Log;
 
 namespace AbubuResouse.Singleton
 {
-    /// <summary>
-    /// ƒVƒ“ƒOƒ‹ƒgƒ“ƒpƒ^[ƒ“‚ğÀ‘•‚·‚é‚½‚ß‚Ì’ŠÛƒNƒ‰ƒX
-    /// </summary>
-    /// <typeparam name="T">ƒVƒ“ƒOƒ‹ƒgƒ“‚Æ‚µ‚Äg—p‚·‚éƒNƒ‰ƒX‚ÌŒ^</typeparam>
+    ///<summary>
+    ///ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å®Ÿè£…ã™ã‚‹ãŸã‚ã®æŠ½è±¡ã‚¯ãƒ©ã‚¹
+    ///</summary>
+    ///<typeparam name="T">ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã¨ã—ã¦ä½¿ç”¨ã™ã‚‹ã‚¯ãƒ©ã‚¹ã®å‹</typeparam>
     public abstract class SingletonMonoBehaviour<T> : MonoBehaviour where T : SingletonMonoBehaviour<T>
     {
 
         private static T _instance;
 
-        /// <summary>
-        /// ƒVƒ“ƒOƒ‹ƒgƒ“‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾
-        /// </summary>
+        ///<summary>
+        ///ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—
+        ///</summary>
         public static T Instance
         {
             get
@@ -25,17 +25,17 @@ namespace AbubuResouse.Singleton
                     _instance = FindObjectOfType<T>();
                     if (_instance == null)
                     {
-                        DebugUtility.LogError($"{typeof(T).Name}‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªƒV[ƒ“‚É‘¶İ‚µ‚È‚¢I");
+                        DebugUtility.LogError($"{typeof(T).Name}ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒã‚·ãƒ¼ãƒ³ã«å­˜åœ¨ã—ãªã„ï¼");
                     }
                 }
                 return _instance;
             }
         }
 
-        /// <summary>
-        /// ƒIƒuƒWƒFƒNƒg‚Ì‰Šú‰»‚ÉŒÄ‚Ño‚³‚ê‚é
-        /// ƒVƒ“ƒOƒ‹ƒgƒ“‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğİ’è‚µAƒIƒuƒWƒFƒNƒg‚ª”jŠü‚³‚ê‚È‚¢‚æ‚¤‚É‚·‚é
-        /// </summary>
+        ///<summary>
+        ///ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆæœŸåŒ–æ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹
+        ///ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’è¨­å®šã—ã€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒç ´æ£„ã•ã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹
+        ///</summary>
         protected virtual void Awake()
         {
             if (_instance == null)
@@ -45,21 +45,21 @@ namespace AbubuResouse.Singleton
             }
             else if (_instance != this)
             {
-                DebugUtility.Log($"{typeof(T).Name}‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª‚·‚Å‚É‘¶İ‚µ‚Ä‚¢‚éI");
+                DebugUtility.Log($"{typeof(T).Name}ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒã™ã§ã«å­˜åœ¨ã—ã¦ã„ã‚‹ï¼");
                 Destroy(gameObject);
             }
         }
 
-        /// <summary>
-        /// ƒIƒuƒWƒFƒNƒg‚ª”jŠü‚³‚ê‚éÛ‚ÉŒÄ‚Ño‚·
-        /// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğƒNƒŠƒA‚·‚é
-        /// </summary>
+        ///<summary>
+        ///ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒç ´æ£„ã•ã‚Œã‚‹éš›ã«å‘¼ã³å‡ºã™
+        ///ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹
+        ///</summary>
         protected virtual void OnDestroy()
         {
             if (_instance == this)
             {
                 _instance = null;
-                DebugUtility.Log($"{typeof(T).Name}‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ”jŠüI");
+                DebugUtility.Log($"{typeof(T).Name}ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç ´æ£„ï¼");
             }
         }
     }

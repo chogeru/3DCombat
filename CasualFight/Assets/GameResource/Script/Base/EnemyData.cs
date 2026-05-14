@@ -1,0 +1,51 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "NewEnemyData", menuName = "Enemy/Data")]
+public class EnemyData : ScriptableObject
+{
+    [Header("基本ステータス"), Header(" 敵の名前")]
+    public string m_EnemyName;
+    [Header("最大HP")]
+    public int m_MaxHp;
+    [Header("移動速度")]
+    public float m_MoveSpeed;
+
+    [Space]
+
+    [Header("戦闘設定"), Header("攻撃力")]
+    public int m_AttackDamage = 10;
+    [Header("攻撃が届く距離")]
+    public float m_AttackRange;
+    [Header("プレイヤーを見つける距離")]
+    public float m_SearchRange;
+    [Header("攻撃対象レイヤー")]
+    public LayerMask m_TargetLayer;
+
+    [Space]
+
+    [Header("待機アニメ名")]
+    public string m_IdleAnimName;
+    [Header("移動アニメ名")]
+    public string m_MoveAnimName;
+    [Header("攻撃アニメ名")]
+    public string m_AttackAnimName;
+    [Header("ヒットエフェクト")]
+    public GameObject m_HitEffectPrefab;
+    [Header("ヒットアニメ名")]
+    public string m_HitAnimName;
+
+    [Header("後退時の設定")]
+    //後退する速度
+    public float m_RetreatSpeed = 3.0f;
+    //後退し続ける時間
+    public float m_RetreatDuration = 1.5f;
+    //後退時のアニメーション名
+    public string m_RetreatAnimName;
+
+    [Header("索敵アニメ名")]
+    public string m_SearchAnimName;
+    [Header("死亡アニメ名")]
+    public string m_DieAnimName;
+}

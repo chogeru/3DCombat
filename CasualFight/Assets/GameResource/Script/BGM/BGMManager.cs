@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace AbubuResouse.Singleton
 {
-    /// <summary>
-    /// BGMの再生を管理するマネージャークラス
-    /// </summary>
+    ///<summary>
+    ///BGMの再生を管理するマネージャークラス
+    ///</summary>
     public class BGMManager : AudioManagerBase<BGMManager>
     {
-        /// <summary>
-        /// BGM名とリソースパスのマッピング
-        /// </summary>
+        ///<summary>
+        ///BGM名とリソースパスのマッピング
+        ///</summary>
         [System.Serializable]
         public class BGMEntry
         {
@@ -20,8 +20,7 @@ namespace AbubuResouse.Singleton
             public string ResourcePath;
         }
 
-        [Tooltip("BGMのマッピングリスト")]
-        [SerializeField]
+        [Tooltip("BGMのマッピングリスト"), SerializeField]
         private List<BGMEntry> bgmList = new List<BGMEntry>();
 
         private Dictionary<string, string> bgmDictionary;
@@ -33,9 +32,9 @@ namespace AbubuResouse.Singleton
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        /// <summary>
-        /// BGMリストを辞書に初期化する
-        /// </summary>
+        ///<summary>
+        ///BGMリストを辞書に初期化する
+        ///</summary>
         private void InitializeBGMDictionary()
         {
             bgmDictionary = new Dictionary<string, string>();
@@ -52,16 +51,16 @@ namespace AbubuResouse.Singleton
             }
         }
 
-        /// <summary>
-        /// シーンがロードされた際にBGMを停止する
-        /// </summary>
+        ///<summary>
+        ///シーンがロードされた際にBGMを停止する
+        ///</summary>
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode) => StopBGM();
 
-        /// <summary>
-        /// 指定されたBGM名に対応するサウンドを再生する
-        /// </summary>
-        /// <param name="bgmName">BGM名</param>
-        /// <param name="volume">音量</param>
+        ///<summary>
+        ///指定されたBGM名に対応するサウンドを再生する
+        ///</summary>
+        ///<param name="bgmName">BGM名</param>
+        ///<param name="volume">音量</param>
         public override void PlaySound(string bgmName, float volume)
         {
             if (bgmDictionary.TryGetValue(bgmName, out string resourcePath))
@@ -74,9 +73,9 @@ namespace AbubuResouse.Singleton
             }
         }
 
-        /// <summary>
-        /// 現在再生中のBGMを停止
-        /// </summary>
+        ///<summary>
+        ///現在再生中のBGMを停止
+        ///</summary>
         public void StopBGM()
         {
             if (audioSource.isPlaying)
@@ -87,9 +86,9 @@ namespace AbubuResouse.Singleton
             }
         }
 
-        /// <summary>
-        /// シーンロードイベントを解除
-        /// </summary>
+        ///<summary>
+        ///シーンロードイベントを解除
+        ///</summary>
         protected override void OnDestroy()
         {
             base.OnDestroy();
