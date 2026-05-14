@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// —­‚ßUŒ‚ˆ—
-/// </summary>
+///<summary>
+///æºœã‚æ”»æ’ƒå‡¦ç†
+///</summary>
 public class ChargeAttackSystem : MonoBehaviour
 {
 

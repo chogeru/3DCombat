@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 矢印をプレイヤーの向きに同期させるスクリプト
-/// </summary>
+///<summary>
+///矢印をプレイヤーの向きに同期させるスクリプト
+///</summary>
 public class MinimapPlayerArrowSync : MonoBehaviour
 {
     [Header("プレイヤーオブジェクト"), SerializeField]
@@ -21,7 +21,7 @@ public class MinimapPlayerArrowSync : MonoBehaviour
 
     private void LateUpdate()
     {
-        // イベント中は同期しない（カメラが動くため、ミニマップの矢印が荒ぶるのを防ぐ）
+        //イベント中は同期しない（カメラが動くため、ミニマップの矢印が荒ぶるのを防ぐ）
         if (GameStateManager.Instance != null)
         {
             var state = GameStateManager.Instance.CurrentState;

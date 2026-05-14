@@ -3,53 +3,53 @@ using System.Globalization;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 
-/// <summary>
-/// Cinemachine‚ğg—p‚µ‚½ƒY[ƒ€ˆ—
-/// </summary>
+///<summary>
+///Cinemachineã‚’ä½¿ç”¨ã—ãŸã‚ºãƒ¼ãƒ å‡¦ç†
+///</summary>
 public class CinemachineUserInputZoom : CinemachineExtension
 {
-    [Header("Input Manager‚É“o˜^‚³‚ê‚Ä‚¢‚é“ü—Í–¼"), SerializeField]
+    [Header("Input Managerã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹å…¥åŠ›å"), SerializeField]
     string m_InputName = "Mouse ScrollWheel";
 
-    [Header("ƒXƒNƒ[ƒ‹‚É‚©‚¯‚é”{—¦"), SerializeField]
+    [Header("ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã«ã‹ã‘ã‚‹å€ç‡"), SerializeField]
     float m_InputScale = 100f;
 
-    [Header("ƒY[ƒ€‰Â”\‚ÈFOV‚ÌÅ¬’l"), SerializeField, Range(1, 179)]
+    [Header("ã‚ºãƒ¼ãƒ å¯èƒ½ãªFOVã®æœ€å°å€¤"), SerializeField, Range(1, 179)]
     float m_MinFOV = 10f;
 
-    [Header("ƒY[ƒ€‰Â”\‚ÈFOV‚ÌÅ¬’l"), SerializeField, Range(1, 179)]
+    [Header("ã‚ºãƒ¼ãƒ å¯èƒ½ãªFOVã®æœ€å°å€¤"), SerializeField, Range(1, 179)]
     float m_MaxFOV = 90f;
 
-    //“ü—Í‚ğg‚¤éŒ¾
+    //å…¥åŠ›ã‚’ä½¿ã†å®£è¨€
     public override bool RequiresUserInput => true;
 
-    //1ƒtƒŒ[ƒ€•ª‚ÌƒXƒNƒ[ƒ‹“ü—Í’l
+    //1ãƒ•ãƒ¬ãƒ¼ãƒ åˆ†ã®ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«å…¥åŠ›å€¤
     float m_ScrollDelta;
 
-    //Œ»İ‚Ì FOV •â³—Ê
+    //ç¾åœ¨ã® FOV è£œæ­£é‡
     float m_AdjustFOV;
 
     private void Update()
     {
-        //ƒ}ƒEƒXƒzƒC[ƒ‹‚Ì“ü—Í‚ğ–ˆƒtƒŒ[ƒ€‰ÁZ(uˆêu‚Ì“ü—Í‚ª‚È‚©‚Á‚½‚±‚Æ‚É‚È‚ç‚È‚¢‚æ‚¤‚É‘ã“ü‚Å‚Í‚È‚­‰ÁZ)
+        //ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ã®å…¥åŠ›ã‚’æ¯ãƒ•ãƒ¬ãƒ¼ãƒ åŠ ç®—(ã€Œä¸€ç¬ã®å…¥åŠ›ãŒãªã‹ã£ãŸã“ã¨ã«ãªã‚‰ãªã„ã‚ˆã†ã«ä»£å…¥ã§ã¯ãªãåŠ ç®—)
         m_ScrollDelta += Input.GetAxis(m_InputName);
     }
 
 
-    /// <summary>
-    /// Cinemachine ‚ÌŠeƒXƒe[ƒWˆ—Œã‚ÉŒÄ‚Î‚ê‚éƒR[ƒ‹ƒoƒbƒN
-    /// </summary>
+    ///<summary>
+    ///Cinemachine ã®å„ã‚¹ãƒ†ãƒ¼ã‚¸å‡¦ç†å¾Œã«å‘¼ã°ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+    ///</summary>
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
     {
-        //Aim’¼Œã‚Ì‚İˆ—
+        //Aimç›´å¾Œã®ã¿å‡¦ç†
         if (stage != CinemachineCore.Stage.Aim)
             return;
 
-        //Cinemachine ‚ªì‚Á‚½ƒJƒƒ‰İ’è(ƒŒƒ“ƒY)‚ğƒRƒs[
+        //Cinemachine ãŒä½œã£ãŸã‚«ãƒ¡ãƒ©è¨­å®š(ãƒ¬ãƒ³ã‚º)ã‚’ã‚³ãƒ”ãƒ¼
         var lens =state.Lens;
 
-        //FOV •â³—Ê‚ğŒvZ
-        //ƒXƒNƒ[ƒ‹•ûŒü‚É‰‚¶‚Ä‘Œ¸
+        //FOV è£œæ­£é‡ã‚’è¨ˆç®—
+        //ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«æ–¹å‘ã«å¿œã˜ã¦å¢—æ¸›
         if (!Mathf.Approximately(m_ScrollDelta, 0))
         {
             m_AdjustFOV=Mathf.Clamp(
@@ -58,14 +58,14 @@ public class CinemachineUserInputZoom : CinemachineExtension
                 m_MaxFOV - lens.FieldOfView
             );
 
-            //ƒŠƒZƒbƒg(‰Šú‰»)
+            //ãƒªã‚»ãƒƒãƒˆ(åˆæœŸåŒ–)
             m_ScrollDelta = 0;
         }
 
-        //CameraState‚Í–ˆƒtƒŒ[ƒ€ì‚è’¼‚³‚ê‚é‚½‚ß–ˆ‰ñFOV•â³‚ğ‰Á‚¦‚é
+        //CameraStateã¯æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ä½œã‚Šç›´ã•ã‚Œã‚‹ãŸã‚æ¯å›FOVè£œæ­£ã‚’åŠ ãˆã‚‹
         lens.FieldOfView += m_AdjustFOV;
 
-        //•â³‚µ‚½ƒŒƒ“ƒYî•ñ‚ğstate‚É–ß‚·
+        //è£œæ­£ã—ãŸãƒ¬ãƒ³ã‚ºæƒ…å ±ã‚’stateã«æˆ»ã™
         state.Lens = lens;
     }
 

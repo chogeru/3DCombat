@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace AbubuResouse
 {
-    /// <summary>
-    /// BGMセット用クラス
-    /// </summary>
+    ///<summary>
+    ///BGMセット用クラス
+    ///</summary>
     public class SetBGM : MonoBehaviour
     {
         [SerializeField, Header("開始時にセットするBGM")]
@@ -30,9 +30,9 @@ namespace AbubuResouse
             }
         }
 
-        /// <summary>
-        /// 初期設定
-        /// </summary>
+        ///<summary>
+        ///初期設定
+        ///</summary>
         private void Initialization()
         {
             if (BGMManager.Instance != null)
@@ -45,9 +45,9 @@ namespace AbubuResouse
             }
         }
 
-        /// <summary>
-        /// ランダムBGMの再生処理を行う
-        /// </summary>
+        ///<summary>
+        ///ランダムBGMの再生処理を行う
+        ///</summary>
         private void RandomBGM()
         {
             if (BGMManager.Instance != null)

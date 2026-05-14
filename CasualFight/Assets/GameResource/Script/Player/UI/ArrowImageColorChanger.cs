@@ -1,15 +1,14 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 敵に向く矢印のハイライト変更処理
-/// </summary>
+///<summary>
+///敵に向く矢印のハイライト変更処理
+///</summary>
 public class ArrowImageColorChanger : MonoBehaviour
 {
-    [Header("設定項目")]
-    [Header("色を変える対象のImage"),SerializeField]
+    [Header("設定項目"), Header("色を変える対象のImage"),SerializeField]
     Image m_TargetImage;      
     [Header("開始色"),SerializeField]
     private Color m_ColorA = Color.white;  
@@ -29,7 +28,7 @@ public class ArrowImageColorChanger : MonoBehaviour
 
     private void Update()
     {
-        // イベント中は処理しない（負荷軽減＆エラー防止）
+        //イベント中は処理しない（負荷軽減＆エラー防止）
         if (GameStateManager.Instance != null)
         {
             var state = GameStateManager.Instance.CurrentState;

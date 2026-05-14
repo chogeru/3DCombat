@@ -2,27 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// ƒ~ƒjƒ}ƒbƒv‚ÌƒJƒƒ‰‚Ì’Ç”öˆ—
-/// </summary>
+///<summary>
+///ãƒŸãƒ‹ãƒãƒƒãƒ—ã®ã‚«ãƒ¡ãƒ©ã®è¿½å°¾å‡¦ç†
+///</summary>
 public class MinimapFollow : MonoBehaviour
 {
-    [Header("’Ç”ö‘ÎÛ"), SerializeField]
+    [Header("è¿½å°¾å¯¾è±¡"), SerializeField]
     Transform m_Player;
 
-    [Header("ƒJƒƒ‰‚Ì‚‚³"),SerializeField]
+    [Header("ã‚«ãƒ¡ãƒ©ã®é«˜ã•"),SerializeField]
     float m_Height = 20.0f;
 
 
     private void LateUpdate()
     {
-        //ƒvƒŒƒCƒ„[‚ÌÀ•Wæ“¾
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™å–å¾—
         Vector3 pos = m_Player.position;
         
-        //‚‚³‚Ì•ÏX
+        //é«˜ã•ã®å¤‰æ›´
         pos.y = pos.y+m_Height;
         
-        //ƒJƒƒ‰‚ÉÀ•W“K‰
+        //ã‚«ãƒ¡ãƒ©ã«åº§æ¨™é©å¿œ
         transform.position = pos;
     }
 }

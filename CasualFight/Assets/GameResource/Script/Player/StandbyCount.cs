@@ -31,7 +31,7 @@ public class StandbyCount : MonoBehaviour
         //攻撃中かチェック (!m_PC.m_IsAttack も考慮して二重チェック)
         bool isAttacking = m_PC.m_IsAttack || m_CS.m_InputReserved || m_Animator.GetInteger("AttackNo") > 0;
         
-        // 武器を抜いているかチェック
+        //武器を抜いているかチェック
         bool isWeaponDrawn = m_PC.GetComponent<WeaponSwitch>() != null && m_PC.GetComponent<WeaponSwitch>().IsWeaponDrawn;
 
         //移動も攻撃もしておらず、かつ刀をしまっている完全な待機状態の時だけ
@@ -53,7 +53,7 @@ public class StandbyCount : MonoBehaviour
             //移動した・攻撃した・あるいはチャージを開始した瞬間にタイマーを0にリセットする
             m_IdleTimer = 0f;
 
-            // 移動中かつ攻撃中でなければ一度だけ CrossFade を送る
+            //移動中かつ攻撃中でなければ一度だけ CrossFade を送る
             if (isMoving && !isAttacking && !m_IsMovingAnimator)
             {
                 m_Animator.CrossFade("Movement", 0.1f, 0, 0f);
@@ -62,9 +62,9 @@ public class StandbyCount : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ランダムな待機アニメーションを再生させる
-    /// </summary>
+    ///<summary>
+    ///ランダムな待機アニメーションを再生させる
+    ///</summary>
     void PlayStandbyMotion()
     {
         //待機アニメーションの数

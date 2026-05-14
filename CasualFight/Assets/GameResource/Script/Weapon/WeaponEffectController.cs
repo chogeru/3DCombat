@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ÅŒÄ‚Ño‚·aŒ‚ƒGƒtƒFƒNƒg
-/// </summary>
+///<summary>
+///ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã§å‘¼ã³å‡ºã™æ–¬æ’ƒã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+///</summary>
 public class WeaponEffectController : MonoBehaviour
 {
-    [Header("aŒ‚ƒGƒtƒFƒNƒg"), SerializeField]
+    [Header("æ–¬æ’ƒã‚¨ãƒ•ã‚§ã‚¯ãƒˆ"), SerializeField]
     ParticleSystem m_Slash;
 
-    /// <summary>
-    /// ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ÅŒÄ‚Ño‚·
-    /// </summary>
+    ///<summary>
+    ///ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã§å‘¼ã³å‡ºã™
+    ///</summary>
     public void PlaySlashEffect()
     {
         m_Slash.Stop();

@@ -2,30 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// ƒ~ƒjƒ}ƒbƒv‚Ì‰ñ“]ˆ—
-/// </summary>
+///<summary>
+///ãƒŸãƒ‹ãƒãƒƒãƒ—ã®å›è»¢å‡¦ç†
+///</summary>
 public class MinimapIconController : MonoBehaviour
 {
-    [Header("ƒvƒŒƒCƒ„[‚ÌÀ•W"), SerializeField]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™"), SerializeField]
     Transform m_PlayerTransform;
-    [Header("‰ñ“]ONOFFƒtƒ‰ƒO")]
+    [Header("å›è»¢ONOFFãƒ•ãƒ©ã‚°")]
     public bool m_IsPlayerIcon = true;
 
     void LateUpdate()
     {
         if (m_PlayerTransform == null) return;
 
-        // ƒAƒCƒRƒ“‚ğ^ãiƒ~ƒjƒ}ƒbƒvƒJƒƒ‰‚Ì•ûj‚ÉŒü‚¯‚é
-        // X‚ğ90“x‚ÉŒÅ’è‚µAY‚ÉƒvƒŒƒCƒ„[‚ÌŒü‚«‚ğ‘ã“ü‚·‚é
+        //ã‚¢ã‚¤ã‚³ãƒ³ã‚’çœŸä¸Šï¼ˆãƒŸãƒ‹ãƒãƒƒãƒ—ã‚«ãƒ¡ãƒ©ã®æ–¹ï¼‰ã«å‘ã‘ã‚‹
+        //Xã‚’90åº¦ã«å›ºå®šã—ã€Yã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ãã‚’ä»£å…¥ã™ã‚‹
         if (m_IsPlayerIcon)
         {
-            // ƒvƒŒƒCƒ„[‚ÌŒü‚«‚É‡‚í‚¹‚ÄƒJƒƒ‰‚à‰ñ“]i‘O•ûŒÅ’èƒ‚[ƒhj
+            //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‘ãã«åˆã‚ã›ã¦ã‚«ãƒ¡ãƒ©ã‚‚å›è»¢ï¼ˆå‰æ–¹å›ºå®šãƒ¢ãƒ¼ãƒ‰ï¼‰
             transform.rotation = Quaternion.Euler(90f, m_PlayerTransform.eulerAngles.y, 0f);
         }
         else
         {
-            // í‚É–k‚ğã‚É‚·‚éi–kŒÅ’èƒ‚[ƒhj
+            //å¸¸ã«åŒ—ã‚’ä¸Šã«ã™ã‚‹ï¼ˆåŒ—å›ºå®šãƒ¢ãƒ¼ãƒ‰ï¼‰
             transform.rotation = Quaternion.Euler(90f, 0f, 0f);
         }
     }

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 壁（シェーダー）を表示させるかどうかの判定処理
-/// </summary>
+///<summary>
+///壁（シェーダー）を表示させるかどうかの判定処理
+///</summary>
 public class ForceFieldController : MonoBehaviour
 {
     [Header("追跡する対象（プレイヤー）"), SerializeField]
@@ -25,7 +25,7 @@ public class ForceFieldController : MonoBehaviour
         m_Material = GetComponent<Renderer>().material;
 
         //プレイヤーが未設定なら自動で"Player"タグから探す
-        // プレイヤーの自動割り当て
+        //プレイヤーの自動割り当て
         if (m_PlayerTransform == null)
         {
             //まず "Player" タグで探す
@@ -55,22 +55,22 @@ public class ForceFieldController : MonoBehaviour
     {
         if (m_PlayerTransform != null && m_Material != null)
         {
-            // プレイヤーの現在地をリアルタイムでシェーダーへ送る
+            //プレイヤーの現在地をリアルタイムでシェーダーへ送る
             m_Material.SetVector(m_PlayerPosID, m_PlayerTransform.position);
         }
     }
 
     void OnDrawGizmos()
     {
-        // レンダラーを取得（ローカル変数は小文字開始）
+        //レンダラーを取得（ローカル変数は小文字開始）
         Renderer renderer = GetComponent<Renderer>();
         if (renderer != null)
         {
-            // 枠線を描画（シアン）
+            //枠線を描画（シアン）
             Gizmos.color = Color.cyan;
             Gizmos.DrawWireCube(renderer.bounds.center, renderer.bounds.size);
 
-            // 半透明の塗りつぶしを描画（少し薄いシアン）
+            //半透明の塗りつぶしを描画（少し薄いシアン）
             Gizmos.color = new Color(0, 1, 1, 1f);
             Gizmos.DrawCube(renderer.bounds.center, renderer.bounds.size);
         }

@@ -14,20 +14,20 @@ public class State_Idle : State<AITester>
 
     public override void Stay()
     {
-        //ƒvƒŒƒCƒ„[‚Æ©g‚Ì‹——£Š´‚ğ‹‚ß‚é
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨è‡ªèº«ã®è·é›¢æ„Ÿã‚’æ±‚ã‚ã‚‹
         float distance = Vector3.Distance(owner.transform.position, owner.m_Player.position);
 
-        //õ“G”ÍˆÍ‚É“ü‚Á‚½‚ç
+        //ç´¢æ•µç¯„å›²ã«å…¥ã£ãŸã‚‰
         if(distance<owner.m_EnemyData.m_SearchRange)
         {
-            //’ÇÕ‚ÉˆÚ“®
+            //è¿½è·¡ã«ç§»å‹•
             owner.ChangeState(AIState_Type.Tracking);
         }
     }
 
     public override void Exit()
     {
-        Debug.Log("’ÇÕ‚ÉˆÚs");
+        Debug.Log("è¿½è·¡ã«ç§»è¡Œ");
     }
 
 }

@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// ƒJƒƒ‰‚ÌŒü‚«‚ÅƒLƒƒƒ‰ƒNƒ^[‚ÌŒü‚«‚ğs‚¤‚½‚ß‚Ìˆ—
-/// </summary>
+///<summary>
+///ã‚«ãƒ¡ãƒ©ã®å‘ãã§ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å‘ãã‚’è¡Œã†ãŸã‚ã®å‡¦ç†
+///</summary>
 public class LookAtCameraTarget : MonoBehaviour
 {
-    [Header("Animation Rigging‚Ìƒ^[ƒQƒbƒg"),SerializeField]
+    [Header("Animation Riggingã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ"),SerializeField]
     Transform m_LookTarget;
 
-    [Header("ƒƒCƒ“ƒJƒƒ‰"), SerializeField]
+    [Header("ãƒ¡ã‚¤ãƒ³ã‚«ãƒ¡ãƒ©"), SerializeField]
     Transform m_CameraTf;
 
-    [Header("‚Ç‚ê‚­‚ç‚¢æ‚ğŒ©‚é‚©"), SerializeField]
+    [Header("ã©ã‚Œãã‚‰ã„å…ˆã‚’è¦‹ã‚‹ã‹"), SerializeField]
     float m_Distance = 15f;
 
-    [Header("‚‚³‚Ì•â³"), SerializeField]
+    [Header("é«˜ã•ã®è£œæ­£"), SerializeField]
     float m_HightOffset = 0f;
 
     private void Update()
@@ -24,16 +24,16 @@ public class LookAtCameraTarget : MonoBehaviour
         if (m_LookTarget == null || m_CameraTf == null) 
             return;
 
-        //ƒJƒƒ‰À•W‚Ìæ“¾
+        //ã‚«ãƒ¡ãƒ©åº§æ¨™ã®å–å¾—
         Vector3 cameraPos = m_CameraTf.position;
 
-        //ƒJƒƒ‰‚ªŒ©‚Ä‚¢‚é‹ŠE‚Ì‚Ç^‚ñ’†‚É”z’u
+        //ã‚«ãƒ¡ãƒ©ãŒè¦‹ã¦ã„ã‚‹è¦–ç•Œã®ã©çœŸã‚“ä¸­ã«é…ç½®
         Vector3 targetPos = cameraPos + m_CameraTf.forward * m_Distance;
 
-        //‚‚³’²®
+        //é«˜ã•èª¿æ•´
         targetPos.y+= m_HightOffset;
 
-        //ƒ^[ƒQƒbƒg‚ğˆÚ“®
+        //ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ç§»å‹•
         m_LookTarget.position = targetPos;
     }
 }

@@ -3,52 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using static VInspector.VInspectorData;
 
-/// <summary>
-/// •Ší‚ğ—h‚ç‚·ˆ—
-/// </summary>
+///<summary>
+///æ­¦å™¨ã‚’æºã‚‰ã™å‡¦ç†
+///</summary>
 public class WeaponMovement : MonoBehaviour
 {
-    [Header("•Ší‚ÌQÆ"), SerializeField]
+    [Header("æ­¦å™¨ã®å‚ç…§"), SerializeField]
     Transform m_WeaponTf;
 
-    [Header("—h‚ê‚é‘¬‚³"), SerializeField]
+    [Header("æºã‚Œã‚‹é€Ÿã•"), SerializeField]
     float m_WeaponSpeed = 10f;
 
-    [Header("—h‚ê‚é‘å‚«‚³"), SerializeField]
+    [Header("æºã‚Œã‚‹å¤§ãã•"), SerializeField]
     float m_WeaponShaking = 0.05f;
 
-    [Header("‘–‚Á‚Ä‚¢‚é‚Æ‚«‚Ì—h‚ê‚é‘¬‚³"), SerializeField]
+    [Header("èµ°ã£ã¦ã„ã‚‹ã¨ãã®æºã‚Œã‚‹é€Ÿã•"), SerializeField]
     float m_DashWeaponSpeed = 7f;
 
-    [Header("‘–‚Á‚Ä‚¢‚é‚Æ‚«‚Ì—h‚ê‚é‘å‚«‚³"), SerializeField]
+    [Header("èµ°ã£ã¦ã„ã‚‹ã¨ãã®æºã‚Œã‚‹å¤§ãã•"), SerializeField]
     float m_DashWeaponShaking = 0.1f;
 
     [Space]
 
-    [Header("•à‚¢‚Ä‚¢‚é‚Æ‚«‚Ì“‚ÆƒLƒƒƒ‰‚Ì—£‚ê‚é‹——£"), SerializeField]
+    [Header("æ­©ã„ã¦ã„ã‚‹ã¨ãã®åˆ€ã¨ã‚­ãƒ£ãƒ©ã®é›¢ã‚Œã‚‹è·é›¢"), SerializeField]
     float m_BetweenWalk = 0.1f;
-    [Header("‘–‚Á‚Ä‚¢‚é‚Æ‚«‚Ì“‚ÆƒLƒƒƒ‰‚Ì—£‚ê‚é‹——£"), SerializeField]
+    [Header("èµ°ã£ã¦ã„ã‚‹ã¨ãã®åˆ€ã¨ã‚­ãƒ£ãƒ©ã®é›¢ã‚Œã‚‹è·é›¢"), SerializeField]
     float m_BetweenDash = 0.15f;
 
     [Space]
 
-    [Header("‘Ò‹@‚Ì“‚ÌŠp“xİŒv"),SerializeField]
+    [Header("å¾…æ©Ÿæ™‚ã®åˆ€ã®è§’åº¦è¨­è¨ˆ"),SerializeField]
     Vector3 m_IdleRotation = new Vector3(0, 0, 0);
-    [Header("•à‚¢‚Ä‚¢‚é‚Ì“‚ÌŠp“xİŒv"), SerializeField]
+    [Header("æ­©ã„ã¦ã„ã‚‹æ™‚ã®åˆ€ã®è§’åº¦è¨­è¨ˆ"), SerializeField]
     Vector3 m_WalkRotation = new Vector3(0, 40, 0);
-    [Header("‘–‚Á‚Ä‚¢‚é“‚ÌŠp“xİŒv"), SerializeField]
+    [Header("èµ°ã£ã¦ã„ã‚‹æ™‚åˆ€ã®è§’åº¦è¨­è¨ˆ"), SerializeField]
     Vector3 m_DashRotation = new Vector3(0, 80, 0);
 
     [Space]
 
-    //Å‰‚ÌƒIƒuƒWƒFƒNƒg‚ÌˆÊ’u‚ğŠo‚¦‚Ä‚¨‚­‚½‚ß
+    //æœ€åˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½ç½®ã‚’è¦šãˆã¦ãŠããŸã‚
     Vector3 m_WeaponDefaultPos;
-    //ƒx[ƒX‚Ì‰ñ“]
+    //ãƒ™ãƒ¼ã‚¹ã®å›è»¢
     Quaternion m_BaseRot = Quaternion.Euler(7, 0, 163);
 
-    [Header("ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg"), SerializeField]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ"), SerializeField]
     GameObject m_PlayerObj;
-    [Header("ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg"), SerializeField]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ"), SerializeField]
     PlayerController m_PC;
 
     private void Start()
@@ -63,50 +63,50 @@ public class WeaponMovement : MonoBehaviour
         if (m_PlayerObj == null || m_PC == null)
             return;
 
-        //ƒvƒŒƒCƒ„[‚ªˆÚ“®‚µ‚Ä‚¢‚é‚©‚Ìƒ`ƒFƒbƒN
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç§»å‹•ã—ã¦ã„ã‚‹ã‹ã®ãƒã‚§ãƒƒã‚¯
         bool isMoving = m_PC.m_MoveInput.sqrMagnitude > 0.01f;
 
-        //‘Ò‹@ó‘Ô
+        //å¾…æ©ŸçŠ¶æ…‹
         Vector3 targetPos = m_WeaponDefaultPos;
         Vector3 targetRotOffset = Vector3.zero;
 
         if (isMoving)
         {
-            //—h‚ê‚ğ”½‰f‚·‚é•Ï”
+            //æºã‚Œã‚’åæ˜ ã™ã‚‹å¤‰æ•°
             float currentSpeed = m_PC.m_IsDash ? m_DashWeaponSpeed : m_WeaponSpeed;
             float currentShaking = m_PC.m_IsDash ? m_DashWeaponShaking : m_WeaponShaking;
 
-            //—h‚ê‚ÌŒvZ
+            //æºã‚Œã®è¨ˆç®—
             float wabe = Mathf.Sin(Time.time * currentSpeed);
 
-            //ˆÚ“®’†‚¾‚¯”w’†‚©‚ç•Ší‚ğ—£‚·
-            //‚»‚µ‚Äƒ_ƒbƒVƒ…’†‚È‚ç—£‚·‹——£•ÏX
+            //ç§»å‹•ä¸­ã ã‘èƒŒä¸­ã‹ã‚‰æ­¦å™¨ã‚’é›¢ã™
+            //ãã—ã¦ãƒ€ãƒƒã‚·ãƒ¥ä¸­ãªã‚‰é›¢ã™è·é›¢å¤‰æ›´
             float between = m_PC.m_IsDash ? -m_BetweenDash : -m_BetweenWalk;
 
-            //ˆÚ“®’†‚¾‚¯•Ší‚ÌŒX‚«‚ğ•Ï‚¦‚é
-            //‚»‚µ‚Äƒ_ƒbƒVƒ…’†‚È‚çŒX‚­‹——£•ÏX
+            //ç§»å‹•ä¸­ã ã‘æ­¦å™¨ã®å‚¾ãã‚’å¤‰ãˆã‚‹
+            //ãã—ã¦ãƒ€ãƒƒã‚·ãƒ¥ä¸­ãªã‚‰å‚¾ãè·é›¢å¤‰æ›´
             Vector3 targetRot = m_PC.m_IsDash ? m_DashRotation : m_WalkRotation;
 
-            //’Ç‰Á‚µ‚½‚¢‰ñ“]’l‚ğæ‚É•ÏŠ·
+            //è¿½åŠ ã—ãŸã„å›è»¢å€¤ã‚’å…ˆã«å¤‰æ›
             Quaternion addRotation = Quaternion.Euler(targetRot);
 
-            //À•W‚ğ”½‰f
+            //åº§æ¨™ã‚’åæ˜ 
             targetPos.y += wabe * currentShaking;
             targetPos.z += between;
 
-            //Œ³‚Ì‰ñ“]’l‚Æ‚Ì‡¬
+            //å…ƒã®å›è»¢å€¤ã¨ã®åˆæˆ
             Quaternion targetRotQ = addRotation * m_BaseRot;
 
-            //”½‰f
+            //åæ˜ 
             transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * 5f);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRotQ, Time.deltaTime * 5f);
         }
         else
         {
-            //©‘R‚É–ß‚·
+            //è‡ªç„¶ã«æˆ»ã™
             m_WeaponTf.localPosition = Vector3.Lerp(transform.localPosition, m_WeaponDefaultPos, Time.deltaTime * 5f);
 
-            //Œ³‚ÌŠp“x‚É–ß‚·
+            //å…ƒã®è§’åº¦ã«æˆ»ã™
             Quaternion idleQ = Quaternion.Euler(7, 0, 163);
             transform.localRotation = Quaternion.Slerp(transform.localRotation, idleQ, Time.deltaTime * 5f);
         }

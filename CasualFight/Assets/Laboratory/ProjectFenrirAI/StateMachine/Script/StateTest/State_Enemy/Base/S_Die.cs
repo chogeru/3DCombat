@@ -15,16 +15,16 @@ namespace StateMachineAI
             owner.m_IsDead = true;
             m_IsDissolveStarted = false;
 
-            // タグを変更してターゲットから外す
+            //タグを変更してターゲットから外す
             owner.gameObject.tag = "Untagged";
             
-            // BattleManagerから敵を削除（UI連携）
+            //BattleManagerから敵を削除（UI連携）
             if (BattleManager.m_BattleInstance != null)
             {
                 BattleManager.m_BattleInstance.EnemyLostPlayer(owner.transform);
             }
             
-            // 死亡アニメーション
+            //死亡アニメーション
             if (owner.m_Animator != null && owner.m_EnemyData != null)
             {
                 if (!string.IsNullOrEmpty(owner.m_EnemyData.m_DieAnimName))
@@ -33,14 +33,14 @@ namespace StateMachineAI
                 }
             }
 
-            // 物理挙動の停止（落下防止）
+            //物理挙動の停止（落下防止）
             if (owner.m_Rigidbody != null)
             {
                 owner.m_Rigidbody.isKinematic = true;
                 owner.m_Rigidbody.velocity = Vector3.zero;
             }
 
-            // コライダーの無効化（当たり判定削除）
+            //コライダーの無効化（当たり判定削除）
             Collider collider = owner.GetComponent<Collider>();
             if (collider != null)
             {
@@ -53,10 +53,10 @@ namespace StateMachineAI
             if (m_IsDissolveStarted) return;
             if (owner.m_Animator == null || owner.m_EnemyData == null) return;
 
-            // アニメーションステートの監視
+            //アニメーションステートの監視
             AnimatorStateInfo stateInfo = owner.m_Animator.GetCurrentAnimatorStateInfo(0);
 
-            // 現在のステートが死亡アニメーションであり、かつ再生完了しているか
+            //現在のステートが死亡アニメーションであり、かつ再生完了しているか
             if (stateInfo.IsName(owner.m_EnemyData.m_DieAnimName) && stateInfo.normalizedTime >= 1.0f)
             {
                 m_IsDissolveStarted = true;
@@ -69,7 +69,7 @@ namespace StateMachineAI
 
         public override void Exit()
         {
-            // 蘇生処理などがない限り呼ばれない
+            //蘇生処理などがない限り呼ばれない
         }
     }
 }

@@ -7,9 +7,9 @@ using AbubuResouse.Log;
 
 namespace AbubuResouse
 {
-    /// <summary>
-    /// 音量設定を管理するクラス
-    /// </summary>
+    ///<summary>
+    ///音量設定を管理するクラス
+    ///</summary>
     public class AudioVolumeSetting : MonoBehaviour
     {
         [SerializeField]
@@ -31,18 +31,18 @@ namespace AbubuResouse
 
             LoadAudioSettings();
 
-            // スライダーのイベントリスナーを設定
+            //スライダーのイベントリスナーを設定
             m_BGMSlider.onValueChanged.AddListener(SetBGM);
             m_SESlider.onValueChanged.AddListener(SetSE);
-            // 初期値を設定
+            //初期値を設定
             SetBGM(m_BGMSlider.value);
             SetSE(m_SESlider.value);
         }
 
-        /// <summary>
-        /// BGMの音量を設定する処理
-        /// </summary>
-        /// <param name="volume">設定する音量</param>
+        ///<summary>
+        ///BGMの音量を設定する処理
+        ///</summary>
+        ///<param name="volume">設定する音量</param>
         public void SetBGM(float volume)
         {
             SetVolume("BGM", volume);
@@ -50,10 +50,10 @@ namespace AbubuResouse
             SaveAudioSettings();
         }
 
-        /// <summary>
-        /// SEの音量を設定するメソッド
-        /// </summary>
-        /// <param name="volume">設定する音量</param>
+        ///<summary>
+        ///SEの音量を設定するメソッド
+        ///</summary>
+        ///<param name="volume">設定する音量</param>
         public void SetSE(float volume)
         {
             SetVolume("SE", volume);
@@ -61,15 +61,15 @@ namespace AbubuResouse
             SaveAudioSettings();
         }
 
-        /// <summary>
-        /// 指定されたパラメータ名のオーディオの音量を設定する
-        /// </summary>
-        /// <param name="parameterName">パラメータ名</param>
-        /// <param name="volume">音量</param>
+        ///<summary>
+        ///指定されたパラメータ名のオーディオの音量を設定する
+        ///</summary>
+        ///<param name="parameterName">パラメータ名</param>
+        ///<param name="volume">音量</param>
         private void SetVolume(string parameterName, float volume)
         {
 
-            // スライダーの値が0の場合、最小値を設定
+            //スライダーの値が0の場合、最小値を設定
             if (volume <= 0)
             {
                 m_AudioMixer.SetFloat(parameterName, -80f);
@@ -83,9 +83,9 @@ namespace AbubuResouse
             }
         }
 
-        /// <summary>
-        /// オーディオ設定を読み込む
-        /// </summary>
+        ///<summary>
+        ///オーディオ設定を読み込む
+        ///</summary>
         private void LoadAudioSettings()
         {
             if (File.Exists(m_SavePath))
@@ -97,15 +97,15 @@ namespace AbubuResouse
             }
             else
             {
-                // 初期音量を最大に設定
+                //初期音量を最大に設定
                 m_BGMSlider.value = 1f;
                 m_SESlider.value = 1f;
             }
         }
 
-        /// <summary>
-        /// オーディオ設定を保存する
-        /// </summary>
+        ///<summary>
+        ///オーディオ設定を保存する
+        ///</summary>
         private void SaveAudioSettings()
         {
             AudioSettings settings = new AudioSettings
@@ -117,11 +117,11 @@ namespace AbubuResouse
             File.WriteAllText(m_SavePath, json);
         }
 
-        /// <summary>
-        /// 音量テキストを更新する
-        /// </summary>
-        /// <param name="text">更新するTextMeshPro</param>
-        /// <param name="volume">音量</param>
+        ///<summary>
+        ///音量テキストを更新する
+        ///</summary>
+        ///<param name="text">更新するTextMeshPro</param>
+        ///<param name="volume">音量</param>
         private void UpdateVolumeText(TextMeshProUGUI text, float volume)
         {
             text.text = volume.ToString("F1");

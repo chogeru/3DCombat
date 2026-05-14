@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// プレイヤーの移動サウンド[0.停止 1.歩き 2.走り]
-/// </summary>
+///<summary>
+///プレイヤーの移動サウンド[0.停止 1.歩き 2.走り]
+///</summary>
 public class PlayerMoveSound : MonoBehaviour
 {
     [Header("プレイヤーのオーディオソース"),SerializeField]
@@ -22,10 +22,10 @@ public class PlayerMoveSound : MonoBehaviour
     //再生中の種類
     int m_CurrentState = -1;
 
-    /// <summary>
-    /// プレイヤーの移動サウンド処理
-    /// </summary>
-    /// <param name="no">[0.停止 1.歩き 2.走り]</param>
+    ///<summary>
+    ///プレイヤーの移動サウンド処理
+    ///</summary>
+    ///<param name="no">[0.停止 1.歩き 2.走り]</param>
     public void PlayerSoundMove(int no)
     {
         //再生中の番号と同じならスキップ
@@ -50,9 +50,9 @@ public class PlayerMoveSound : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ブリンク音再生
-    /// </summary>
+    ///<summary>
+    ///ブリンク音再生
+    ///</summary>
     public void PlayBlinkSound()
     {
         if (m_BlinkSound != null && m_AudioSource != null)

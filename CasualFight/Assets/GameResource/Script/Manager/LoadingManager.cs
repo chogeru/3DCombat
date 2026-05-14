@@ -1,20 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Cysharp.Threading.Tasks; // UniTask‚ğƒCƒ“ƒ|[ƒg
+//UniTaskã‚’ã‚¤ãƒ³ãƒãƒ¼ãƒˆ
+using Cysharp.Threading.Tasks;
 using System;
 
 public class LoadingManager : MonoBehaviour
 {
     public static LoadingManager Instance { get; private set; }
 
-    [Header("UI References")]
-    [SerializeField] private CanvasGroup m_LoadingCanvasGroup; // ƒtƒF[ƒh—p
-    [SerializeField] private Slider m_ProgressBar;            // i’»ƒo[
+    [Header("UI References"), Header("ãƒ•ã‚§ãƒ¼ãƒ‰ç”¨"), SerializeField]
+    private CanvasGroup m_LoadingCanvasGroup;
+    [Header("é€²æ—ãƒãƒ¼"), SerializeField]
+    private Slider m_ProgressBar;
 
-    [Header("Settings")]
-    [SerializeField] private float m_FadeDuration = 0.5f;    // ƒtƒF[ƒhŠÔ
-    [SerializeField] private float m_MinLoadingTime = 1.0f;  // Å’á•\¦ŠÔiˆêu‚ÅI‚í‚é‚Ì‚ğ–h‚®j
+    [Header("Settings"), Header("ãƒ•ã‚§ãƒ¼ãƒ‰æ™‚é–“"), SerializeField]
+    private float m_FadeDuration = 0.5f;
+    [Header("æœ€ä½è¡¨ç¤ºæ™‚é–“ï¼ˆä¸€ç¬ã§çµ‚ã‚ã‚‹ã®ã‚’é˜²ãï¼‰"), SerializeField]
+    private float m_MinLoadingTime = 1.0f;
 
     private void Awake()
     {
@@ -31,54 +34,56 @@ public class LoadingManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ƒV[ƒ“‚ğ”ñ“¯Šú‚Åƒ[ƒh‚·‚é
-    /// </summary>
+    ///<summary>
+    ///ã‚·ãƒ¼ãƒ³ã‚’éåŒæœŸã§ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
+    ///</summary>
     public async UniTaskVoid LoadSceneAsync(string sceneName)
     {
-        // 1. ƒ[ƒh‰æ–Ê‚ğ•\¦‚µAƒtƒF[ƒhƒCƒ“
+        //ãƒ­ãƒ¼ãƒ‰ç”»é¢ã‚’è¡¨ç¤ºã—ã€ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³
         m_LoadingCanvasGroup.gameObject.SetActive(true);
         await FadeAsync(1.0f);
 
-        // 2. ”ñ“¯Šúƒ[ƒhŠJn
+        //éåŒæœŸãƒ­ãƒ¼ãƒ‰é–‹å§‹
         var asyncOp = SceneManager.LoadSceneAsync(sceneName);
-        asyncOp.allowSceneActivation = false; // “Ç‚İ‚İŠ®—¹‚µ‚Ä‚àŸè‚ÉØ‚è‘Ö‚¦‚È‚¢
+        //èª­ã¿è¾¼ã¿å®Œäº†ã—ã¦ã‚‚å‹æ‰‹ã«åˆ‡ã‚Šæ›¿ãˆãªã„
+        asyncOp.allowSceneActivation = false;
 
         float startTime = Time.time;
 
-        // 3. ƒ[ƒhi’»‚ğŠÄ‹
+        //ãƒ­ãƒ¼ãƒ‰é€²æ—ã‚’ç›£è¦–
         while (asyncOp.progress < 0.9f)
         {
             if (m_ProgressBar != null)
             {
-                // progress(0~0.9)‚ğ0~1‚É•â³‚µ‚Äƒo[‚É”½‰f
+                //progress(0~0.9)ã‚’0~1ã«è£œæ­£ã—ã¦ãƒãƒ¼ã«åæ˜ 
                 m_ProgressBar.value = asyncOp.progress / 0.9f;
             }
-            await UniTask.Yield(); // 1ƒtƒŒ[ƒ€‘Ò‹@
+            //1ãƒ•ãƒ¬ãƒ¼ãƒ å¾…æ©Ÿ
+            await UniTask.Yield();
         }
 
-        // 4. Å’á•\¦ŠÔ‚ğŠm•Ûi‰‰o‚Ì‚½‚ßj
+        //æœ€ä½è¡¨ç¤ºæ™‚é–“ã‚’ç¢ºä¿ï¼ˆæ¼”å‡ºã®ãŸã‚ï¼‰
         float elapsedTime = Time.time - startTime;
         if (elapsedTime < m_MinLoadingTime)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(m_MinLoadingTime - elapsedTime));
         }
 
-        // 5. ƒV[ƒ“Ø‚è‘Ö‚¦‚ğ‹–‰Â
+        //ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆã‚’è¨±å¯
         if (m_ProgressBar != null) m_ProgressBar.value = 1.0f;
         asyncOp.allowSceneActivation = true;
 
-        // ƒV[ƒ“‚ªŠ®‘S‚ÉØ‚è‘Ö‚í‚é‚Ü‚Å‘Ò‹@
+        //ã‚·ãƒ¼ãƒ³ãŒå®Œå…¨ã«åˆ‡ã‚Šæ›¿ã‚ã‚‹ã¾ã§å¾…æ©Ÿ
         await UniTask.WaitUntil(() => asyncOp.isDone);
 
-        // 6. ƒtƒF[ƒhƒAƒEƒg‚µ‚Äƒ[ƒh‰æ–Ê‚ğ‰B‚·
+        //ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã—ã¦ãƒ­ãƒ¼ãƒ‰ç”»é¢ã‚’éš ã™
         await FadeAsync(0.0f);
         m_LoadingCanvasGroup.gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// CanvasGroup‚ÌAlpha‚ğ‘€ì‚·‚éƒVƒ“ƒvƒ‹‚ÈƒtƒF[ƒh
-    /// </summary>
+    ///<summary>
+    ///CanvasGroupã®Alphaã‚’æ“ä½œã™ã‚‹ã‚·ãƒ³ãƒ—ãƒ«ãªãƒ•ã‚§ãƒ¼ãƒ‰
+    ///</summary>
     private async UniTask FadeAsync(float targetAlpha)
     {
         float startAlpha = m_LoadingCanvasGroup.alpha;

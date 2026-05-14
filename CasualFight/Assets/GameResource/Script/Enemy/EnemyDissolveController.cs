@@ -21,7 +21,7 @@ public class EnemyDissolveController : MonoBehaviour
     //シェーダーの名前と一致
     readonly int m_DissolveHandle = Shader.PropertyToID("_DissolveAmount");
 
-    // 多重実行防止フラグ
+    //多重実行防止フラグ
     bool m_IsDissolving = false;
 
     private void Start()
@@ -31,12 +31,12 @@ public class EnemyDissolveController : MonoBehaviour
             m_DissolveMaterial = m_Renderer.material;
     }
 
-    /// <summary>
-    /// 死んだときに外部から呼ぶ関数
-    /// </summary>
+    ///<summary>
+    ///死んだときに外部から呼ぶ関数
+    ///</summary>
     public void StartDissolve()
     {
-        // 既に実行中なら何もしない
+        //既に実行中なら何もしない
         if (m_IsDissolving) return;
         m_IsDissolving = true;
 
@@ -60,8 +60,8 @@ public class EnemyDissolveController : MonoBehaviour
 
         //if (m_DeathVfxPrefab != null)
         //{
-        //    //敵の場所にエフェクトを生成(親子関係にはしない)
-        //    Instantiate(m_DeathVfxPrefab, transform.position, Quaternion.identity);
+        ////敵の場所にエフェクトを生成(親子関係にはしない)
+        //Instantiate(m_DeathVfxPrefab, transform.position, Quaternion.identity);
         //}
 
         //経過時間内なら

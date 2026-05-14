@@ -3,14 +3,15 @@ using StateMachineAI;
 
 namespace StateMachineAI
 {
-    /// <summary>
-    /// 被弾ステート
-    /// ダメージを受けた時のリアクション処理を行う
-    /// </summary>
+    ///<summary>
+    ///被弾ステート
+    ///ダメージを受けた時のリアクション処理を行う
+    ///</summary>
     public class S_Hit : State<AITester>
     {
         private float m_Timer = 0f;
-        private float m_HitStunDuration = 0.5f; // 被弾硬直時間
+        //被弾硬直時間
+        private float m_HitStunDuration = 0.5f;
 
         public S_Hit(AITester owner) : base(owner) { }
 
@@ -19,7 +20,7 @@ namespace StateMachineAI
             Debug.Log("S_Hitに入りました: 被弾リアクション開始...");
             m_Timer = 0f;
             
-            // 被弾アニメーション再生
+            //被弾アニメーション再生
             if (owner.m_Animator != null && owner.m_EnemyData != null)
             {
                 if (!string.IsNullOrEmpty(owner.m_EnemyData.m_HitAnimName))
@@ -33,11 +34,11 @@ namespace StateMachineAI
         {
             m_Timer += Time.deltaTime;
             
-            // 硬直時間終了後、索敵フラグをONにしてIdleへ遷移
+            //硬直時間終了後、索敵フラグをONにしてIdleへ遷移
             if (m_Timer >= m_HitStunDuration)
             {
-                // 追跡中などに被弾した場合、フラグがfalseのままここに来るので、
-                // 復帰時にtrueに戻さないとグローバル索敵が再開されない。
+                //追跡中などに被弾した場合、フラグがfalseのままここに来るので、
+                //復帰時にtrueに戻さないとグローバル索敵が再開されない。
                 owner.m_IsSearching = true;
                 owner.ChangeState(AIState_Type.Idle);
             }

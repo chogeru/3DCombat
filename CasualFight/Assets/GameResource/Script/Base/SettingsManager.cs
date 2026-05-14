@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    // シングルトンインスタンス
+    //シングルトンインスタンス
     public static SettingsManager Instance { get; private set; }
 
     [Header("設定画面のパネル"), SerializeField]
@@ -37,7 +37,7 @@ public class SettingsManager : MonoBehaviour
     //メーニュー画面開いているかどうか
     bool m_IsMenuOpen = false;
 
-    // メニューが開いているかどうかのプロパティ
+    //メニューが開いているかどうかのプロパティ
     public bool IsMenuOpen => m_IsMenuOpen;
 
     const string Key_Volume = "VolumeValue";
@@ -73,7 +73,7 @@ public class SettingsManager : MonoBehaviour
         //設定画面非表示
         m_Menu.SetActive(false);
 
-        // カーソル初期化処理
+        //カーソル初期化処理
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
     }
@@ -83,7 +83,7 @@ public class SettingsManager : MonoBehaviour
         //エスケープキーを押したら
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // TPキャンバスが開いていたら、それを閉じるだけにして終了(優先度高)
+            //TPキャンバスが開いていたら、それを閉じるだけにして終了(優先度高)
             if (TeleportManager.TPInstance != null && TeleportManager.TPInstance.IsUIOpen)
             {
                 TeleportManager.TPInstance.CloseUI();
@@ -100,9 +100,9 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// UIの表示・非表示を切り替え処理
-    /// </summary>
+    ///<summary>
+    ///UIの表示・非表示を切り替え処理
+    ///</summary>
     void ToggleSettings()
     {
         //フラグの切り替え
@@ -123,9 +123,9 @@ public class SettingsManager : MonoBehaviour
             //カーソルの表示
             UnityEngine.Cursor.visible = true;
             
-            // 字幕を一時非表示
+            //字幕を一時非表示
             if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Pause();
-            // ガイドを一時非表示
+            //ガイドを一時非表示
             if (OperationGuideManager.Instance != null) OperationGuideManager.Instance.Pause();
         }
         else
@@ -139,16 +139,16 @@ public class SettingsManager : MonoBehaviour
             //カーソル非表示
             UnityEngine.Cursor.visible = false;
             
-            // 字幕を復帰
+            //字幕を復帰
             if (GameSubtitleManager.Instance != null) GameSubtitleManager.Instance.Resume();
-            // ガイドを復帰
+            //ガイドを復帰
             if (OperationGuideManager.Instance != null) OperationGuideManager.Instance.Resume();
         }
     }
 
-    /// <summary>
-    /// 水平感度
-    /// </summary>
+    ///<summary>
+    ///水平感度
+    ///</summary>
     public void OnSensitivityXChanged(float value)
     {
         m_FreeLookCamera.m_XAxis.m_MaxSpeed = value;
@@ -160,9 +160,9 @@ public class SettingsManager : MonoBehaviour
         UpdateLabel(m_TextXObj, value);
     }
 
-    /// <summary>
-    /// 垂直感度
-    /// </summary>
+    ///<summary>
+    ///垂直感度
+    ///</summary>
     public void OnSensitivityYChanged(float value)
     {
         m_FreeLookCamera.m_YAxis.m_MaxSpeed = value;
@@ -174,9 +174,9 @@ public class SettingsManager : MonoBehaviour
         UpdateLabel(m_TextYObj, value);
     }
 
-    /// <summary>
-    /// 音量設定
-    /// </summary>
+    ///<summary>
+    ///音量設定
+    ///</summary>
     public void OnVolumeChanged(float value)
     {
         AudioListener.volume = value;
@@ -188,36 +188,36 @@ public class SettingsManager : MonoBehaviour
         UpdateLabel(m_TextVolumeObj, value);
     }
 
-    /// <summary>
-    /// ミニマップの回転処理
-    /// </summary>
+    ///<summary>
+    ///ミニマップの回転処理
+    ///</summary>
     public void OnMiniMapRotationChanged()
     {
         m_MIC.m_IsPlayerIcon=!m_MIC.m_IsPlayerIcon;
 
-        // 設定画面を閉じる(自動)
+        //設定画面を閉じる(自動)
         ToggleSettings();
     }
 
-    /// <summary>
-    /// 手動リスポーンボタン処理（新規追加）
-    /// </summary>
+    ///<summary>
+    ///手動リスポーンボタン処理（新規追加）
+    ///</summary>
     public void OnRespawnButtonClicked()
     {
-        // プレイヤーを探してリスポーン実行
+        //プレイヤーを探してリスポーン実行
         var player = FindObjectOfType<PlayerController>();
         if (player != null)
         {
             player.ManualRespawn();
         }
 
-        // 設定画面を閉じる(自動)
+        //設定画面を閉じる(自動)
         ToggleSettings();
     }
 
-    /// <summary>
-    /// ゲームの終了
-    /// </summary>
+    ///<summary>
+    ///ゲームの終了
+    ///</summary>
     public void QuitGame()
     {
         //念のため保存
@@ -226,12 +226,12 @@ public class SettingsManager : MonoBehaviour
         Application.Quit();
     }
 
-    /// <summary>
-    /// 初期値を設定し、テキストを更新する処理
-    /// </summary>
-    /// <param name="sliderObj"></param>
-    /// <param name="textObj"></param>
-    /// <param name="startValue"></param>
+    ///<summary>
+    ///初期値を設定し、テキストを更新する処理
+    ///</summary>
+    ///<param name="sliderObj"></param>
+    ///<param name="textObj"></param>
+    ///<param name="startValue"></param>
     void InitSlider(GameObject sliderObj, GameObject textObj, float startValue)
     {
         //オブジェクトからコンポーネント取得
@@ -242,11 +242,11 @@ public class SettingsManager : MonoBehaviour
         UpdateLabel(textObj, startValue);
     }
 
-    /// <summary>
-    /// テキストの表示更新
-    /// </summary>
-    /// <param name="textObj"></param>
-    /// <param name="value"></param>
+    ///<summary>
+    ///テキストの表示更新
+    ///</summary>
+    ///<param name="textObj"></param>
+    ///<param name="value"></param>
     void UpdateLabel(GameObject textObj, float value)
     {
         //オブジェクトからコンポーネント取得
@@ -265,9 +265,9 @@ public class SettingsManager : MonoBehaviour
 
     }
 
-    /// <summary>
-    /// 全て初期化（デフォルトのの値に直す）
-    /// </summary>
+    ///<summary>
+    ///全て初期化（デフォルトのの値に直す）
+    ///</summary>
     public void ResetDefault()
     {
         //音量
@@ -287,15 +287,15 @@ public class SettingsManager : MonoBehaviour
         SetSliderValue(m_XSlider, defaX);
         SetSliderValue(m_YSlider, defaY);
 
-        // 設定画面を閉じる(自動)
+        //設定画面を閉じる(自動)
         ToggleSettings();
     }
 
-    /// <summary>
-    /// スライダーに数値を代入処理
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <param name="value"></param>
+    ///<summary>
+    ///スライダーに数値を代入処理
+    ///</summary>
+    ///<param name="obj"></param>
+    ///<param name="value"></param>
     public void SetSliderValue(GameObject obj, float value)
     {
         //コンポーネントの取得

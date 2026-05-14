@@ -14,15 +14,15 @@ namespace StateMachineAI
 
         public override void Stay()
         {
-            // HP監視: 0になったら死亡
+            //HP監視: 0になったら死亡
             if (owner.m_EnemyHP <= 0 && !owner.IsCurrentState(AIState_Type.Die))
             {
                 owner.ChangeState(AIState_Type.Die);
                 return;
             }
 
-            // テスト用: Spaceキーで攻撃へ遷移
-            // ※ 死んでいないときのみ
+            //テスト用: Spaceキーで攻撃へ遷移
+            //※ 死んでいないときのみ
             if (Input.GetKeyDown(KeyCode.Space) && !owner.IsCurrentState(AIState_Type.Die) && !owner.IsCurrentState(AIState_Type.Attack))
             {
                 Debug.Log("GlobalMonitor: 攻撃トリガー検知");
@@ -32,7 +32,7 @@ namespace StateMachineAI
 
         public override void Exit()
         {
-            // グローバルステートが外れることはあまりないが念のため
+            //グローバルステートが外れることはあまりないが念のため
         }
     }
 }

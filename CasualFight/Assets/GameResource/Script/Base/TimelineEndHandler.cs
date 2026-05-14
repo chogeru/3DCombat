@@ -4,9 +4,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 
-/// <summary>
-/// 最初のTimeline終了後呼ばれる
-/// </summary>
+///<summary>
+///最初のTimeline終了後呼ばれる
+///</summary>
 public class TimelineEndHandler : MonoBehaviour
 {
     [Header("プレイヤーオブジェクト"), SerializeField]
@@ -18,8 +18,8 @@ public class TimelineEndHandler : MonoBehaviour
     [Header("プレイヤーのUI"), SerializeField]
     GameObject m_Canvas;
 
-    [Header("プレイヤーの機能（コンポーネント）")]
-    [SerializeField] PlayerController m_PC;
+    [Header("プレイヤーの機能（コンポーネント）"), SerializeField]
+    PlayerController m_PC;
 
     [SerializeField]
     ActionController m_AC;
@@ -64,10 +64,10 @@ public class TimelineEndHandler : MonoBehaviour
         m_PlayableDirector.stopped -= OnTimelineStopped;
     }
 
-    /// <summary>
-    /// イベントが発生した時に呼び出される
-    /// </summary>
-    /// <param name="playabledirector"></param>
+    ///<summary>
+    ///イベントが発生した時に呼び出される
+    ///</summary>
+    ///<param name="playabledirector"></param>
     void OnTimelineStopped(PlayableDirector playabledirector)
     {
         //再生が終わったDirectorが指定のものであるか確認
@@ -84,8 +84,8 @@ public class TimelineEndHandler : MonoBehaviour
             m_AA.enabled = true;
             m_SM.enabled = true;
 
-            // 最初のタイムライン終了 = ガイドを表示する
-            // フラグをリセットしてから表示（このタイムラインが流れた＝初回起動と同義）
+            //最初のタイムライン終了 = ガイドを表示する
+            //フラグをリセットしてから表示（このタイムラインが流れた＝初回起動と同義）
             if (OperationGuideManager.Instance != null)
             {
                 OperationGuideManager.Instance.ResetGuideFlag();

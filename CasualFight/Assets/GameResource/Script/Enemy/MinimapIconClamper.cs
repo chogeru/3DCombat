@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// ミニマップ上で敵の方向を示す処理＆ボスの場合鼓動しているみたいに表示
-/// </summary>
+///<summary>
+///ミニマップ上で敵の方向を示す処理＆ボスの場合鼓動しているみたいに表示
+///</summary>
 public class MinimapIconClamper : MonoBehaviour
 {
     [Header("プレイヤー"), SerializeField]
@@ -23,8 +23,7 @@ public class MinimapIconClamper : MonoBehaviour
 
     [Space]
 
-    [Header("強敵演出設定")]
-    [Header("ボスならチェック"), SerializeField]
+    [Header("強敵演出設定"), Header("ボスならチェック"), SerializeField]
     bool m_IsBoss = false;
     [Header("基本の大きさ（強敵なら大きくする）"), SerializeField]
     float m_BaseScale = 1f;
@@ -48,21 +47,21 @@ public class MinimapIconClamper : MonoBehaviour
     private void LateUpdate()
     {
         //プレイヤー・敵それぞれ座標取得
-        // 戦闘状態の確認と表示切り替え
-        // BattleManagerが存在し、かつ自分がActiveEnemiesに含まれているか確認
+        //戦闘状態の確認と表示切り替え
+        //BattleManagerが存在し、かつ自分がActiveEnemiesに含まれているか確認
         bool isBattleActive = false;
         if (BattleManager.m_BattleInstance != null)
         {
             isBattleActive = BattleManager.m_BattleInstance.m_ActiveEnemies.Contains(m_MyEnemy);
         }
 
-        // 表示・非表示の適用
+        //表示・非表示の適用
         if (m_Renderer != null)
         {
             m_Renderer.enabled = isBattleActive;
         }
 
-        // 戦闘中でなければ位置計算などの重い処理はスキップ
+        //戦闘中でなければ位置計算などの重い処理はスキップ
         if (!isBattleActive) return;
 
         Vector3 playerPos = m_Player.position;

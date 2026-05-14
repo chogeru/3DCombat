@@ -4,63 +4,61 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 
-/// <summary>
-/// HPƒo[‚ğXV‚·‚éˆ—
-/// </summary>
+///<summary>
+///HPãƒãƒ¼ã‚’æ›´æ–°ã™ã‚‹å‡¦ç†
+///</summary>
 public class HPBarController : MonoBehaviour
 {
-    [Header("UI‚Ìƒo[")]
-    [Header("‘O•û"), SerializeField]
+    [Header("UIã®ãƒãƒ¼"), Header("å‰æ–¹"), SerializeField]
     Slider m_ForegroundBar;
-    [Header("Œã•û"), SerializeField]
+    [Header("å¾Œæ–¹"), SerializeField]
     Slider m_BackgroundBar;
 
     [Space]
 
-    [Header("İ’è")]
-    [Header("’x‰„ŠJn‚Ü‚Å‚ÌŠÔ"), SerializeField]
+    [Header("è¨­å®š"), Header("é…å»¶é–‹å§‹ã¾ã§ã®æ™‚é–“"), SerializeField]
     float m_LagDelaySeconds = 0.5f;
-    [Header("Œã•û‚ª’Ç‚¢‚Â‚­‚Ü‚Å‚ÌƒXƒs[ƒh"), SerializeField]
+    [Header("å¾Œæ–¹ãŒè¿½ã„ã¤ãã¾ã§ã®ã‚¹ãƒ”ãƒ¼ãƒ‰"), SerializeField]
     float m_ShrinkSpeed = 2f;
 
-    //value‚Ì’l    
+    //valueã®å€¤    
     private float m_TargetHealth = 1f;
 
-    /// <summary>
-    /// Œã•û‚Ìƒo[‚ğ™X‚ÉŒ¸‚ç‚µ‚Ä‚¢‚­ˆ—
-    /// </summary>
-    /// <returns></returns>
+    ///<summary>
+    ///å¾Œæ–¹ã®ãƒãƒ¼ã‚’å¾ã€…ã«æ¸›ã‚‰ã—ã¦ã„ãå‡¦ç†
+    ///</summary>
+    ///<returns></returns>
     async UniTaskVoid UpdateBackgroundBar()
     {
-        //w’èŠÔ‘Ò‹@
+        //æŒ‡å®šæ™‚é–“å¾…æ©Ÿ
         await UniTask.Delay(System.TimeSpan.FromSeconds(m_LagDelaySeconds));
 
         while (m_BackgroundBar.value > m_TargetHealth)
         {
-            //™X‚É‹ß‚Ã‚¯‚Ä‚¢‚­
+            //å¾ã€…ã«è¿‘ã¥ã‘ã¦ã„ã
             m_BackgroundBar.value -= Time.deltaTime * m_ShrinkSpeed;
             
-            //ƒtƒŒ[ƒ€‘Ò‹@
+            //ãƒ•ãƒ¬ãƒ¼ãƒ å¾…æ©Ÿ
             await UniTask.Yield();
         }
 
-        //Œë·‚ÌC³
+        //èª¤å·®ã®ä¿®æ­£
         m_BackgroundBar.value = m_TargetHealth;
     }
 
-    /// <summary>
-    /// ƒ_ƒ[ƒW‚ğó‚¯‚½‚ÉŒÄ‚Î‚ê‚é
-    /// </summary>
-    /// <param name="currentHP">0.0 ? 1.0</param>
+    ///<summary>
+    ///ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹
+    ///</summary>
+    ///<param name="currentHP">0.0 ? 1.0</param>
     public void OnTakeDamage(float currentHP)
     {
-        //value’lXV
+        //valueå€¤æ›´æ–°
         m_TargetHealth=currentHP;
 
-        //‘O•ûƒo[‚Ì”’lXV
+        //å‰æ–¹ãƒãƒ¼ã®æ•°å€¤æ›´æ–°
         m_ForegroundBar.value = m_TargetHealth;
 
-        //Œã•ûˆ—ŠJn
+        //å¾Œæ–¹å‡¦ç†é–‹å§‹
         UpdateBackgroundBar().Forget();
     }
 }

@@ -9,40 +9,40 @@ public class State_Tracking : State<AITester>
 
     public override void Enter()
     {
-        //ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
+        //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿ
         owner.m_Animator.Play(owner.m_EnemyData.m_MoveAnimName,0, 0f);
     }
 
     public override void Stay()
     {
-        //ƒvƒŒƒCƒ„[‚Æ‚Ì‹——£‚Æ•ûŒü‚ğŒvZ
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ã®è·é›¢ã¨æ–¹å‘ã‚’è¨ˆç®—
         Vector3 targetPos = owner.m_Player.position;
-        //‚‚³‚ğŒÅ’èi’nã‚Ì“G‚Ìê‡j
+        //é«˜ã•ã‚’å›ºå®šï¼ˆåœ°ä¸Šã®æ•µã®å ´åˆï¼‰
         targetPos.y = owner.transform.position.y;
 
-        //•ûŒü
+        //æ–¹å‘
         Vector3 direction = (targetPos - owner.transform.position).normalized;
 
-        //‹——£
+        //è·é›¢
         float distance = Vector3.Distance(targetPos, owner.transform.position);
 
-        //ƒvƒŒƒCƒ„[‚Ì•û‚ğŒü‚©‚¹‚éi‰ñ“]j
+        //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹ã‚’å‘ã‹ã›ã‚‹ï¼ˆå›è»¢ï¼‰
         if (direction != Vector3.zero)
         {
-            //ƒvƒŒƒCƒ„[‚Ì•û‚ğŒü‚­‚ÌŠp“x‚ğŒvZ
+            //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹ã‚’å‘ãã®è§’åº¦ã‚’è¨ˆç®—
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            //‚¶‚í‚Á‚Æ‰ñ“]‚³‚¹‚éiù‰ñ‘¬“xj
+            //ã˜ã‚ã£ã¨å›è»¢ã•ã›ã‚‹ï¼ˆæ—‹å›é€Ÿåº¦ï¼‰
             owner.transform.rotation = Quaternion.Slerp(owner.transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
 
-        //UŒ‚”ÍˆÍ“à‚É“ü‚Á‚½‚çˆÚ“®‚ğ~‚ß‚ÄUŒ‚ƒXƒe[ƒg‚Ö
+        //æ”»æ’ƒç¯„å›²å†…ã«å…¥ã£ãŸã‚‰ç§»å‹•ã‚’æ­¢ã‚ã¦æ”»æ’ƒã‚¹ãƒ†ãƒ¼ãƒˆã¸
         if (distance <= owner.m_EnemyData.m_AttackRange)
         {
             owner.ChangeState(AIState_Type.Attack);
         }
         else
         {
-            //ˆÚ“®ˆ—
+            //ç§»å‹•å‡¦ç†
             owner.m_Rigidbody.velocity = direction * owner.m_EnemyData.m_MoveSpeed;
         }
     }

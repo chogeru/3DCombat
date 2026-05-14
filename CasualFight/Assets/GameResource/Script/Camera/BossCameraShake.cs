@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class BossCameraShake : MonoBehaviour
 {
-    [Header("İ’è"), SerializeField]
+    [Header("è¨­å®š"), SerializeField]
     CinemachineVirtualCamera m_VirtualCamera;
 
-    [Header("—h‚ê‚Ì‹­‚³"), SerializeField]
+    [Header("æºã‚Œã®å¼·ã•"), SerializeField]
     float m_ShakeIntensity = 2.0f;
 
-    [Header("—h‚ê‚Ì‘¬‚³"), SerializeField]
+    [Header("æºã‚Œã®é€Ÿã•"), SerializeField]
     float m_ShakeFrequency = 2.0f;
 
     [SerializeField]
@@ -25,25 +25,25 @@ public class BossCameraShake : MonoBehaviour
             m_VirtualCamera = GetComponent<CinemachineVirtualCamera>();
         }
 
-        //NoiseƒRƒ“ƒ|[ƒlƒ“ƒgæ“¾
+        //Noiseã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆå–å¾—
         if(m_VirtualCamera!=null)
         {
             m_Noise=m_VirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         }
     }
 
-    /// <summary>
-    /// ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ÅŒÄ‚Ô(—h‚êŠJn)
-    /// </summary>
+    ///<summary>
+    ///ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã§å‘¼ã¶(æºã‚Œé–‹å§‹)
+    ///</summary>
     public void StartShake()
     {
         m_Noise.m_AmplitudeGain = m_ShakeIntensity;
         m_Noise.m_FrequencyGain = m_ShakeFrequency;
     }
 
-    /// <summary>
-    /// ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ÅŒÄ‚Ô(—h‚ê’â~)
-    /// </summary>
+    ///<summary>
+    ///ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã§å‘¼ã¶(æºã‚Œåœæ­¢)
+    ///</summary>
     public void EndShake()
     {
         m_Noise.m_AmplitudeGain = 0f;

@@ -2,35 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Player‚Ì’n–Ê(‰º)‚É‘Î‚·‚éd—Íˆ—
-/// </summary>
+///<summary>
+///Playerã®åœ°é¢(ä¸‹)ã«å¯¾ã™ã‚‹é‡åŠ›å‡¦ç†
+///</summary>
 public class PlayerGravity : MonoBehaviour
 {
-    [Header("’Êí‚Ìd—Í"), SerializeField]
+    [Header("é€šå¸¸ã®é‡åŠ›"), SerializeField]
     float m_Gravity;
 
-    [Header("’n–Ê‚É‹z‚¢•t‚­—Í"), SerializeField]
+    [Header("åœ°é¢ã«å¸ã„ä»˜ãåŠ›"), SerializeField]
     float m_StickToGroundForce;
 
-    [Header("Î–Ê‚Å‹z’…‚ğ‚İ‚é‹——£"), SerializeField]
+    [Header("æ–œé¢ã§å¸ç€ã‚’è©¦ã¿ã‚‹è·é›¢"), SerializeField]
     float m_SnapDistance;
 
-    [Header("’n–ÊƒŒƒCƒ„["), SerializeField]
+    [Header("åœ°é¢ãƒ¬ã‚¤ãƒ¤ãƒ¼"), SerializeField]
     LayerMask m_LayerMask;
 
     [SerializeField]
     CharacterController m_CController;
 
-    //‘¬“x
+    //é€Ÿåº¦
     Vector3 m_Velocity;
 
-    //’n–Ê‚É‚Â‚¢‚Ä‚¢‚é‚©‚Ì”»’èƒtƒ‰ƒO
+    //åœ°é¢ã«ã¤ã„ã¦ã„ã‚‹ã‹ã®åˆ¤å®šãƒ•ãƒ©ã‚°
     bool m_WasGrounded=false;
 
     private void Awake()
     {
-        //ƒRƒ“ƒ|[ƒlƒ“ƒg‚Ìæ“¾
+        //ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã®å–å¾—
         if(m_CController==null)
         {
             m_CController = GetComponent<CharacterController>();
@@ -42,43 +42,43 @@ public class PlayerGravity : MonoBehaviour
         HandleGravity();
     }
 
-    /// <summary>
-    /// ’n–Ê‚É‘Î‚·‚éd—Íˆ—
-    /// </summary>
+    ///<summary>
+    ///åœ°é¢ã«å¯¾ã™ã‚‹é‡åŠ›å‡¦ç†
+    ///</summary>
     void HandleGravity()
     {
-        //’n–Ê‚ÉÚ’n‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©(true:‘«Œ³‚ª’n–Ê‚ÉG‚ê‚Ä‚¢‚é)
+        //åœ°é¢ã«æ¥åœ°ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹(true:è¶³å…ƒãŒåœ°é¢ã«è§¦ã‚Œã¦ã„ã‚‹)
         bool isGround = m_CController.isGrounded;
 
-        //’n–Ê‚É’…‚¢‚½uŠÔ‚Æ’n–Ê‚É‚¢‚éŠÔ
+        //åœ°é¢ã«ç€ã„ãŸç¬é–“ã¨åœ°é¢ã«ã„ã‚‹é–“
         if (isGround&&m_Velocity.y<0)
         {
-            //í‚É‚í‚¸‚©‚È—Í‚Å’n–Ê‚É‰Ÿ‚µ•t‚¯‘±‚¯‚é‚±‚Æ‚ÅÚ’n‚ğˆÀ’è‚³‚¹‚é
+            //å¸¸ã«ã‚ãšã‹ãªåŠ›ã§åœ°é¢ã«æŠ¼ã—ä»˜ã‘ç¶šã‘ã‚‹ã“ã¨ã§æ¥åœ°ã‚’å®‰å®šã•ã›ã‚‹
             m_Velocity.y = -2f;
         }
 
-        //‚³‚Á‚«‚Ü‚ÅÚ’n‚µ‚Ä‚¢‚½A‚©‚Â¡‚Í•‚‚¢‚Ä‚¢‚éA‚©‚ÂƒWƒƒƒ“ƒviã•ûŒü‚Ö‚Ì‘¬“xj’†‚Å‚Í‚È‚¢
+        //ã•ã£ãã¾ã§æ¥åœ°ã—ã¦ã„ãŸã€ã‹ã¤ä»Šã¯æµ®ã„ã¦ã„ã‚‹ã€ã‹ã¤ã‚¸ãƒ£ãƒ³ãƒ—ï¼ˆä¸Šæ–¹å‘ã¸ã®é€Ÿåº¦ï¼‰ä¸­ã§ã¯ãªã„
         if (m_WasGrounded&&!isGround&&m_Velocity.y<=0)
         {
             if(Physics.Raycast(transform.position,Vector3.down,out RaycastHit hit,m_SnapDistance,m_LayerMask))
             {
-                //‚ß‚è‚İ–h~(’n–Ê‚Ü‚Å‚Ì‘S‹——£ - CharacterController‚ÌŒú‚İ)
+                //ã‚ã‚Šè¾¼ã¿é˜²æ­¢(åœ°é¢ã¾ã§ã®å…¨è·é›¢ - CharacterControllerã®åšã¿)
                 float snapAmount = hit.distance - m_CController.skinWidth;
 
-                //ƒXƒiƒbƒv(’nŒ`‚Ö‚Ì‹z’…)ˆ—A–³—‚â‚è’n–Ê‚Éƒsƒbƒ^ƒŠ‚­‚Á‚Â‚¯‚é(â“¹‚Å•‚‚¢‚½uŠÔ‚¾‚¯)
+                //ã‚¹ãƒŠãƒƒãƒ—(åœ°å½¢ã¸ã®å¸ç€)å‡¦ç†ã€ç„¡ç†ã‚„ã‚Šåœ°é¢ã«ãƒ”ãƒƒã‚¿ãƒªãã£ã¤ã‘ã‚‹(å‚é“ã§æµ®ã„ãŸç¬é–“ã ã‘)
                 m_CController.Move(Vector3.down * snapAmount);
 
-                //(Ÿ‚ÌƒtƒŒ[ƒ€‚Å‚à)Ú’nó‘Ô‚ğˆÛ‚³‚¹‚é‘Îô
+                //(æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã‚‚)æ¥åœ°çŠ¶æ…‹ã‚’ç¶­æŒã•ã›ã‚‹å¯¾ç­–
                 m_Velocity.y = -2f;
             }
         }
-        //—‰º‘¬“x‚ğXV‚·‚é
+        //è½ä¸‹é€Ÿåº¦ã‚’æ›´æ–°ã™ã‚‹
         m_Velocity.y = m_Gravity * Time.deltaTime;
 
-        //•¨—“I‚È—‰ºAd—Í‚É]‚Á‚Ä‰º‚É‰Á‘¬‚µ‚È‚ª‚ç—‚¿‚é(–ˆƒtƒŒ[ƒ€•K‚¸)
+        //ç‰©ç†çš„ãªè½ä¸‹ã€é‡åŠ›ã«å¾“ã£ã¦ä¸‹ã«åŠ é€Ÿã—ãªãŒã‚‰è½ã¡ã‚‹(æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å¿…ãš)
         m_CController.Move(m_Velocity*Time.deltaTime);
 
-        //Ú’nó‘Ô‚ğŸ‚ÌƒtƒŒ[ƒ€‚Ì‚½‚ß‚É‹L˜^
+        //æ¥åœ°çŠ¶æ…‹ã‚’æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãŸã‚ã«è¨˜éŒ²
         m_WasGrounded = isGround;
     }
 }

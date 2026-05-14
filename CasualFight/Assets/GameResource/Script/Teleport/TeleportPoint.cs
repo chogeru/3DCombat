@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// プレイヤーテレポート場所管理クラス
-/// </summary>
+///<summary>
+///プレイヤーテレポート場所管理クラス
+///</summary>
 public class TeleportPoint : MonoBehaviour
 {
     [Header("地点名"), SerializeField]
@@ -29,7 +29,8 @@ public class TeleportPoint : MonoBehaviour
     //マネージャーの参照用
     public string PointName => m_PointName;
     public bool IsUnlocked => m_IsUnlocked;
-    public Sprite AreaSprite => m_AreaSprite; // 画像参照用
+    //画像参照用
+    public Sprite AreaSprite => m_AreaSprite;
 
     //テレポート地点設定されてない場合は保護として自分自身の座標を送る
     public Vector3 TeleportPosition => m_TeleportTarget != null ? m_TeleportTarget.position : transform.position;
@@ -54,9 +55,9 @@ public class TeleportPoint : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ポイント解放
-    /// </summary>
+    ///<summary>
+    ///ポイント解放
+    ///</summary>
     void Unlock()
     {
         //フラグOn(解放)
@@ -68,7 +69,7 @@ public class TeleportPoint : MonoBehaviour
 
         Debug.Log($"{m_PointName}解放");
 
-        // UnlockManagerなどの外部処理を呼び出す
+        //UnlockManagerなどの外部処理を呼び出す
         m_OnUnlockedEvent?.Invoke();
     }
 }

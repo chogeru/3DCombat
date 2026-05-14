@@ -4,9 +4,9 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    // ダメージを与えるための窓口
+    //繝繝｡繝ｼ繧ｸ繧剃ｸ弱∴繧九◆繧√�ｮ遯灘哨
     void TakeDamage(int damage);
 
-    // 演出中に敵を止めるための窓口
+    //貍泌�ｺ荳ｭ縺ｫ謨ｵ繧呈ｭ｢繧√ｋ縺溘ａ縺ｮ遯灘哨
     void SetFreeze(bool isFrozen);
 }
