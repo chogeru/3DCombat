@@ -329,6 +329,74 @@ MonoBehaviour:
   m_Vcam2: {fileID: 852276062}
   m_CameraLookTarget: {fileID: 163128918}
   m_MouseLookParallax: {fileID: 852276064}
+--- !u!1001 &1301366384
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1802286859466036053, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_Name
+      value: BlackKnightPBRDefault
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 14.915984
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 196.01729
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 130.234
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1802286859466067829, guid: 371182d8331f44269debcfdab00beab0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 371182d8331f44269debcfdab00beab0, type: 3}
 --- !u!1 &1314943039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,3 +1140,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 6454193041443618965}
+  - {fileID: 1301366384}
